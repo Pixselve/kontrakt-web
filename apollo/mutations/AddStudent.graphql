@@ -1,0 +1,5 @@
+mutation AddStudent($firstName: String!, $lastName: String!) {
+  createOneStudent(data: {firstName: $firstName, lastName: $lastName}) {
+    id
+  }
+}

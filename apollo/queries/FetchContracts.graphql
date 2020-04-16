@@ -1,0 +1,10 @@
+query FetchContracts {
+  contracts(orderBy: {date: desc}) {
+    id
+    date
+    skills {
+      id
+      name
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mutation CreateOneContract($date: DateTime!, $skills: [String!]!) {
+  createOneContract(data: {date: $date, skills: $skills}) {
+    date
+  }
+}

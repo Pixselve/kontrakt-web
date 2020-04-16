@@ -1,0 +1,5 @@
+mutation DeleteContract($id: Int!) {
+  removeOneContract(data: {id: $id}) {
+    id
+  }
+}

@@ -1,0 +1,5 @@
+mutation EditSkillToStudent($mark: Mark!, $skillId: Int!, $studentId: Int!) {
+  editOrCreateSkillToStudent(data: {mark: $mark, skill: {id: $skillId}, student: {id: $studentId}}) {
+    id
+  }
+}

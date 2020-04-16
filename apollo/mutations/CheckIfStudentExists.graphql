@@ -1,0 +1,3 @@
+mutation CheckIfStudentExists($id: Float!) {
+  checkIsStudentExists(id: $id)
+}

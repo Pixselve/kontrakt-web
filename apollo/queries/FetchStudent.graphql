@@ -1,0 +1,13 @@
+query FetchStudent($id: Int!) {
+  student(where: {id: $id}) {
+    id
+    firstName
+    lastName
+    skillToStudents {
+      mark
+      skill {
+        id
+      }
+    }
+  }
+}
