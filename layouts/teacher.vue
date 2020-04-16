@@ -11,6 +11,10 @@
           <span>Contrats</span>
           <v-icon>mdi-format-list-checks</v-icon>
         </v-btn>
+        <v-btn @click="logout">
+          <span>Deconnexion</span>
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
       </v-bottom-navigation>
     </v-content>
   </v-app>
@@ -23,6 +27,10 @@
     middleware: "teacherLogged"
   })
   export default class TeacherLayout extends Vue {
-
+    // Logout the teacher
+    async logout() {
+      await this.$apolloHelpers.onLogout();
+      await this.$router.push("/login");
+    }
   }
 </script>
