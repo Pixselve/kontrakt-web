@@ -1063,6 +1063,27 @@ export type FetchContractsQuery = (
   )> }
 );
 
+export type FetchContractsAwaitingFinishStudentQueryVariables = {
+  studentId: Scalars['Int'];
+};
+
+
+export type FetchContractsAwaitingFinishStudentQuery = (
+  { __typename?: 'Query' }
+  & { contracts: Array<(
+    { __typename?: 'Contract' }
+    & Pick<Contract, 'id' | 'date'>
+    & { skills?: Maybe<Array<(
+      { __typename?: 'Skill' }
+      & Pick<Skill, 'id' | 'name'>
+      & { skillToStudents?: Maybe<Array<(
+        { __typename?: 'SkillToStudent' }
+        & Pick<SkillToStudent, 'id' | 'mark'>
+      )>> }
+    )>> }
+  )> }
+);
+
 export type FetchStudentQueryVariables = {
   id: Scalars['Int'];
 };

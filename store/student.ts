@@ -1,20 +1,26 @@
-import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
 import {
   DeleteStudentMutationVariables,
   EditSkillToStudentMutationVariables,
-  FetchStudentQuery,
-  Mark,
+  FetchContractsAwaitingFinishStudentQuery,
+  FetchContractsAwaitingFinishStudentQueryVariables,
+  FetchStudentQuery, FetchStudentsQuery,
+  Mark, Maybe, Skill,
   SkillToStudent,
   Student
-}                                               from "~/types/types";
-import { $apollo }                              from "~/utils/getGraphQLClient";
+}                                                               from "~/types/types";
+import { $apollo }                                              from "~/utils/getGraphQLClient";
 import FetchStudentQueryGQL
-                                                from "~/apollo/queries/FetchStudent.graphql";
-import DeleteStudentMutationGQL                 from "~/apollo/mutations/DeleteStudent.graphql";
+                                                                from "~/apollo/queries/FetchStudent.graphql";
+import DeleteStudentMutationGQL                                 from "~/apollo/mutations/DeleteStudent.graphql";
 
 
 import EditSkillToStudentMutationGQL
   from "~/apollo/mutations/EditSkillToStudent.graphql";
+
+
+import FetchContractsAwaitingFinishStudentQueryGQL
+  from "~/apollo/queries/FetchContractsAwaitingFinishStudent.graphql";
 
 @Module({
   name: 'student',
@@ -25,10 +31,20 @@ export default class StudentModule extends VuexModule {
   id: number | null | undefined;
   firstName: string | null | undefined;
   lastName: string | null | undefined;
-  skillToStudents: Array<SkillToStudent> | null | undefined;
+  skillToStudents: Maybe<Array<(
+    { __typename?: 'SkillToStudent' }
+    & Pick<SkillToStudent, 'mark'>
+    & {
+    skill: (
+      { __typename?: 'Skill' }
+      & Pick<Skill, 'id'>
+      )
+  }
+    )>> | null | undefined;
+  contractsNeededToBeFinished: FetchContractsAwaitingFinishStudentQuery["contracts"] = [];
 
-  get student(): Student | null {
-    if (this.id && this.firstName && this.lastName) {
+  get student(): FetchStudentQuery["student"] | null {
+    if (this.id && this.firstName && this.lastName && this.skillToStudents) {
       return { firstName: this.firstName, lastName: this.lastName, id: this.id, skillToStudents: this.skillToStudents };
     } else {
       return null;
@@ -37,6 +53,16 @@ export default class StudentModule extends VuexModule {
 
   get studentId() {
     return this.id;
+  }
+
+  get getContractsNeededToBeFinished() {
+    return this.contractsNeededToBeFinished;
+  }
+
+  get skillsCountNeededToBeFinished() {
+    let result = 0;
+    this.contractsNeededToBeFinished.forEach(contract => contract.skills ? result += contract.skills.length : result += 0);
+    return result;
   }
 
 
@@ -75,12 +101,15 @@ export default class StudentModule extends VuexModule {
   }
 
   @Mutation
-  async setStudent(data: Student) {
-    const { id, lastName, firstName, skillToStudents } = data;
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.skillToStudents = skillToStudents;
+  async setStudent(data: FetchStudentQuery["student"]) {
+    if (data && data.skillToStudents) {
+      const { id, lastName, firstName, skillToStudents } = data;
+      this.id = id;
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.skillToStudents = skillToStudents;
+    }
+
   }
 
   @Action
@@ -93,5 +122,17 @@ export default class StudentModule extends VuexModule {
       fetchPolicy: "no-cache"
     });
     this.context.commit("setStudent", data.student);
+  }
+
+
+  @MutationAction({ mutate: ['contractsNeededToBeFinished'] })
+  async fetchAwaitingToFinishContracts(id: number) {
+    const { data }: { data: FetchContractsAwaitingFinishStudentQuery } = await $apollo.query({
+      query: FetchContractsAwaitingFinishStudentQueryGQL,
+      variables: {
+        studentId: id
+      } as FetchContractsAwaitingFinishStudentQueryVariables
+    });
+    return { contractsNeededToBeFinished: data.contracts };
   }
 }

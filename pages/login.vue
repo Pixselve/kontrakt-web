@@ -108,7 +108,6 @@
       try {
         if (this.studentFormRef.validate() && this.studentForm) {
           this.loading = true;
-
           await studentStore.fetchStudent(this.studentForm);
           await this.$router.push("/student");
         }

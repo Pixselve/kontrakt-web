@@ -1,8 +1,11 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row align="center" justify="space-between">
       <v-col>
         <h1>Les contrats de travail</h1>
+
+      </v-col>
+      <v-col>
         <CreateContractDialog/>
       </v-col>
     </v-row>

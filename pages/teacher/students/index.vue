@@ -20,8 +20,8 @@
 
 
             <tr @click="$router.push(`/teacher/students/${student.id}`)" v-for="student in students" :key="student.id">
-              <td>{{student.firstName}}</td>
               <td>{{student.lastName}}</td>
+              <td>{{student.firstName}}</td>
             </tr>
             </tbody>
           </template>

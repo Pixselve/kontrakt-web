@@ -1,5 +1,5 @@
 query fetchStudents {
-  students {
+  students(orderBy: {lastName: asc}) {
     id
     firstName
     lastName

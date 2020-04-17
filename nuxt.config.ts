@@ -31,6 +31,7 @@ const config: Configuration = {
   */
   plugins: [
     '@plugins/apollo-accessor',
+    '@plugins/filters'
   ],
   pwa: {
     manifest: {
@@ -38,7 +39,7 @@ const config: Configuration = {
       land: "fr-FR",
       description: "Gerez vos contrats de travail en toute simplicité",
       short_name: "Kontrakt",
-      start_url: "."
+      start_url: "/"
     }
   },
   /*

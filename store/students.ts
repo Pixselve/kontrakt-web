@@ -19,7 +19,7 @@ export default class Students extends VuexModule {
   get studentsComboboxFormatted() {
     if (this.students != undefined) {
       return this.students.map(({ firstName, lastName, id }) => ({
-        text: `${ firstName } ${ lastName }`,
+        text: `${ lastName } ${ firstName }`,
         value: id
       }));
     }

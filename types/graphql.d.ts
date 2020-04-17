@@ -71,6 +71,15 @@ declare module '*/FetchContracts.graphql' {
 }
     
 
+declare module '*/FetchContractsAwaitingFinishStudent.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const FetchContractsAwaitingFinishStudent: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/FetchStudent.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

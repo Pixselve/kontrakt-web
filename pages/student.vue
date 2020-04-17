@@ -18,6 +18,16 @@
       </v-col>
     </v-row>
     <v-row>
+      <v-col cols="12">
+        <h1>Les compétences à terminer
+          <v-badge :content="skillsCountNeededToBeFinished"></v-badge>
+        </h1>
+      </v-col>
+      <v-col v-for="contract in contractsNeededToBeFinished" :key="contract.id" cols="12" xs="12" sm="12" md="6" lg="4" xl="4" >
+        <awaiting-finish-contract-card :contract="contract"></awaiting-finish-contract-card>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col>
         <h1>Les contrats précédents</h1>
       </v-col>
@@ -41,19 +51,23 @@
   import ContractCard                                    from "~/components/ContractCard.vue";
   import { contractsStore, studentsStore, studentStore } from "~/utils/store-accessor";
   import ContractCardWithPopup                           from "~/components/ContractCardWithPopup.vue";
+  import AwaitingFinishContractCard                      from "~/components/AwaitingFinishContractCard.vue";
 
   @Component({
     components: {
       SkillsTable,
       ContactPopup,
       ContractCard,
-      ContractCardWithPopup
+      ContractCardWithPopup,
+      AwaitingFinishContractCard
     },
     head: () => ({
       title: "Élève"
     }),
     async asyncData() {
       await contractsStore.fetchContracts();
+      if (studentStore.studentId)
+        await studentStore.fetchAwaitingToFinishContracts(studentStore.studentId);
     },
     middleware: "studentLogged"
   })
@@ -70,6 +84,12 @@
       }
     }
 
+    contractsNeededToBeFinished = studentStore.getContractsNeededToBeFinished;
+
+
+    get skillsCountNeededToBeFinished() {
+      return studentStore.skillsCountNeededToBeFinished
+    }
 
     get todayContract() {
       return contractsStore.todayContract;

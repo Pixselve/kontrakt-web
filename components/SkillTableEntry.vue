@@ -32,14 +32,15 @@ import {Mark} from "~/types/types";
 
 
     selectValues = [
-      { text: "À corriger", value: "AWAITING_CORRECTION" },
-      { text: "Aquis", value: "GREEN" },
-      { text: "Fait", value: "MARKED" },
-      { text: "En cours d'aquisition", value: "ORANGE" },
-      { text: "Non aquis", value: "RED" },
       { text: "À faire", value: "TODO" },
       { text: "À terminer", value: "TO_FINISH" },
-      { text: "Avec quelques erreurs", value: "BLUE" },
+      { text: "À corriger", value: "AWAITING_CORRECTION" },
+      { text: "Fait", value: "MARKED" },
+      { text: "Aquis", value: "GREEN" },
+      { text: "Aquis avec quelques erreurs", value: "BLUE" },
+      { text: "En cours d'aquisition", value: "ORANGE" },
+      { text: "Non aquis", value: "RED" },
+
     ];
 
     mark = this.textAndIcon.value;
@@ -89,7 +90,7 @@ import {Mark} from "~/types/types";
         case Mark.Red:
           return { text: "Non aquis", icon: "mdi-emoticon-sad-outline", value: "RED", color: "red" };
         case Mark.Blue:
-          return { text: "Avec quelques erreurs", icon: "mdi-emoticon-happy-outline", value: "BLUE", color: "blue" };
+          return { text: "Aquis avec quelques erreurs", icon: "mdi-emoticon-happy-outline", value: "BLUE", color: "blue" };
         case Mark.ToFinish:
           return { text: "À terminer", icon: "mdi-view-dashboard-outline", value: "TO_FINISH", color: "brown" };
         default:
