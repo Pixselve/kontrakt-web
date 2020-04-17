@@ -40,8 +40,19 @@ export default class StudentModule extends VuexModule {
   }
 
 
+  @Mutation
+  /**
+   * Logout the current student
+   */
+  logout() {
+    this.id = null;
+    this.firstName = null;
+    this.lastName = null;
+    this.skillToStudents = null;
+  }
+
   @Action
-  async editMarkSkillToStudent(data: {mark: Mark, skillId: number}) {
+  async editMarkSkillToStudent(data: { mark: Mark, skillId: number }) {
     await $apollo.mutate({
       mutation: EditSkillToStudentMutationGQL,
       variables: {

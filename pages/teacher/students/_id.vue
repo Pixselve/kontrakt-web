@@ -2,7 +2,7 @@
   <div>
     <v-app-bar flat>
 
-      <v-btn to="/teacher/students" icon>
+      <v-btn @click="exitPage" icon>
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>{{student.firstName}} {{student.lastName}}</v-toolbar-title>
@@ -75,6 +75,7 @@
       return data.checkIsStudentExists;
     },
     async asyncData({ params }) {
+      studentStore.logout();
       await Promise.all([studentStore.fetchStudent(parseInt(params.id)), contractsStore.fetchContracts()]);
     },
     layout: "teacher",
@@ -87,9 +88,10 @@
     }
   })
   export default class StudentSpecificPage extends Vue {
-    get student() {
-      return studentStore.student;
-    }
+
+
+    student = studentStore.student;
+
 
     get todayContract() {
       return contractsStore.todayContract;
@@ -108,6 +110,13 @@
       } else {
         return "";
       }
+    }
+
+    /**
+     * Exit the current student page
+     */
+    async exitPage() {
+      await this.$router.push("/teacher/students");
     }
 
     async deleteStudent() {

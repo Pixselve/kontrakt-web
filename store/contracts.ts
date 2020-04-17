@@ -27,7 +27,7 @@ export default class Contracts extends VuexModule {
   }
 
   get todayContract() {
-    return this.contracts.find(contract => new Date(contract.date).getDate() === new Date().getDate());
+    return this.contracts.find(contract => new Date(contract.date) === new Date());
   }
 
   get laterContracts() {

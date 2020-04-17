@@ -146,7 +146,10 @@ export enum Mark {
   Green = 'GREEN',
   Marked = 'MARKED',
   Orange = 'ORANGE',
-  Red = 'RED'
+  Red = 'RED',
+  Blue = 'BLUE',
+  Todo = 'TODO',
+  ToFinish = 'TO_FINISH'
 }
 
 export type MarkFilter = {
@@ -579,7 +582,7 @@ export type SkillToStudent = {
 };
 
 export type SkillToStudentCreateInput = {
-  mark: Mark;
+  mark?: Maybe<Mark>;
   skill: SkillCreateOneWithoutSkillToStudentsInput;
   student: StudentCreateOneWithoutSkillToStudentsInput;
 };
@@ -595,12 +598,12 @@ export type SkillToStudentCreateManyWithoutStudentInput = {
 };
 
 export type SkillToStudentCreateWithoutSkillInput = {
-  mark: Mark;
+  mark?: Maybe<Mark>;
   student: StudentCreateOneWithoutSkillToStudentsInput;
 };
 
 export type SkillToStudentCreateWithoutStudentInput = {
-  mark: Mark;
+  mark?: Maybe<Mark>;
   skill: SkillCreateOneWithoutSkillToStudentsInput;
 };
 

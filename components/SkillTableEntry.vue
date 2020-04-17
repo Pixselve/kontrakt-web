@@ -1,3 +1,4 @@
+import {Mark} from "~/types/types";
 <template>
   <tr>
     <td>{{skill.name}}</td>
@@ -17,7 +18,7 @@
   </tr>
 </template>
 <script lang="ts">
-  import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
+  import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
   import { Mark, Skill, SkillToStudent } from "~/types/types";
   import { studentStore }                from "~/utils/store-accessor";
 
@@ -36,7 +37,9 @@
       { text: "Fait", value: "MARKED" },
       { text: "En cours d'aquisition", value: "ORANGE" },
       { text: "Non aquis", value: "RED" },
-      { text: "À faire", value: "TODO", disabled: true },
+      { text: "À faire", value: "TODO" },
+      { text: "À terminer", value: "TO_FINISH" },
+      { text: "Avec quelques erreurs", value: "BLUE" },
     ];
 
     mark = this.textAndIcon.value;
@@ -75,7 +78,7 @@
         case Mark.Green:
           return { text: "Aquis", icon: "mdi-emoticon-outline", value: "GREEN", color: "green" };
         case Mark.Marked:
-          return { text: "Fait", icon: "mdi-bookmark-outline", value: "MARKED", color: "blue" };
+          return { text: "Fait", icon: "mdi-bookmark-outline", value: "MARKED", color: "pink" };
         case Mark.Orange:
           return {
             text: "En cours d'aquisition",
@@ -85,16 +88,18 @@
           };
         case Mark.Red:
           return { text: "Non aquis", icon: "mdi-emoticon-sad-outline", value: "RED", color: "red" };
+        case Mark.Blue:
+          return { text: "Avec quelques erreurs", icon: "mdi-emoticon-happy-outline", value: "BLUE", color: "blue" };
+        case Mark.ToFinish:
+          return { text: "À terminer", icon: "mdi-view-dashboard-outline", value: "TO_FINISH", color: "brown" };
+        default:
+          return { text: "À faire", icon: "mdi-clock-outline", value: "TODO", color: "grey" };
       }
     }
 
     get textAndIcon() {
       const studentSkill = this.studentSkills.find(studentSkillToFound => studentSkillToFound.skill.id == this.skill.id);
-      if (studentSkill) {
-        return this.markToIconAndText(studentSkill.mark);
-      } else {
-        return { text: "À faire", icon: "mdi-clock-outline", value: "TODO", color: "grey" };
-      }
+      return this.markToIconAndText(studentSkill ? studentSkill.mark : Mark.Todo);
     }
 
 

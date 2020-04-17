@@ -2,21 +2,22 @@
   <v-app>
     <v-content>
       <nuxt/>
-      <v-bottom-navigation grow fixed>
-        <v-btn to="/teacher/students">
-          <span>Élèves</span>
-          <v-icon>mdi-account-group</v-icon>
-        </v-btn>
-        <v-btn to="/teacher/contracts">
-          <span>Contrats</span>
-          <v-icon>mdi-format-list-checks</v-icon>
-        </v-btn>
-        <v-btn @click="logout">
-          <span>Deconnexion</span>
-          <v-icon>mdi-logout</v-icon>
-        </v-btn>
-      </v-bottom-navigation>
+
     </v-content>
+    <v-bottom-navigation app grow>
+      <v-btn to="/teacher/students">
+        <span>Élèves</span>
+        <v-icon>mdi-account-group</v-icon>
+      </v-btn>
+      <v-btn to="/teacher/contracts">
+        <span>Contrats</span>
+        <v-icon>mdi-format-list-checks</v-icon>
+      </v-btn>
+      <v-btn @click="logout">
+        <span>Deconnexion</span>
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </v-app>
 </template>
 

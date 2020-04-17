@@ -103,10 +103,13 @@ type Teacher {
 
 enum Mark {
   AWAITING_CORRECTION
+  BLUE
   GREEN
   MARKED
   ORANGE
   RED
+  TODO
+  TO_FINISH
 }
 
 enum OrderByArg {
@@ -277,7 +280,7 @@ input SkillScalarWhereInput {
 }
 
 input SkillToStudentCreateInput {
-  mark: Mark!
+  mark: Mark
   skill: SkillCreateOneWithoutSkillToStudentsInput!
   student: StudentCreateOneWithoutSkillToStudentsInput!
 }
@@ -293,12 +296,12 @@ input SkillToStudentCreateManyWithoutStudentInput {
 }
 
 input SkillToStudentCreateWithoutSkillInput {
-  mark: Mark!
+  mark: Mark
   student: StudentCreateOneWithoutSkillToStudentsInput!
 }
 
 input SkillToStudentCreateWithoutStudentInput {
-  mark: Mark!
+  mark: Mark
   skill: SkillCreateOneWithoutSkillToStudentsInput!
 }
 
