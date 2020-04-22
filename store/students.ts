@@ -14,7 +14,7 @@ import { AddStudentMutationVariables, FetchContractsQuery, FetchStudentQuery, Fe
   namespaced: true,
 })
 export default class Students extends VuexModule {
-  students: FetchStudentsQuery["students"] | undefined;
+  students: FetchStudentsQuery["students"] = [];
 
   get studentsComboboxFormatted() {
     if (this.students != undefined) {

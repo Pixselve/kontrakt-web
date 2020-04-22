@@ -1,0 +1,19 @@
+query FetchContract($id: Int!) {
+  contract(where: {id: $id}) {
+    id
+    date
+    skills {
+      id
+      name
+      skillToStudents {
+        id
+        mark
+        student {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+}

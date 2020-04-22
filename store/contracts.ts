@@ -47,7 +47,6 @@ export default class Contracts extends VuexModule {
       fetchPolicy: "no-cache"
     });
     this.context.commit('setContracts', data.contracts);
-
   }
 
 

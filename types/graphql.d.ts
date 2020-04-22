@@ -62,6 +62,15 @@ declare module '*/LoginTeacher.graphql' {
 }
     
 
+declare module '*/FetchContract.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const FetchContract: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/FetchContracts.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

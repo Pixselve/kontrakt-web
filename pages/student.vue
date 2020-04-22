@@ -17,14 +17,20 @@
         <h1>Il n'y a pas de contrat aujourd'hui</h1>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="skillsCountNeededToBeFinished > 0">
       <v-col cols="12">
         <h1>Les compétences à terminer
           <v-badge :content="skillsCountNeededToBeFinished"></v-badge>
         </h1>
       </v-col>
-      <v-col v-for="contract in contractsNeededToBeFinished" :key="contract.id" cols="12" xs="12" sm="12" md="6" lg="4" xl="4" >
+      <v-col v-for="contract in contractsNeededToBeFinished" :key="contract.id" cols="12" xs="12" sm="12" md="6" lg="4"
+             xl="4">
         <awaiting-finish-contract-card :contract="contract"></awaiting-finish-contract-card>
+      </v-col>
+    </v-row>
+    <v-row v-else>
+      <v-col cols="12">
+        <h1>Vous n'avez plus rien à faire 😁</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -39,7 +45,6 @@
           <contract-card-with-popup :editable="false" :contract="contract"></contract-card-with-popup>
         </v-col>
       </v-row>
-
     </v-row>
   </v-container>
 </template>
@@ -88,7 +93,7 @@
 
 
     get skillsCountNeededToBeFinished() {
-      return studentStore.skillsCountNeededToBeFinished
+      return studentStore.skillsCountNeededToBeFinished;
     }
 
     get todayContract() {

@@ -1,8 +1,14 @@
 <template>
   <v-list-item dense>
-    <v-list-item-icon>
-      <v-icon color="white">{{icon}}</v-icon>
-    </v-list-item-icon>
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-list-item-icon v-on="on">
+          <v-icon color="white">{{icon}}</v-icon>
+        </v-list-item-icon>
+      </template>
+      <span>{{tooltipText}}</span>
+    </v-tooltip>
     <v-list-item-content class="white--text">
       {{skill.name}}
     </v-list-item-content>
@@ -50,5 +56,32 @@
         return "mdi-clock-outline";
       }
     }
+
+
+    get tooltipText() {
+      if (this.skill.skillToStudents && this.skill.skillToStudents.length > 0) {
+        switch (this.skill.skillToStudents[0].mark) {
+          case Mark.AwaitingCorrection:
+            return "À corriger";
+          case Mark.Green:
+            return "Aquis";
+          case Mark.Marked:
+            return "Fait";
+          case Mark.Orange:
+            return "En cours d'aquisition";
+          case Mark.Red:
+            return "Non aquis";
+          case Mark.Blue:
+            return "Aquis avec quelques erreurs";
+          case Mark.ToFinish:
+            return "À terminer";
+          default:
+            return "À faire";
+        }
+      } else {
+        return "À faire";
+      }
+    }
+
   }
 </script>

@@ -1048,6 +1048,31 @@ export type LoginTeacherMutation = (
   ) }
 );
 
+export type FetchContractQueryVariables = {
+  id: Scalars['Int'];
+};
+
+
+export type FetchContractQuery = (
+  { __typename?: 'Query' }
+  & { contract?: Maybe<(
+    { __typename?: 'Contract' }
+    & Pick<Contract, 'id' | 'date'>
+    & { skills?: Maybe<Array<(
+      { __typename?: 'Skill' }
+      & Pick<Skill, 'id' | 'name'>
+      & { skillToStudents?: Maybe<Array<(
+        { __typename?: 'SkillToStudent' }
+        & Pick<SkillToStudent, 'id' | 'mark'>
+        & { student: (
+          { __typename?: 'Student' }
+          & Pick<Student, 'id' | 'firstName' | 'lastName'>
+        ) }
+      )>> }
+    )>> }
+  )> }
+);
+
 export type FetchContractsQueryVariables = {};
 
 

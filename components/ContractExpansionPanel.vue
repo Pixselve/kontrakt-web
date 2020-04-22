@@ -8,6 +8,7 @@
           <v-list-item-subtitle>{{skill.name}}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+      <v-btn :to="`/teacher/contracts/${contract.id}`" text color="primary">Compléter les compétences</v-btn>
       <v-btn :disabled="loading" @click="deleteContract" text color="red">Supprimer le contrat</v-btn>
     </v-expansion-panel-content>
   </v-expansion-panel>

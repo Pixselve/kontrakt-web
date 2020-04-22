@@ -21,7 +21,7 @@ const config: Configuration = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#9C27B0' },
   /*
   ** Global CSS
   */
