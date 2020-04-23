@@ -17,12 +17,12 @@ export default class Students extends VuexModule {
   students: FetchStudentsQuery["students"] = [];
 
   get studentsComboboxFormatted() {
-    if (this.students != undefined) {
-      return this.students.map(({ firstName, lastName, id }) => ({
-        text: `${ lastName } ${ firstName }`,
-        value: id
-      }));
-    }
+
+    return this.students.map(({ firstName, lastName, id }) => ({
+      text: `${ lastName } ${ firstName }`,
+      value: id
+    }));
+
   }
 
 
