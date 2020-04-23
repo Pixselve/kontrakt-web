@@ -31,7 +31,7 @@
     // Logout the teacher
     async logout() {
       await this.$apolloHelpers.onLogout();
-      await this.$router.push("/login");
+      await this.$router.push("/teacher/login");
     }
   }
 </script>
