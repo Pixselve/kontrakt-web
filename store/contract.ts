@@ -22,7 +22,6 @@ export default class ContractModule extends VuexModule {
 
   @MutationAction({ mutate: ["contract"] })
   async fetchContract(id: number) {
-    console.log(id);
     const { data }: { data: FetchContractQuery } = await $apollo.query({
       query: FetchContractQueryGQL,
       variables: {

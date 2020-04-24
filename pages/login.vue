@@ -1,9 +1,7 @@
 <template>
   <v-card :disabled="loading" class="mx-auto" flat max-width="500px">
     <v-card-text class="text-center">
-      <v-avatar class="mb-5" color="blue">
-        <v-icon dark>mdi-school</v-icon>
-      </v-avatar>
+      <v-img width="50%" class="mx-auto mb-5" src="/logo_text_colored.svg"></v-img>
       <h1 class="mb-10">Connexion élève</h1>
       <v-form ref="form" @submit.prevent="login">
         <v-autocomplete required clearable :rules="rules.input" v-model="selectedStudent"

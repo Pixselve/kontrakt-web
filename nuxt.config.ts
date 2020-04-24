@@ -15,7 +15,6 @@ const config: Configuration = {
       { hid: 'description', name: 'description', content: "Gerez vos contrats de travail en toute simplicité" }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
   /*
@@ -70,7 +69,14 @@ const config: Configuration = {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: false
+      dark: false,
+      themes: {
+        light: {
+          primary: "#174891",
+          secondary: "#E06CF2"
+        }
+      }
+
     }
   },
   /*
@@ -81,7 +87,7 @@ const config: Configuration = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-    }
+    },
   },
   server: {
     host: "0.0.0.0",

@@ -39,7 +39,6 @@
   })
   export default class TeacherContractsPage extends Vue {
     get contracts() {
-      console.log(contractsStore);
       return contractsStore.getContracts;
     }
 

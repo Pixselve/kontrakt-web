@@ -3,9 +3,10 @@
 
     <v-card-text class="text-center">
 
-      <v-avatar class="mb-5" color="purple">
-        <v-icon dark>mdi-teach</v-icon>
-      </v-avatar>
+      <v-img width="50%" class="mx-auto mb-5" src="/logo_text_colored.svg"></v-img>
+
+
+
       <h1 class="mb-10">Connexion enseignant</h1>
       <v-form ref="form" @submit.prevent="login">
         <v-text-field v-model="form.email" validate-on-blur :error-messages="errors.email" :rules="rules.email" outlined
@@ -86,7 +87,6 @@
           await this.$router.push("/teacher/contracts");
         }
       } catch ( e ) {
-        console.log({ e });
         if (e.message) {
           if (e.message.includes("INVALID_USER")) {
             this.errors.email = "Cet utilisateur n'existe pas";
