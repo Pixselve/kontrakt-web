@@ -1,5 +1,5 @@
 <template>
-  <v-card :disabled="loading" class="mx-auto" flat max-width="500px">
+  <v-card color="transparent" :disabled="loading" class="mx-auto" flat max-width="500px">
     <v-card-text class="text-center">
       <v-img width="50%" class="mx-auto mb-5" src="/logo_text_colored.svg"></v-img>
       <h1 class="mb-10">Connexion élève</h1>
@@ -53,7 +53,7 @@
 
     rules = {
       input: [
-        (v: string | null) => !!v || "Veuillez sélectionner un élève"
+        (v: string | null) => v ?? "Veuillez sélectionner un élève"
       ]
     };
 

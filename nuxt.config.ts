@@ -14,8 +14,7 @@ const config: Configuration = {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: "Gerez vos contrats de travail en toute simplicité" }
     ],
-    link: [
-    ]
+    link: []
   },
   /*
   ** Customize the progress-bar color
@@ -69,12 +68,15 @@ const config: Configuration = {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: false,
       themes: {
         light: {
           primary: "#174891",
           secondary: "#E06CF2"
         }
+      },
+      themeCache: {
+        get: (key: string) => localStorage.getItem(key),
+        set: (key: string, value: string) => localStorage.setItem(key, value),
       }
 
     }

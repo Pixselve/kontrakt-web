@@ -28,9 +28,9 @@ import FetchContractsAwaitingFinishStudentQueryGQL
   namespaced: true,
 })
 export default class StudentModule extends VuexModule {
-  id: number | null | undefined;
-  firstName: string | null | undefined;
-  lastName: string | null | undefined;
+  id: number | null = null;
+  firstName: string | null = null;
+  lastName: string | null = null;
   skillToStudents: Maybe<Array<(
     { __typename?: 'SkillToStudent' }
     & Pick<SkillToStudent, 'mark'>
@@ -40,7 +40,7 @@ export default class StudentModule extends VuexModule {
       & Pick<Skill, 'id'>
       )
   }
-    )>> | null | undefined;
+    )>> = [];
   contractsNeededToBeFinished: FetchContractsAwaitingFinishStudentQuery["contracts"] = [];
 
   get student(): FetchStudentQuery["student"] | null {
@@ -74,7 +74,8 @@ export default class StudentModule extends VuexModule {
     this.id = null;
     this.firstName = null;
     this.lastName = null;
-    this.skillToStudents = null;
+    this.skillToStudents = [];
+    this.contractsNeededToBeFinished = [];
   }
 
   @Action

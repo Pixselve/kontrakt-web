@@ -1,5 +1,5 @@
 <template>
-  <v-card :disabled="loading" class="mx-auto" flat max-width="500px">
+  <v-card color="transparent" :disabled="loading" class="mx-auto" flat max-width="500px">
 
     <v-card-text class="text-center">
 
@@ -9,10 +9,10 @@
 
       <h1 class="mb-10">Connexion enseignant</h1>
       <v-form ref="form" @submit.prevent="login">
-        <v-text-field v-model="form.email" validate-on-blur :error-messages="errors.email" :rules="rules.email" outlined
+        <v-text-field prepend-inner-icon="mdi-email" v-model="form.email" validate-on-blur :error-messages="errors.email" :rules="rules.email" outlined
                       type="email" required autofocus
                       label="Adresse email"></v-text-field>
-        <v-text-field v-model="form.password" validate-on-blur :error-messages="errors.password" :rules="rules.password"
+        <v-text-field prepend-inner-icon="mdi-form-textbox-password" v-model="form.password" validate-on-blur :error-messages="errors.password" :rules="rules.password"
                       type="password" outlined required label="Mot de passe"></v-text-field>
 
         <v-row no-gutters>
