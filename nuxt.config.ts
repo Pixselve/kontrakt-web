@@ -1,4 +1,4 @@
-import { Configuration } from '@nuxt/types';
+import {Configuration} from '@nuxt/types';
 
 
 const config: Configuration = {
@@ -10,16 +10,16 @@ const config: Configuration = {
     titleTemplate: '%s - Kontrakt',
     title: "",
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: "Gerez vos contrats de travail en toute simplicité" }
+      {charset: 'utf-8'},
+      {name: 'viewport', content: 'width=device-width, initial-scale=1'},
+      {hid: 'description', name: 'description', content: "Gerez vos contrats de travail en toute simplicité"}
     ],
     link: []
   },
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#9C27B0' },
+  loading: {color: '#9C27B0'},
   /*
   ** Global CSS
   */
@@ -46,6 +46,7 @@ const config: Configuration = {
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
+    '@nuxtjs/dotenv'
   ],
   /*
   ** Nuxt.js modules
@@ -57,9 +58,11 @@ const config: Configuration = {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: 'https://contrat.api.maelkerichard.com/'
-      }
+        // httpEndpoint: 'https://contrat.api.maelkerichard.com/',
+        httpEndpoint: 'http://localhost:4000/'
+      },
     }
+
   },
   /*
   ** vuetify module configuration

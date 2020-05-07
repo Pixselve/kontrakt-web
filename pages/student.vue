@@ -51,13 +51,13 @@
 
     <v-row>
       <v-col>
-        <h1>Les contrats précédents</h1>
+        <h1>Les contrats</h1>
       </v-col>
     </v-row>
     <v-divider></v-divider>
     <v-row>
 
-      <v-col cols="12" sm="12" md="6" lg="4" xl="3" v-for="contract in laterContracts" :key="contract.id">
+      <v-col cols="12" sm="12" md="6" lg="4" xl="3" v-for="contract in contracts" :key="contract.id">
         <contract-card-with-popup :editable="false" :contract="contract"></contract-card-with-popup>
       </v-col>
 
@@ -68,13 +68,13 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component }                              from 'vue-property-decorator';
-  import ContactPopup                                    from "~/components/ContractPopup.vue";
-  import SkillsTable                                     from "~/components/SkillsTable.vue";
-  import ContractCard                                    from "~/components/ContractCard.vue";
-  import { contractsStore, studentsStore, studentStore } from "~/utils/store-accessor";
-  import ContractCardWithPopup                           from "~/components/ContractCardWithPopup.vue";
-  import AwaitingFinishContractCard                      from "~/components/AwaitingFinishContractCard.vue";
+  import { Component, Vue }               from 'vue-property-decorator';
+  import ContactPopup                     from "~/components/ContractPopup.vue";
+  import SkillsTable                      from "~/components/SkillsTable.vue";
+  import ContractCard                     from "~/components/ContractCard.vue";
+  import { contractsStore, studentStore } from "~/utils/store-accessor";
+  import ContractCardWithPopup            from "~/components/ContractCardWithPopup.vue";
+  import AwaitingFinishContractCard       from "~/components/AwaitingFinishContractCard.vue";
 
   @Component({
     components: {

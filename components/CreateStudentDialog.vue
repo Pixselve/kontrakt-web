@@ -1,7 +1,10 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="500">
     <template v-slot:activator="{on}">
-      <v-btn color="primary" v-on="on">Ajouter un élève</v-btn>
+      <slot v-bind="{on}">
+        <v-btn color="primary" v-on="on">Ajouter un élève</v-btn>
+      </slot>
+
     </template>
     <v-card>
       <v-form ref="form" @submit.prevent="submit">
@@ -23,8 +26,8 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component, Ref } from 'vue-property-decorator';
-  import { studentsStore }       from "~/utils/store-accessor";
+  import { Component, Ref, Vue } from 'vue-property-decorator';
+  import { studentsStore } from "~/utils/store-accessor";
 
   @Component({})
   export default class CreateStudentDialog extends Vue {
@@ -49,7 +52,7 @@
       try {
         await studentsStore.addStudent(this.studentData);
         this.close();
-      } catch ( e ) {
+      } catch (e) {
         console.error(e);
       } finally {
         this.loading = false;

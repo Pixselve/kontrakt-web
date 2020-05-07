@@ -23,20 +23,20 @@
     <v-tabs-items v-model="tab">
       <v-tab-item>
         <v-container>
-          <v-row>
-            <v-col cols="12" v-if="todayContract">
-              <h1>Le contrat du {{todayContractDate}}</h1>
-              <skills-table editable :skills="todayContract.skills"></skills-table>
-            </v-col>
-            <v-col v-else>
-              <h1>Pas de contrat aujourd'hui</h1>
-            </v-col>
-          </v-row>
+          <!--          <v-row>-->
+          <!--            <v-col cols="12" v-if="todayContract">-->
+          <!--              <h1>Le contrat du {{todayContractDate}}</h1>-->
+          <!--              <skills-table editable :skills="todayContract.skills"></skills-table>-->
+          <!--            </v-col>-->
+          <!--            <v-col v-else>-->
+          <!--              <h1>Pas de contrat aujourd'hui</h1>-->
+          <!--            </v-col>-->
+          <!--          </v-row>-->
 
-          <h1>Les contrats précédents</h1>
+          <h1>Les contrats</h1>
           <v-divider></v-divider>
           <v-row>
-            <v-col cols="12" sm="12" md="6" lg="4" xl="3" v-for="contract in laterContracts" :key="contract.id">
+            <v-col cols="12" sm="12" md="6" lg="4" xl="3" v-for="contract in contracts" :key="contract.id">
               <contract-card-with-popup :editable="true" :contract="contract"></contract-card-with-popup>
             </v-col>
           </v-row>
@@ -54,15 +54,13 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component }                                                      from 'vue-property-decorator';
-  import { $apollo }                                                             from "~/utils/getGraphQLClient";
-  import CheckIfStudentExistsMutationGQL
-                                                                                 from "~/apollo/mutations/CheckIfStudentExists.graphql";
-  import { CheckIfStudentExistsMutation, CheckIfStudentExistsMutationVariables } from "~/types/types";
-  import SkillsTable                                                             from "~/components/SkillsTable.vue";
-  import { contractsStore, studentStore }                                        from "~/utils/store-accessor";
-  import ContractCardWithPopup
-                                                                                 from "~/components/ContractCardWithPopup.vue";
+  import { Component, Vue }                        from 'vue-property-decorator';
+  import { $apollo }                               from "~/utils/getGraphQLClient";
+  import CheckIfStudentExistsMutationGQL           from "~/apollo/mutations/CheckIfStudentExists.graphql";
+  import { CheckIfStudentExistsMutationVariables } from "~/types/types";
+  import SkillsTable                               from "~/components/SkillsTable.vue";
+  import { contractsStore, studentStore }          from "~/utils/store-accessor";
+  import ContractCardWithPopup                     from "~/components/ContractCardWithPopup.vue";
 
   @Component({
     async validate({ params }): Promise<boolean> {
@@ -92,6 +90,10 @@
 
     student = studentStore.student;
 
+
+    get contracts() {
+      return contractsStore.getContracts;
+    }
 
     get todayContract() {
       return contractsStore.todayContract;

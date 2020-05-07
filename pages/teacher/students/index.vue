@@ -41,7 +41,8 @@
     head: () => ({
       title: "Les élèves"
     }),
-    async asyncData() {
+    async asyncData(ctx) {
+      ctx.redirect("/beta/teacher/students")
       await studentsStore.fetchStudents();
     },
     components: {

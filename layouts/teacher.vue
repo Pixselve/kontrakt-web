@@ -4,7 +4,7 @@
       <nuxt/>
 
     </v-content>
-    <v-bottom-navigation app grow>
+    <v-bottom-navigation color="secondary" app grow>
       <v-btn to="/teacher/students">
         <span>Élèves</span>
         <v-icon>mdi-account-group</v-icon>

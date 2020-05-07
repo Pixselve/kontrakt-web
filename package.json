@@ -9,7 +9,8 @@
     "build": "nuxt-ts build",
     "generate": "nuxt-ts generate",
     "start": "nuxt-ts start",
-    "generate-types": "graphql-codegen --config codegen.yml"
+    "generate-types": "graphql-codegen --config codegen.yml",
+    "upload-to-google-cloud": "gcloud builds submit --config ./cloud-build.yml"
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^0.4.5",
@@ -20,7 +21,8 @@
     "core-js": "2",
     "nuxt": "^2.12.2",
     "utf-8-validate": "^5.0.2",
-    "vue-property-decorator": "^8.4.1"
+    "vue-property-decorator": "^8.4.1",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.13.3",
@@ -29,6 +31,7 @@
     "@graphql-codegen/typescript-operations": "^1.13.3",
     "@nuxt/typescript-build": "^0.6.5",
     "@nuxtjs/vuetify": "^1.0.0",
-    "vuex-module-decorators": "^0.16.1"
+    "vuex-module-decorators": "^0.16.1",
+    "@nuxtjs/dotenv": "^1.4.1"
   }
 }

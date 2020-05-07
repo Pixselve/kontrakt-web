@@ -6,8 +6,12 @@
 
       </v-col>
       <v-col>
+        <v-btn color="primary" @click="generateSheetFile">Télécharger le fichier tableur</v-btn>
+      </v-col>
+      <v-col>
         <CreateContractDialog/>
       </v-col>
+
     </v-row>
     <v-row>
       <v-col>
@@ -26,6 +30,8 @@
   import CreateContractDialog              from "~/components/CreateContractDialog.vue";
   import { contractsStore, studentsStore } from "~/utils/store-accessor";
   import ContractExpansionPanel            from "~/components/ContractExpansionPanel.vue";
+  import GetSheetFileQueryGQL              from "~/apollo/queries/GetSheetFile.graphql";
+  import { GetSheetFileQuery }             from "~/types/types";
 
   @Component({
     components: { CreateContractDialog, ContractExpansionPanel },
@@ -40,6 +46,15 @@
   export default class TeacherContractsPage extends Vue {
     get contracts() {
       return contractsStore.getContracts;
+    }
+
+
+    async generateSheetFile() {
+      const { data }: { data: GetSheetFileQuery } = await this.$apollo.query({
+        query: GetSheetFileQueryGQL
+      });
+
+      window.open(data.contractsToExcel, "_blank");
     }
 
   }
