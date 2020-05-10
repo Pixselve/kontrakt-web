@@ -26,12 +26,12 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component }                from 'vue-property-decorator';
-  import CreateContractDialog              from "~/components/CreateContractDialog.vue";
-  import { contractsStore, studentsStore } from "~/utils/store-accessor";
-  import ContractExpansionPanel            from "~/components/ContractExpansionPanel.vue";
-  import GetSheetFileQueryGQL              from "~/apollo/queries/GetSheetFile.graphql";
-  import { GetSheetFileQuery }             from "~/types/types";
+  import { Component, Vue } from 'vue-property-decorator';
+  import CreateContractDialog from "~/components/CreateContractDialog.vue";
+  import { contractsStore } from "~/utils/store-accessor";
+  import ContractExpansionPanel from "~/components/ContractExpansionPanel.vue";
+  import GetSheetFileQueryGQL from "~/apollo/queries/GetSheetFile.graphql";
+  import { GetSheetFileQuery } from "~/types/types";
 
   @Component({
     components: { CreateContractDialog, ContractExpansionPanel },
@@ -39,7 +39,8 @@
     head: () => ({
       title: "Les contrats"
     }),
-    async asyncData() {
+    async asyncData({ redirect }) {
+      redirect("/beta/teacher/contracts");
       await contractsStore.fetchContracts();
     }
   })

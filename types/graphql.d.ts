@@ -62,6 +62,24 @@ declare module '*/LoginTeacher.graphql' {
 }
     
 
+declare module '*/ContractByDate.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const ContractByDate: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/ContractsDatesOnly.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const ContractsDatesOnly: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/FetchContract.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

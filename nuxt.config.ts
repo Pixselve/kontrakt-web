@@ -1,36 +1,36 @@
-import {Configuration} from '@nuxt/types';
-
+import { Configuration } from "@nuxt/types";
 
 const config: Configuration = {
-  mode: 'universal',
+  mode: "universal",
   /*
-  ** Headers of the page
-  */
+   ** Headers of the page
+   */
   head: {
-    titleTemplate: '%s - Kontrakt',
+    titleTemplate: "%s - Kontrakt",
     title: "",
     meta: [
-      {charset: 'utf-8'},
-      {name: 'viewport', content: 'width=device-width, initial-scale=1'},
-      {hid: 'description', name: 'description', content: "Gerez vos contrats de travail en toute simplicité"}
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      {
+        hid: "description",
+        name: "description",
+        content: "Gerez vos contrats de travail en toute simplicité"
+      }
     ],
     link: []
   },
   /*
-  ** Customize the progress-bar color
-  */
-  loading: {color: '#9C27B0'},
+   ** Customize the progress-bar color
+   */
+  loading: { color: "#9C27B0" },
   /*
-  ** Global CSS
-  */
+   ** Global CSS
+   */
   css: [],
   /*
-  ** Plugins to load before mounting the App
-  */
-  plugins: [
-    '@plugins/apollo-accessor',
-    '@plugins/filters'
-  ],
+   ** Plugins to load before mounting the App
+   */
+  plugins: ["@plugins/apollo-accessor", "@plugins/filters"],
   pwa: {
     manifest: {
       name: "Kontrakt - Contrats de travail ",
@@ -41,35 +41,27 @@ const config: Configuration = {
     }
   },
   /*
-  ** Nuxt.js dev-modules
-  */
-  buildModules: [
-    '@nuxt/typescript-build',
-    '@nuxtjs/vuetify',
-    '@nuxtjs/dotenv'
-  ],
+   ** Nuxt.js dev-modules
+   */
+  buildModules: ["@nuxt/typescript-build", "@nuxtjs/vuetify", "@nuxtjs/dotenv"],
   /*
-  ** Nuxt.js modules
-  */
-  modules: [
-    '@nuxtjs/pwa',
-    "@nuxtjs/apollo"
-  ],
+   ** Nuxt.js modules
+   */
+  modules: ["@nuxtjs/pwa", "@nuxtjs/apollo"],
   apollo: {
     clientConfigs: {
       default: {
-        // httpEndpoint: 'https://contrat.api.maelkerichard.com/',
-        httpEndpoint: 'http://localhost:4000/'
-      },
+        httpEndpoint: "https://contrat.api.maelkerichard.com/"
+        // httpEndpoint: 'http://localhost:4000/'
+      }
     }
-
   },
   /*
-  ** vuetify module configuration
-  ** https://github.com/nuxt-community/vuetify-module
-  */
+   ** vuetify module configuration
+   ** https://github.com/nuxt-community/vuetify-module
+   */
   vuetify: {
-    customVariables: ['~/assets/variables.scss'],
+    customVariables: ["~/assets/variables.scss"],
     theme: {
       themes: {
         light: {
@@ -79,20 +71,18 @@ const config: Configuration = {
       },
       themeCache: {
         get: (key: string) => localStorage.getItem(key),
-        set: (key: string, value: string) => localStorage.setItem(key, value),
+        set: (key: string, value: string) => localStorage.setItem(key, value)
       }
-
     }
   },
   /*
-  ** Build configuration
-  */
+   ** Build configuration
+   */
   build: {
     /*
-    ** You can extend webpack config here
-    */
-    extend(config, ctx) {
-    },
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {}
   },
   server: {
     host: "0.0.0.0",

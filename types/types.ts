@@ -573,8 +573,8 @@ export type SkillToStudent = {
   mark: Mark;
   skillId: Scalars['Int'];
   studentId: Scalars['Int'];
-  skill: Skill;
-  student: Student;
+  skill?: Maybe<Skill>;
+  student?: Maybe<Student>;
 };
 
 export type SkillToStudentCreateManyWithoutSkillInput = {
@@ -981,6 +981,38 @@ export type LoginTeacherMutation = (
   ) }
 );
 
+export type ContractByDateQueryVariables = {
+  date: Scalars['DateTime'];
+};
+
+
+export type ContractByDateQuery = (
+  { __typename?: 'Query' }
+  & { contracts: Array<(
+    { __typename?: 'Contract' }
+    & Pick<Contract, 'id'>
+    & { skills?: Maybe<Array<(
+      { __typename?: 'Skill' }
+      & Pick<Skill, 'id' | 'name'>
+      & { skillToStudents?: Maybe<Array<(
+        { __typename?: 'SkillToStudent' }
+        & Pick<SkillToStudent, 'id' | 'mark'>
+      )>> }
+    )>> }
+  )> }
+);
+
+export type ContractsDatesOnlyQueryVariables = {};
+
+
+export type ContractsDatesOnlyQuery = (
+  { __typename?: 'Query' }
+  & { contracts: Array<(
+    { __typename?: 'Contract' }
+    & Pick<Contract, 'date'>
+  )> }
+);
+
 export type FetchContractQueryVariables = {
   id: Scalars['Int'];
 };
@@ -997,10 +1029,10 @@ export type FetchContractQuery = (
       & { skillToStudents?: Maybe<Array<(
         { __typename?: 'SkillToStudent' }
         & Pick<SkillToStudent, 'id' | 'mark'>
-        & { student: (
+        & { student?: Maybe<(
           { __typename?: 'Student' }
           & Pick<Student, 'id' | 'firstName' | 'lastName'>
-        ) }
+        )> }
       )>> }
     )>> }
   )> }
@@ -1055,10 +1087,10 @@ export type FetchStudentQuery = (
     & { skillToStudents?: Maybe<Array<(
       { __typename?: 'SkillToStudent' }
       & Pick<SkillToStudent, 'mark'>
-      & { skill: (
+      & { skill?: Maybe<(
         { __typename?: 'Skill' }
         & Pick<Skill, 'id'>
-      ) }
+      )> }
     )>> }
   )> }
 );

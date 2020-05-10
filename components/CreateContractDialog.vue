@@ -6,13 +6,17 @@
     v-model="dialog"
   >
     <template v-slot:activator="{ on }">
-      <v-btn
-        color="primary"
-        dark
-        v-on="on"
-      >
-        Ajouter un contrat
-      </v-btn>
+      <slot v-bind="{on}">
+        <v-btn
+          color="primary"
+          dark
+          v-on="on"
+        >
+          Ajouter un contrat
+        </v-btn>
+      </slot>
+
+
     </template>
 
     <v-card :disabled="loading" :loading="loading" tile>
@@ -73,9 +77,9 @@
   </v-dialog>
 </template>
 <script lang="ts">
-  import { Vue, Component } from 'vue-property-decorator';
-  import EditSkillDialog    from "~/components/EditSkillDialog.vue";
-  import CreateSkillDialog  from "~/components/CreateSkillDialog.vue";
+  import { Component, Vue } from 'vue-property-decorator';
+  import EditSkillDialog from "~/components/EditSkillDialog.vue";
+  import CreateSkillDialog from "~/components/CreateSkillDialog.vue";
   import { contractsStore } from "~/utils/store-accessor";
   //TODO - Page title
   @Component({
@@ -114,8 +118,10 @@
       try {
         this.loading = true;
         await contractsStore.addContract({ date: this.date, skills: this.skills });
+        //TODO
+        alert("Il faut actualiser la page pour voir les changements (pour le moment)...");
         this.close();
-      } catch ( e ) {
+      } catch (e) {
         alert("ERROR");
         console.error({ e });
       } finally {
