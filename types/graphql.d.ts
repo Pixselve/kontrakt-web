@@ -62,6 +62,24 @@ declare module '*/LoginTeacher.graphql' {
 }
     
 
+declare module '*/LoginStudent.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const LoginStudent: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/LoginStudentOld.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const LoginStudentOld: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/ContractByDate.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -119,7 +137,7 @@ declare module '*/FetchStudent.graphql' {
 declare module '*/FetchStudents.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  export const fetchStudents: DocumentNode;
+  export const FetchStudents: DocumentNode;
 
   export default defaultDocument;
 }
@@ -138,6 +156,15 @@ declare module '*/GetSheetFile.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const GetSheetFile: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/Me.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const Me: DocumentNode;
 
   export default defaultDocument;
 }

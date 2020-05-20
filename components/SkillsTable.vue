@@ -15,10 +15,10 @@
   </v-simple-table>
 </template>
 <script lang="ts">
-  import { Vue, Component, Prop }        from 'vue-property-decorator';
-  import { Mark, Skill, SkillToStudent } from "~/types/types";
-  import SkillTableEntry                 from "~/components/SkillTableEntry.vue";
-  import { studentStore }                from "~/utils/store-accessor";
+  import { Component, Prop, Vue } from 'vue-property-decorator';
+  import { Skill } from "~/types/types";
+  import SkillTableEntry from "~/components/SkillTableEntry.vue";
+  import { studentStore } from "~/utils/store-accessor";
 
   @Component({
     components: { SkillTableEntry }
@@ -28,7 +28,7 @@
     @Prop({ type: Boolean, default: () => false }) readonly editable!: boolean;
 
     get studentSkills() {
-      return studentStore.student?.skillToStudents;
+      return studentStore.skillToStudents;
     }
 
   }

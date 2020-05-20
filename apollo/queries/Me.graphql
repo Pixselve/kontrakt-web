@@ -1,0 +1,19 @@
+query Me {
+  me {
+    student {
+      id
+      firstName
+      lastName
+      skillToStudents {
+        id
+        mark
+        skill {
+          id
+        }
+      }
+    }
+    teacher {
+      email
+    }
+  }
+}

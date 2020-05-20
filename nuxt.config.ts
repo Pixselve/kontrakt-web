@@ -47,14 +47,15 @@ const config: Configuration = {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/pwa", "@nuxtjs/apollo"],
+  modules: ["@nuxtjs/pwa", "@nuxtjs/apollo", "cookie-universal-nuxt"],
   apollo: {
     clientConfigs: {
       default: {
         httpEndpoint: "https://contrat.api.maelkerichard.com/"
         // httpEndpoint: 'http://localhost:4000/'
       }
-    }
+    },
+    tokenName: "token"
   },
   /*
    ** vuetify module configuration
@@ -82,7 +83,8 @@ const config: Configuration = {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {
+    }
   },
   server: {
     host: "0.0.0.0",

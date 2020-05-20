@@ -27,7 +27,10 @@
       "@types/node",
       "@nuxt/types",
       "vuetify",
-      "vue-apollo/types"
+      "vue-apollo/types",
+      "cookie-universal-nuxt",
+      "@nuxtjs/apollo",
+      "vue-cli-plugin-apollo"
     ]
   },
   "exclude": [

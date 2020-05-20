@@ -20,7 +20,7 @@ import {Mark} from "~/types/types";
 <script lang="ts">
   import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
   import { Mark, Skill, SkillToStudent } from "~/types/types";
-  import { studentStore }                from "~/utils/store-accessor";
+  import { studentStore } from "~/utils/store-accessor";
 
   @Component({})
   export default class SkillTableEntry extends Vue {
@@ -99,7 +99,7 @@ import {Mark} from "~/types/types";
     }
 
     get textAndIcon() {
-      const studentSkill = this.studentSkills.find(studentSkillToFound => studentSkillToFound.skill.id == this.skill.id);
+      const studentSkill = this.studentSkills.find(studentSkillToFound => studentSkillToFound.skill?.id == this.skill.id);
       return this.markToIconAndText(studentSkill ? studentSkill.mark : Mark.Todo);
     }
 

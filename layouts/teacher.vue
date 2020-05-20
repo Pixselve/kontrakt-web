@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component } from 'vue-property-decorator';
+  import { Component, Vue } from 'vue-property-decorator';
 
   @Component({
     middleware: "teacherLogged"
@@ -31,6 +31,7 @@
     // Logout the teacher
     async logout() {
       await this.$apolloHelpers.onLogout();
+      this.$cookies.remove("type");
       await this.$router.push("/teacher/login");
     }
   }

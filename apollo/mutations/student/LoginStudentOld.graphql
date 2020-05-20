@@ -1,0 +1,16 @@
+mutation LoginStudentOld($id: Float!) {
+  loginStudentOld(id: $id) {
+    token
+    student {
+      id
+      firstName
+      lastName
+      skillToStudents {
+        mark
+        skill {
+          id
+        }
+      }
+    }
+  }
+}

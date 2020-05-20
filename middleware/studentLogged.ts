@@ -1,11 +1,12 @@
-import { Middleware }                  from '@nuxt/types';
-import { studentsStore, studentStore } from "~/utils/store-accessor";
+import { Middleware } from "@nuxt/types";
 
-const studentLogged: Middleware = (context) => {
-  if (studentStore.studentId === null) {
-    return context.redirect("/login");
+const studentLogged: Middleware = ({ app, redirect }) => {
+  if (
+    app.$cookies.get("type") !== "STUDENT" ||
+    !app.$apolloHelpers.getToken()
+  ) {
+    redirect("/login");
   }
-
 };
 
 export default studentLogged;

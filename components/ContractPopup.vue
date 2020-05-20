@@ -4,12 +4,13 @@
       <slot v-bind:on="on"></slot>
     </template>
     <v-card>
-<!--      <v-progress-linear color="orange" value="50"></v-progress-linear>-->
+      <!--      <v-progress-linear color="orange" value="50"></v-progress-linear>-->
       <v-card-title>
         <v-row align-content="center" no-gutters justify="space-between">
-          <v-col>Contrat du {{new Date(contract.date).toLocaleDateString("fr-FR", {day: "numeric", month: "long"})}}</v-col>
+          <v-col>Contrat du {{new Date(contract.date).toLocaleDateString("fr-FR", {day: "numeric", month: "long"})}}
+          </v-col>
           <v-col>
-<!--            <div class="text-right orange&#45;&#45;text overline">50% complété</div>-->
+            <!--            <div class="text-right orange&#45;&#45;text overline">50% complété</div>-->
           </v-col>
         </v-row>
       </v-card-title>
@@ -28,10 +29,10 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component, Ref, Prop } from 'vue-property-decorator';
-  import SkillsTable                   from "~/components/SkillsTable.vue";
-  import { Contract }                  from "~/types/types";
-  import { studentStore }              from "~/utils/store-accessor";
+  import { Component, Prop, Vue } from 'vue-property-decorator';
+  import SkillsTable from "~/components/SkillsTable.vue";
+  import { Contract } from "~/types/types";
+  import { studentStore } from "~/utils/store-accessor";
 
   @Component({
     components: {

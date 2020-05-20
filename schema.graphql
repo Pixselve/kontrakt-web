@@ -37,6 +37,8 @@ type Mutation {
   deleteOneSkillStatus(where: SkillStatusWhereUniqueInput!): SkillStatus
   deleteStudent(data: DeleteStudentInput!): Student!
   editOrCreateSkillToStudent(data: EditOrCreateSkillToStudentInput!): SkillToStudent!
+  loginStudent(username: Int!): StudentAuthPayload!
+  loginStudentOld(id: Float!): StudentAuthPayload!
   loginTeacher(data: LoginTeacherInput!): AuthPayload!
   removeOneContract(data: RemoveOneContractInput!): Contract!
   updateOneContract(data: ContractUpdateInput!, where: ContractWhereUniqueInput!): Contract
@@ -51,6 +53,7 @@ type Query {
   contract(where: ContractWhereUniqueInput!): Contract
   contracts(after: ContractWhereUniqueInput, before: ContractWhereUniqueInput, first: Int, last: Int, orderBy: ContractOrderByInput, skip: Int, where: ContractWhereInput): [Contract!]!
   contractsToExcel: String!
+  me: User!
   skill(where: SkillWhereUniqueInput!): Skill
   skillStatus(where: SkillStatusWhereUniqueInput!): SkillStatus
   skillStatuses(after: SkillStatusWhereUniqueInput, before: SkillStatusWhereUniqueInput, first: Int, last: Int, orderBy: SkillStatusOrderByInput, skip: Int, where: SkillStatusWhereInput): [SkillStatus!]!
@@ -78,9 +81,9 @@ type SkillStatus {
 type SkillToStudent {
   id: Int!
   mark: Mark!
-  skill: Skill!
+  skill: Skill
   skillId: Int!
-  student: Student!
+  student: Student
   studentId: Int!
 }
 
@@ -89,11 +92,21 @@ type Student {
   id: Int!
   lastName: String!
   skillToStudents(after: SkillToStudentWhereUniqueInput, before: SkillToStudentWhereUniqueInput, first: Int, last: Int, orderBy: SkillToStudentOrderByInput, skip: Int, where: SkillToStudentWhereInput): [SkillToStudent!]
+  username: Int!
+}
+
+type StudentAuthPayload {
+  student: Student!
+  token: String!
 }
 
 type Teacher {
   email: String!
-  password: String!
+}
+
+type User {
+  student: Student
+  teacher: Teacher
 }
 
 enum Mark {

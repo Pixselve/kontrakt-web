@@ -59,7 +59,7 @@
   import CheckIfStudentExistsMutationGQL           from "~/apollo/mutations/CheckIfStudentExists.graphql";
   import { CheckIfStudentExistsMutationVariables } from "~/types/types";
   import SkillsTable                               from "~/components/SkillsTable.vue";
-  import { contractsStore, studentStore }          from "~/utils/store-accessor";
+  import { contractsStore, studentStore } from "~/utils/store-accessor";
   import ContractCardWithPopup                     from "~/components/ContractCardWithPopup.vue";
 
   @Component({

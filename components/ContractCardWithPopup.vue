@@ -13,11 +13,11 @@
 </template>
 
 <script lang="ts">
-  import { Vue, Component, Ref, Prop }       from 'vue-property-decorator';
-  import { Contract, Skill, SkillToStudent } from "~/types/types";
-  import ContractCard                        from "~/components/ContractCard.vue";
-  import ContractPopup                       from "~/components/ContractPopup.vue";
-  import { studentStore }                    from "~/utils/store-accessor";
+  import { Component, Prop, Ref, Vue } from 'vue-property-decorator';
+  import { Contract } from "~/types/types";
+  import ContractCard from "~/components/ContractCard.vue";
+  import ContractPopup from "~/components/ContractPopup.vue";
+  import { studentStore } from "~/utils/store-accessor";
 
   @Component({
     components: {
@@ -34,7 +34,7 @@
     popup = false;
 
     get studentSkills() {
-      return studentStore.student?.skillToStudents;
+      return studentStore.skillToStudents;
     }
 
 

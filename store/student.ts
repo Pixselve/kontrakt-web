@@ -1,51 +1,47 @@
-import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
+import { Action, Module, Mutation, MutationAction, VuexModule } from "vuex-module-decorators";
 import {
   DeleteStudentMutationVariables,
   EditSkillToStudentMutationVariables,
   FetchContractsAwaitingFinishStudentQuery,
   FetchContractsAwaitingFinishStudentQueryVariables,
-  FetchStudentQuery, FetchStudentsQuery,
-  Mark, Maybe, Skill,
-  SkillToStudent,
-  Student
-}                                                               from "~/types/types";
-import { $apollo }                                              from "~/utils/getGraphQLClient";
-import FetchStudentQueryGQL
-                                                                from "~/apollo/queries/FetchStudent.graphql";
-import DeleteStudentMutationGQL                                 from "~/apollo/mutations/DeleteStudent.graphql";
+  FetchStudentQuery,
+  Mark,
+  Maybe,
+  MeQuery,
+  Skill,
+  SkillToStudent
+} from "~/types/types";
+import { $apollo } from "~/utils/getGraphQLClient";
+import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
+import DeleteStudentMutationGQL from "~/apollo/mutations/DeleteStudent.graphql";
+import MeQueryGQL from "~/apollo/queries/Me.graphql";
 
+import EditSkillToStudentMutationGQL from "~/apollo/mutations/EditSkillToStudent.graphql";
 
-import EditSkillToStudentMutationGQL
-  from "~/apollo/mutations/EditSkillToStudent.graphql";
-
-
-import FetchContractsAwaitingFinishStudentQueryGQL
-  from "~/apollo/queries/FetchContractsAwaitingFinishStudent.graphql";
+import FetchContractsAwaitingFinishStudentQueryGQL from "~/apollo/queries/FetchContractsAwaitingFinishStudent.graphql";
 
 @Module({
-  name: 'student',
+  name: "student",
   stateFactory: true,
-  namespaced: true,
+  namespaced: true
 })
-export default class StudentModule extends VuexModule {
+export default class TeacherStudentModule extends VuexModule {
   id: number | null = null;
   firstName: string | null = null;
   lastName: string | null = null;
-  skillToStudents: Maybe<Array<(
-    { __typename?: 'SkillToStudent' }
-    & Pick<SkillToStudent, 'mark'>
-    & {
-    skill: (
-      { __typename?: 'Skill' }
-      & Pick<Skill, 'id'>
-      )
-  }
-    )>> = [];
+  skillToStudents: Array<{ __typename?: "SkillToStudent" } & Pick<SkillToStudent, "mark"> & {
+    skill?: Maybe<{ __typename?: "Skill" } & Pick<Skill, "id">>;
+  }> = [];
   contractsNeededToBeFinished: FetchContractsAwaitingFinishStudentQuery["contracts"] = [];
 
   get student(): FetchStudentQuery["student"] | null {
     if (this.id && this.firstName && this.lastName && this.skillToStudents) {
-      return { firstName: this.firstName, lastName: this.lastName, id: this.id, skillToStudents: this.skillToStudents };
+      return {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        id: this.id,
+        skillToStudents: this.skillToStudents
+      };
     } else {
       return null;
     }
@@ -61,10 +57,11 @@ export default class StudentModule extends VuexModule {
 
   get skillsCountNeededToBeFinished() {
     let result = 0;
-    this.contractsNeededToBeFinished.forEach(contract => contract.skills ? result += contract.skills.length : result += 0);
+    this.contractsNeededToBeFinished.forEach(contract =>
+      contract.skills ? (result += contract.skills.length) : (result += 0)
+    );
     return result;
   }
-
 
   @Mutation
   /**
@@ -79,7 +76,7 @@ export default class StudentModule extends VuexModule {
   }
 
   @Action
-  async editMarkSkillToStudent(data: { mark: Mark, skillId: number }) {
+  async editMarkSkillToStudent(data: { mark: Mark; skillId: number }) {
     await $apollo.mutate({
       mutation: EditSkillToStudentMutationGQL,
       variables: {
@@ -110,7 +107,6 @@ export default class StudentModule extends VuexModule {
       this.lastName = lastName;
       this.skillToStudents = skillToStudents;
     }
-
   }
 
   @Action
@@ -125,15 +121,36 @@ export default class StudentModule extends VuexModule {
     this.context.commit("setStudent", data.student);
   }
 
-
-  @MutationAction({ mutate: ['contractsNeededToBeFinished'] })
-  async fetchAwaitingToFinishContracts(id: number) {
-    const { data }: { data: FetchContractsAwaitingFinishStudentQuery } = await $apollo.query({
-      query: FetchContractsAwaitingFinishStudentQueryGQL,
-      variables: {
-        studentId: id
-      } as FetchContractsAwaitingFinishStudentQueryVariables
+  @MutationAction({
+    mutate: ["id", "firstName", "lastName", "skillToStudents"]
+  })
+  async fetchMe() {
+    const { data }: { data: MeQuery } = await $apollo.query({
+      query: MeQueryGQL,
+      fetchPolicy: "no-cache"
     });
+
+    return {
+      id: data.me.student?.id,
+      firstName: data.me.student?.firstName,
+      lastName: data.me.student?.lastName,
+      skillToStudents: data.me.student?.skillToStudents
+    };
+  }
+
+  @MutationAction({ mutate: ["contractsNeededToBeFinished"] })
+  async fetchAwaitingToFinishContracts(id: number) {
+    const {
+      data
+    }: { data: FetchContractsAwaitingFinishStudentQuery } = await $apollo.query(
+      {
+        query: FetchContractsAwaitingFinishStudentQueryGQL,
+        variables: {
+          studentId: id
+        } as FetchContractsAwaitingFinishStudentQueryVariables
+      }
+    );
     return { contractsNeededToBeFinished: data.contracts };
   }
+
 }

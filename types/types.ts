@@ -239,6 +239,8 @@ export type Mutation = {
   updateOneSkillStatus?: Maybe<SkillStatus>;
   createOneColor: Color;
   deleteOneColor?: Maybe<Color>;
+  loginStudent: StudentAuthPayload;
+  loginStudentOld: StudentAuthPayload;
 };
 
 
@@ -340,6 +342,16 @@ export type MutationDeleteOneColorArgs = {
   where: ColorWhereUniqueInput;
 };
 
+
+export type MutationLoginStudentArgs = {
+  username: Scalars['Int'];
+};
+
+
+export type MutationLoginStudentOldArgs = {
+  id: Scalars['Float'];
+};
+
 export enum OrderByArg {
   Asc = 'asc',
   Desc = 'desc'
@@ -353,6 +365,7 @@ export type Query = {
   skill?: Maybe<Skill>;
   skills: Array<Skill>;
   student?: Maybe<Student>;
+  me: User;
   students: Array<Student>;
   skillStatus?: Maybe<SkillStatus>;
   skillStatuses: Array<SkillStatus>;
@@ -799,9 +812,10 @@ export type StringFilter = {
 
 export type Student = {
    __typename?: 'Student';
-  firstName: Scalars['String'];
   id: Scalars['Int'];
+  firstName: Scalars['String'];
   lastName: Scalars['String'];
+  username: Scalars['Int'];
   skillToStudents?: Maybe<Array<SkillToStudent>>;
 };
 
@@ -814,6 +828,12 @@ export type StudentSkillToStudentsArgs = {
   before?: Maybe<SkillToStudentWhereUniqueInput>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+};
+
+export type StudentAuthPayload = {
+   __typename?: 'StudentAuthPayload';
+  token: Scalars['String'];
+  student: Student;
 };
 
 export type StudentCreateInput = {
@@ -880,12 +900,17 @@ export type StudentWhereUniqueInput = {
 export type Teacher = {
    __typename?: 'Teacher';
   email: Scalars['String'];
-  password: Scalars['String'];
 };
 
 export type TeacherCreateInputCustom = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type User = {
+   __typename?: 'User';
+  teacher?: Maybe<Teacher>;
+  student?: Maybe<Student>;
 };
 
 export type AddStudentMutationVariables = {
@@ -978,6 +1003,56 @@ export type LoginTeacherMutation = (
   & { loginTeacher: (
     { __typename?: 'AuthPayload' }
     & Pick<AuthPayload, 'token'>
+  ) }
+);
+
+export type LoginStudentMutationVariables = {
+  username: Scalars['Int'];
+};
+
+
+export type LoginStudentMutation = (
+  { __typename?: 'Mutation' }
+  & { loginStudent: (
+    { __typename?: 'StudentAuthPayload' }
+    & Pick<StudentAuthPayload, 'token'>
+    & { student: (
+      { __typename?: 'Student' }
+      & Pick<Student, 'id' | 'firstName' | 'lastName'>
+      & { skillToStudents?: Maybe<Array<(
+        { __typename?: 'SkillToStudent' }
+        & Pick<SkillToStudent, 'mark'>
+        & { skill?: Maybe<(
+          { __typename?: 'Skill' }
+          & Pick<Skill, 'id'>
+        )> }
+      )>> }
+    ) }
+  ) }
+);
+
+export type LoginStudentOldMutationVariables = {
+  id: Scalars['Float'];
+};
+
+
+export type LoginStudentOldMutation = (
+  { __typename?: 'Mutation' }
+  & { loginStudentOld: (
+    { __typename?: 'StudentAuthPayload' }
+    & Pick<StudentAuthPayload, 'token'>
+    & { student: (
+      { __typename?: 'Student' }
+      & Pick<Student, 'id' | 'firstName' | 'lastName'>
+      & { skillToStudents?: Maybe<Array<(
+        { __typename?: 'SkillToStudent' }
+        & Pick<SkillToStudent, 'mark'>
+        & { skill?: Maybe<(
+          { __typename?: 'Skill' }
+          & Pick<Skill, 'id'>
+        )> }
+      )>> }
+    ) }
   ) }
 );
 
@@ -1127,4 +1202,29 @@ export type GetSheetFileQueryVariables = {};
 export type GetSheetFileQuery = (
   { __typename?: 'Query' }
   & Pick<Query, 'contractsToExcel'>
+);
+
+export type MeQueryVariables = {};
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me: (
+    { __typename?: 'User' }
+    & { student?: Maybe<(
+      { __typename?: 'Student' }
+      & Pick<Student, 'id' | 'firstName' | 'lastName'>
+      & { skillToStudents?: Maybe<Array<(
+        { __typename?: 'SkillToStudent' }
+        & Pick<SkillToStudent, 'id' | 'mark'>
+        & { skill?: Maybe<(
+          { __typename?: 'Skill' }
+          & Pick<Skill, 'id'>
+        )> }
+      )>> }
+    )>, teacher?: Maybe<(
+      { __typename?: 'Teacher' }
+      & Pick<Teacher, 'email'>
+    )> }
+  ) }
 );

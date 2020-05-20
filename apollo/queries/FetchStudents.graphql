@@ -1,4 +1,4 @@
-query fetchStudents {
+query FetchStudents {
   students(orderBy: {lastName: asc}) {
     id
     firstName
