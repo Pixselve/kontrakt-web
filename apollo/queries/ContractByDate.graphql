@@ -1,5 +1,6 @@
 query ContractByDate($date: DateTime!) {
   contracts(where: {date: {equals: $date}}) {
+    date
     id
     skills {
       id

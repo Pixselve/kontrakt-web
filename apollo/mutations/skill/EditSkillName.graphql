@@ -1,0 +1,16 @@
+mutation EditSkillName($id: Int!, $name: String!) {
+  updateOneSkill(where: {id: $id}, data: {name: $name}) {
+    contract {
+      date
+      id
+      skills {
+        id
+        name
+        skillToStudents {
+          id
+          mark
+        }
+      }
+    }
+  }
+}

@@ -8,15 +8,17 @@
         </h1>
       </v-col>
       <v-col class="text-right">
-        <v-btn color="secondary" @click="generateSheetFile"><v-icon left>mdi-file</v-icon> Télécharger le fichier tableur</v-btn>
+        <v-btn color="secondary" @click="generateSheetFile">
+          <v-icon left>mdi-file</v-icon>
+          Télécharger le fichier tableur
+        </v-btn>
         <create-contract-dialog>
-          <template v-slot="{on}">
+          <template v-slot="{ on }">
             <v-btn color="secondary" v-on="on">
               <v-icon left>mdi-playlist-plus</v-icon>
               Ajouter un contrat
             </v-btn>
           </template>
-
         </create-contract-dialog>
       </v-col>
     </v-row>
@@ -68,6 +70,15 @@
         </v-list>
       </v-col>
       <v-col cols="12">
+        <contract-skill-add-dialog>
+          <template v-slot:default="{on}">
+            <v-btn v-on="on" text color="green">
+              <v-icon left>mdi-playlist-plus</v-icon>
+              Ajouter une compétence
+            </v-btn>
+          </template>
+        </contract-skill-add-dialog>
+
         <v-btn
           :to="`/teacher/contracts/${selectedContract.id}`"
           text
@@ -96,117 +107,98 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from "vue-property-decorator";
-  import { contractsStore } from "~/utils/store-accessor";
-  import {
-    Contract,
-    ContractByDateQuery,
-    ContractByDateQueryVariables,
-    ContractsDatesOnlyQuery,
-    GetSheetFileQuery,
-    Maybe,
-    Skill,
-    SkillToStudent
-  } from "~/types/types";
-  import { $apollo } from "~/utils/getGraphQLClient";
+import { Component, Vue } from "vue-property-decorator";
+import { contractStore } from "~/utils/store-accessor";
+import { ContractsDatesOnlyQuery, GetSheetFileQuery } from "~/types/types";
+import { $apollo } from "~/utils/getGraphQLClient";
 
-  import ContractsDatesOnlyQueryGQL from "~/apollo/queries/ContractsDatesOnly.graphql";
-  import ContractByDateQueryGQL from "~/apollo/queries/ContractByDate.graphql";
-  import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
-  import CreateContractDialog from "~/components/CreateContractDialog.vue";
-  import GetSheetFileQueryGQL from "~/apollo/queries/GetSheetFile.graphql";
+import ContractsDatesOnlyQueryGQL from "~/apollo/queries/ContractsDatesOnly.graphql";
+import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
+import CreateContractDialog from "~/components/CreateContractDialog.vue";
+import GetSheetFileQueryGQL from "~/apollo/queries/GetSheetFile.graphql";
+import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
 
-  @Component({
-    layout: "teacher",
-    async asyncData() {
-      const { data }: { data: ContractsDatesOnlyQuery } = await $apollo.query({
-        query: ContractsDatesOnlyQueryGQL
-      });
-      return { contractsOnlyDates: data.contracts };
-    },
-    components: {
-      ContractSkillListItemTeacherDashboard,
-      CreateContractDialog
-    }
-  })
-  export default class TeacherContractsPageBeta extends Vue {
-    date: null | string = null;
-    selectedContract:
-      | ({ __typename?: "Contract" } & Pick<Contract, "id"> & {
-      skills?: Maybe<Array<{ __typename?: "Skill" } & Pick<Skill, "id" | "name"> & {
-        skillToStudents?: Maybe<Array<{ __typename?: "SkillToStudent" } & Pick<SkillToStudent,
-          "id" | "mark">>>;
-      }>>;
-    })
-      | null = null;
+@Component({
+  layout: "teacher",
+  async asyncData() {
+    const { data }: { data: ContractsDatesOnlyQuery } = await $apollo.query({
+      query: ContractsDatesOnlyQueryGQL
+    });
+    return { contractsOnlyDates: data.contracts };
+  },
+  components: {
+    ContractSkillListItemTeacherDashboard,
+    CreateContractDialog,
+    ContractSkillAddDialog
+  }
+})
+export default class TeacherContractsPageBeta extends Vue {
+  date: null | string = this.alreadyPresentDate;
 
-    contractsOnlyDates: ContractsDatesOnlyQuery["contracts"] = [];
 
-    loading = false;
-    loadingDeletion = false;
-
-    async fetchSelectedContract() {
-      try {
-        this.loading = true;
-        this.selectedContract = null;
-        if (this.date === null) throw new Error("No contract selected");
-        const selectedDate = new Date(this.date);
-        const { data }: { data: ContractByDateQuery } = await $apollo.query({
-          query: ContractByDateQueryGQL,
-          variables: {
-            date: new Date(
-              Date.UTC(
-                selectedDate.getUTCFullYear(),
-                selectedDate.getUTCMonth(),
-                selectedDate.getUTCDate()
-              )
-            )
-          } as ContractByDateQueryVariables
-        });
-        if (data.contracts.length <= 0) throw new Error("Contract not found");
-        this.selectedContract = data.contracts[0];
-      } catch (e) {
-        console.log({ e });
-      } finally {
-        this.loading = false;
-      }
-    }
-
-    allowedDates(date: string): boolean {
-      return !!this.contractsDates.find(
-        contractDate =>
-          contractDate.getDate() === new Date(date).getDate() &&
-          contractDate.getMonth() === new Date(date).getMonth() &&
-          contractDate.getFullYear() === new Date(date).getFullYear()
-      );
-    }
-
-    get contractsDates(): Date[] {
-      return this.contractsOnlyDates.map(
-        contract => new Date(new Date(contract.date).setHours(0, 0, 0, 0))
-      );
-    }
-
-    async deleteContract() {
-      try {
-        if (!this.selectedContract) throw new Error("");
-        this.loadingDeletion = true;
-        await contractsStore.deleteContract(this.selectedContract.id);
-        this.selectedContract = null;
-      } catch (e) {
-        alert("Une erreur est survenue lors de la suppression du contrat");
-        console.log({ e });
-      } finally {
-        this.loadingDeletion = false;
-      }
-    }
-
-    async generateSheetFile() {
-      const { data }: { data: GetSheetFileQuery } = await this.$apollo.query({
-        query: GetSheetFileQueryGQL
-      });
-
-      window.open(data.contractsToExcel, "_blank");
+  get alreadyPresentDate() {
+    if (contractStore?.contract?.date) {
+      return new Date(contractStore.contract?.date).toISOString().replace(/T.+/g, "");
+    } else {
+      return null;
     }
   }
+
+
+  get selectedContract() {
+    return contractStore.contract;
+  }
+
+  contractsOnlyDates: ContractsDatesOnlyQuery["contracts"] = [];
+
+  loading = false;
+  loadingDeletion = false;
+
+  async fetchSelectedContract() {
+    try {
+      this.loading = true;
+      if (this.date === null) throw new Error("NoSelectedContract");
+      await contractStore.fetchContractByDate(new Date(this.date));
+    } catch (e) {
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  allowedDates(date: string): boolean {
+    return !!this.contractsDates.find(
+      contractDate =>
+        contractDate.getDate() === new Date(date).getDate() &&
+        contractDate.getMonth() === new Date(date).getMonth() &&
+        contractDate.getFullYear() === new Date(date).getFullYear()
+    );
+  }
+
+  get contractsDates(): Date[] {
+    return this.contractsOnlyDates.map(
+      contract => new Date(new Date(contract.date).setHours(0, 0, 0, 0))
+    );
+  }
+
+  async deleteContract() {
+    try {
+      if (!this.selectedContract) throw new Error("");
+      this.loadingDeletion = true;
+      await contractStore.deleteContract();
+    } catch (e) {
+      alert("Une erreur est survenue lors de la suppression du contrat");
+      console.log({ e });
+    } finally {
+      this.loadingDeletion = false;
+    }
+  }
+
+  async generateSheetFile() {
+    const { data }: { data: GetSheetFileQuery } = await this.$apollo.query({
+      query: GetSheetFileQueryGQL
+    });
+
+    window.open(data.contractsToExcel, "_blank");
+  }
+}
 </script>

@@ -71,64 +71,62 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from "vue-property-decorator";
-  import ContactPopup from "~/components/ContractPopup.vue";
-  import SkillsTable from "~/components/SkillsTable.vue";
-  import ContractCard from "~/components/ContractCard.vue";
-  import { contractsStore, studentStore } from "~/utils/store-accessor";
-  import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
-  import AwaitingFinishContractCard from "~/components/AwaitingFinishContractCard.vue";
+import { Component, Vue } from "vue-property-decorator";
+import ContactPopup from "~/components/ContractPopup.vue";
+import SkillsTable from "~/components/SkillsTable.vue";
+import ContractCard from "~/components/ContractCard.vue";
+import { contractsStore, studentStore } from "~/utils/store-accessor";
+import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
+import AwaitingFinishContractCard from "~/components/AwaitingFinishContractCard.vue";
 
-  @Component({
-    components: {
-      SkillsTable,
-      ContactPopup,
-      ContractCard,
-      ContractCardWithPopup,
-      AwaitingFinishContractCard
-    },
-    head: () => ({
-      title: "Élève"
-    }),
-    async asyncData() {
-      await contractsStore.fetchContracts();
-      await studentStore.fetchMe();
-      if (studentStore.id) await studentStore.fetchAwaitingToFinishContracts(studentStore.id);
-    },
-    fetchOnServer: true,
-    fetchDelay: 300,
-    middleware: "studentLogged"
-  })
-  export default class StudentPage extends Vue {
-    get isDarkTheme() {
-      return this.$vuetify.theme.dark;
-    }
-
-    toggleTheme() {
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-    }
-
-    async disconnect() {
-      await this.$apolloHelpers.onLogout();
-      this.$cookies.remove("type");
-      await this.$router.push("/login");
-
-    }
-
-    get contractsNeededToBeFinished() {
-      return studentStore.contractsNeededToBeFinished;
-    }
-
-    get skillsCountNeededToBeFinished() {
-      return studentStore.skillsCountNeededToBeFinished;
-    }
-
-    get contracts() {
-      return contractsStore.getContracts;
-    }
-
-    get student() {
-      return studentStore.student;
-    }
+@Component({
+  components: {
+    SkillsTable,
+    ContactPopup,
+    ContractCard,
+    ContractCardWithPopup,
+    AwaitingFinishContractCard
+  },
+  head: () => ({
+    title: "Élève"
+  }),
+  async asyncData() {
+    await contractsStore.fetchContracts();
+    await studentStore.fetchMe();
+    if (studentStore.id) await studentStore.fetchAwaitingToFinishContracts(studentStore.id);
+  },
+  middleware: "studentLogged"
+})
+export default class StudentPage extends Vue {
+  get isDarkTheme() {
+    return this.$vuetify.theme.dark;
   }
+
+  toggleTheme() {
+    this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+  }
+
+  async disconnect() {
+    await this.$apolloHelpers.onLogout();
+    this.$cookies.remove("type");
+    await this.$router.push("/login");
+
+  }
+
+  get contractsNeededToBeFinished() {
+    return studentStore.contractsNeededToBeFinished;
+  }
+
+  get skillsCountNeededToBeFinished() {
+    return studentStore.skillsCountNeededToBeFinished;
+  }
+
+  get contracts() {
+    return contractsStore.getContracts;
+  }
+
+  get student() {
+    return studentStore.student;
+  }
+}
 </script>

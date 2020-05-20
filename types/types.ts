@@ -1006,6 +1006,80 @@ export type LoginTeacherMutation = (
   ) }
 );
 
+export type CreateOneSkillToContractMutationVariables = {
+  name: Scalars['String'];
+  contractID: Scalars['Int'];
+};
+
+
+export type CreateOneSkillToContractMutation = (
+  { __typename?: 'Mutation' }
+  & { createOneSkill: (
+    { __typename?: 'Skill' }
+    & { contract: (
+      { __typename?: 'Contract' }
+      & Pick<Contract, 'date' | 'id'>
+      & { skills?: Maybe<Array<(
+        { __typename?: 'Skill' }
+        & Pick<Skill, 'id' | 'name'>
+        & { skillToStudents?: Maybe<Array<(
+          { __typename?: 'SkillToStudent' }
+          & Pick<SkillToStudent, 'id' | 'mark'>
+        )>> }
+      )>> }
+    ) }
+  ) }
+);
+
+export type DeleteSkillMutationVariables = {
+  id: Scalars['Int'];
+};
+
+
+export type DeleteSkillMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteOneSkill?: Maybe<(
+    { __typename?: 'Skill' }
+    & { contract: (
+      { __typename?: 'Contract' }
+      & Pick<Contract, 'date' | 'id'>
+      & { skills?: Maybe<Array<(
+        { __typename?: 'Skill' }
+        & Pick<Skill, 'id' | 'name'>
+        & { skillToStudents?: Maybe<Array<(
+          { __typename?: 'SkillToStudent' }
+          & Pick<SkillToStudent, 'id' | 'mark'>
+        )>> }
+      )>> }
+    ) }
+  )> }
+);
+
+export type EditSkillNameMutationVariables = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+};
+
+
+export type EditSkillNameMutation = (
+  { __typename?: 'Mutation' }
+  & { updateOneSkill?: Maybe<(
+    { __typename?: 'Skill' }
+    & { contract: (
+      { __typename?: 'Contract' }
+      & Pick<Contract, 'date' | 'id'>
+      & { skills?: Maybe<Array<(
+        { __typename?: 'Skill' }
+        & Pick<Skill, 'id' | 'name'>
+        & { skillToStudents?: Maybe<Array<(
+          { __typename?: 'SkillToStudent' }
+          & Pick<SkillToStudent, 'id' | 'mark'>
+        )>> }
+      )>> }
+    ) }
+  )> }
+);
+
 export type LoginStudentMutationVariables = {
   username: Scalars['Int'];
 };
@@ -1016,18 +1090,6 @@ export type LoginStudentMutation = (
   & { loginStudent: (
     { __typename?: 'StudentAuthPayload' }
     & Pick<StudentAuthPayload, 'token'>
-    & { student: (
-      { __typename?: 'Student' }
-      & Pick<Student, 'id' | 'firstName' | 'lastName'>
-      & { skillToStudents?: Maybe<Array<(
-        { __typename?: 'SkillToStudent' }
-        & Pick<SkillToStudent, 'mark'>
-        & { skill?: Maybe<(
-          { __typename?: 'Skill' }
-          & Pick<Skill, 'id'>
-        )> }
-      )>> }
-    ) }
   ) }
 );
 
@@ -1065,7 +1127,7 @@ export type ContractByDateQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id'>
+    & Pick<Contract, 'date' | 'id'>
     & { skills?: Maybe<Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>

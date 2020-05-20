@@ -62,6 +62,33 @@ declare module '*/LoginTeacher.graphql' {
 }
     
 
+declare module '*/CreateOneSkillToContract.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const CreateOneSkillToContract: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/DeleteSkill.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const DeleteSkill: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/EditSkillName.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const EditSkillName: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/LoginStudent.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
