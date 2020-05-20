@@ -10,7 +10,7 @@
     "generate": "nuxt-ts generate",
     "start": "nuxt-ts start",
     "generate-types": "graphql-codegen --config codegen.yml",
-    "upload-to-google-cloud": "gcloud builds submit --config ./cloud-build.yml"
+    "upload-to-google-cloud": "docker push eu.gcr.io/kontrakt-273811/kontrakt-web:latest"
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^0.4.6",

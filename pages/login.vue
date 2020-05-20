@@ -1,29 +1,9 @@
 <template>
-  <v-form ref="form" @submit.prevent="login">
+  <v-form lazy-validation ref="form" @submit.prevent="login">
     <h1 class="mb-10">Connexion élève</h1>
-    <v-alert type="warning"
-    >À partir du 18 mai, la connexion par prénom et nom de famille sera
-      impossible. Un identifiant vous sera transmis par email dans les plus
-      brefs délais.
-    </v-alert>
-    <v-autocomplete
-      required
-      clearable
-      :rules="rules.input"
-      v-model="selectedStudent"
-      :items="students"
-      outlined
-      prepend-inner-icon="mdi-account"
-      label="Élève"
-    >
-    </v-autocomplete>
-    <v-row align="center">
-      <v-divider></v-divider>
-      <h3 class="mx-5">ou</h3>
-      <v-divider></v-divider>
-    </v-row>
     <v-text-field
       autofocus
+      :rules="rules.input"
       v-model="username"
       type="number"
       class="mt-7"
@@ -49,13 +29,7 @@ import { studentsStore } from "~/utils/store-accessor";
 import { $apollo } from "~/utils/getGraphQLClient";
 
 import LoginStudentMutationGQL from "~/apollo/mutations/student/LoginStudent.graphql";
-import LoginStudentOldMutationGQL from "~/apollo/mutations/student/LoginStudentOld.graphql";
-import {
-  LoginStudentMutation,
-  LoginStudentMutationVariables,
-  LoginStudentOldMutation,
-  LoginStudentOldMutationVariables
-} from "~/types/types";
+import { LoginStudentMutation, LoginStudentMutationVariables } from "~/types/types";
 
 @Component({
   head: () => ({
@@ -70,19 +44,14 @@ export default class LoginPage extends Vue {
   @Ref("form") formRef!: HTMLFormElement;
 
   loading = false;
-  selectedStudent: number | null = null;
   username: string = "";
   rules = {
-    input: [(v: string | null) => v || "Veuillez sélectionner un élève"]
+    input: [(v: string) => v?.length === 6 || "Veuillez entrer un identifiant valide"]
   };
-
   errors: { username: string[] } = {
     username: []
   };
 
-  get students() {
-    return studentsStore.studentsComboboxFormatted;
-  }
 
   /**
    * Login the student
@@ -107,25 +76,6 @@ export default class LoginPage extends Vue {
           await this.$apolloHelpers.onLogin(data.loginStudent.token);
           this.$cookies.set("type", "STUDENT");
           await this.$router.push("/student");
-        }
-      } else {
-        //  The method of authentication used is the user id based on firstName and lastName picker
-        if (this.formRef.validate() && this.selectedStudent) {
-          const {
-            data
-          }: {
-            data?: LoginStudentOldMutation | undefined | null;
-          } = await $apollo.mutate({
-            mutation: LoginStudentOldMutationGQL,
-            variables: {
-              id: this.selectedStudent
-            } as LoginStudentOldMutationVariables
-          });
-          if (data) {
-            await this.$apolloHelpers.onLogin(data?.loginStudentOld.token);
-            this.$cookies.set("type", "STUDENT");
-            await this.$router.push("/student");
-          }
         }
       }
     } catch (e) {

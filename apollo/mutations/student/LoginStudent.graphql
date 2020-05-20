@@ -1,16 +1,5 @@
 mutation LoginStudent($username: Int!) {
   loginStudent(username: $username) {
     token
-    student {
-      id
-      firstName
-      lastName
-      skillToStudents {
-        mark
-        skill {
-          id
-        }
-      }
-    }
   }
 }
