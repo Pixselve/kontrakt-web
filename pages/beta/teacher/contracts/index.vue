@@ -71,7 +71,7 @@
       </v-col>
       <v-col cols="12">
         <contract-skill-add-dialog>
-          <template v-slot:default="{on}">
+          <template v-slot:default="{ on }">
             <v-btn v-on="on" text color="green">
               <v-icon left>mdi-playlist-plus</v-icon>
               Ajouter une compétence
@@ -108,11 +108,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { contractStore } from "~/utils/store-accessor";
-import { ContractsDatesOnlyQuery, GetSheetFileQuery } from "~/types/types";
-import { $apollo } from "~/utils/getGraphQLClient";
-
-import ContractsDatesOnlyQueryGQL from "~/apollo/queries/ContractsDatesOnly.graphql";
+import { contractsStore, contractStore } from "~/utils/store-accessor";
+import { GetSheetFileQuery } from "~/types/types";
 import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
 import CreateContractDialog from "~/components/CreateContractDialog.vue";
 import GetSheetFileQueryGQL from "~/apollo/queries/GetSheetFile.graphql";
@@ -121,10 +118,11 @@ import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
 @Component({
   layout: "teacher",
   async asyncData() {
-    const { data }: { data: ContractsDatesOnlyQuery } = await $apollo.query({
-      query: ContractsDatesOnlyQueryGQL
-    });
-    return { contractsOnlyDates: data.contracts };
+    // const { data }: { data: ContractsDatesOnlyQuery } = await $apollo.query({
+    //   query: ContractsDatesOnlyQueryGQL
+    // });
+    // return { contractsOnlyDates: data.contracts };
+    await contractsStore.fetchContracts();
   },
   components: {
     ContractSkillListItemTeacherDashboard,
@@ -135,21 +133,23 @@ import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
 export default class TeacherContractsPageBeta extends Vue {
   date: null | string = this.alreadyPresentDate;
 
-
   get alreadyPresentDate() {
     if (contractStore?.contract?.date) {
-      return new Date(contractStore.contract?.date).toISOString().replace(/T.+/g, "");
+      return new Date(contractStore.contract?.date)
+        .toISOString()
+        .replace(/T.+/g, "");
     } else {
       return null;
     }
   }
 
-
   get selectedContract() {
     return contractStore.contract;
   }
 
-  contractsOnlyDates: ContractsDatesOnlyQuery["contracts"] = [];
+  get contracts() {
+    return contractsStore.getContracts;
+  }
 
   loading = false;
   loadingDeletion = false;
@@ -175,7 +175,7 @@ export default class TeacherContractsPageBeta extends Vue {
   }
 
   get contractsDates(): Date[] {
-    return this.contractsOnlyDates.map(
+    return this.contracts.map(
       contract => new Date(new Date(contract.date).setHours(0, 0, 0, 0))
     );
   }
@@ -185,6 +185,8 @@ export default class TeacherContractsPageBeta extends Vue {
       if (!this.selectedContract) throw new Error("");
       this.loadingDeletion = true;
       await contractStore.deleteContract();
+      await contractsStore.fetchContracts();
+      this.date = null;
     } catch (e) {
       alert("Une erreur est survenue lors de la suppression du contrat");
       console.log({ e });

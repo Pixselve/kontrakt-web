@@ -56,7 +56,7 @@ export default class ContractModule extends VuexModule {
       await $apollo.mutate({
         mutation: DeleteContractMutationGQL,
         variables: {
-          id: this.contract?.id
+          id: this.getters?.contractID as unknown as number
         } as DeleteContractMutationVariables
       });
       return { contract: null };
