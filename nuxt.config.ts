@@ -51,8 +51,8 @@ const config: Configuration = {
   apollo: {
     clientConfigs: {
       default: {
-        // httpEndpoint: "https://contrat.api.maelkerichard.com/"
-        httpEndpoint: 'http://localhost:4000/'
+        httpEndpoint: "https://contrat.api.maelkerichard.com/"
+        // httpEndpoint: 'http://localhost:4000/'
       }
     },
     tokenName: "token"
