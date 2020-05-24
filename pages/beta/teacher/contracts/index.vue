@@ -23,20 +23,40 @@
       </v-col>
     </v-row>
     <v-divider></v-divider>
-    <v-date-picker
-      @change="fetchSelectedContract"
-      class="mt-6"
-      header-color="secondary"
+    <v-row no-gutters class="text-center" justify="center" align="center">
+      <v-col>
+        <v-btn fab text small color="grey darken-2" @click="prev">
+          <v-icon small>mdi-chevron-left</v-icon>
+        </v-btn>
+      </v-col>
+      <v-col
+        ><h3>
+          {{
+            new Date(calendarValue).toLocaleDateString("fr-FR", {
+              month: "long",
+              year: "numeric"
+            })
+          }}
+        </h3>
+      </v-col>
+      <v-col>
+        <v-btn fab text small color="grey darken-2" @click="next">
+          <v-icon small>mdi-chevron-right</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-calendar
+      :weekdays="[1, 2, 3, 4, 5]"
       locale="fr-FR"
-      min="2020"
-      v-model="date"
-      event-color="secondary"
-      :allowed-dates="allowedDates"
-      :events="allowedDates"
-      show-current
-      landscape
-      full-width
-    ></v-date-picker>
+      ref="calendar"
+      v-model="calendarValue"
+      :events="contractsFormattedForCalendar"
+      @click:event="eventClick"
+      :event-color="getEventColor"
+    ></v-calendar>
+
+    <v-divider class="mt-5"></v-divider>
+
     <v-row class="text-center" v-if="loading">
       <v-col cols="12">
         <v-progress-circular
@@ -50,12 +70,56 @@
       </v-col>
     </v-row>
     <v-row v-else-if="!loading && selectedContract">
+      <v-col cols="12">
+        <v-row align="center" no-gutters>
+          <h2>{{ selectedContract.name }}</h2>
+          <h5>
+            ({{ getFormattedDate(selectedContract.date) }} -
+            {{ getFormattedDate(selectedContract.end) }})
+          </h5>
+
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" icon>
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <contract-skill-add-dialog>
+                <template v-slot:default="{ on }">
+                  <v-list-item v-on="on">
+                    <v-list-item-avatar>
+                      <v-icon>mdi-playlist-plus</v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-title
+                      >Ajouter une compétence</v-list-item-title
+                    >
+                  </v-list-item>
+                </template>
+              </contract-skill-add-dialog>
+
+              <v-list-item :to="`/teacher/contracts/${selectedContract.id}`">
+                <v-list-item-avatar>
+                  <v-icon>mdi-playlist-edit</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-title>Compléter les compétences</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="deleteContract">
+                <v-list-item-avatar>
+                  <v-icon>mdi-delete</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-title>Supprimer le contrat</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-row>
+      </v-col>
       <!--      <v-col v-for="i in 3">-->
       <!--        <v-card>-->
       <!--          <v-card-title>Élèves ayant terminé le contrat</v-card-title>-->
       <!--          <v-card-text class="text-center">-->
       <!--            <v-progress-circular size="100" width="10" value="95" color="red"-->
-      <!--            ><h2>25%</h2></v-progress-circular-->
+      <!--              ><h2>25%</h2></v-progress-circular-->
       <!--            >-->
       <!--          </v-card-text>-->
       <!--        </v-card>-->
@@ -69,34 +133,6 @@
           ></contract-skill-list-item-teacher-dashboard>
         </v-list>
       </v-col>
-      <v-col cols="12">
-        <contract-skill-add-dialog>
-          <template v-slot:default="{ on }">
-            <v-btn v-on="on" text color="green">
-              <v-icon left>mdi-playlist-plus</v-icon>
-              Ajouter une compétence
-            </v-btn>
-          </template>
-        </contract-skill-add-dialog>
-
-        <v-btn
-          :to="`/teacher/contracts/${selectedContract.id}`"
-          text
-          color="secondary"
-        >
-          <v-icon left>mdi-playlist-edit</v-icon>
-          Compléter les compétences
-        </v-btn>
-        <v-btn
-          :loading="loadingDeletion"
-          @click="deleteContract"
-          text
-          color="red"
-        >
-          <v-icon left>mdi-delete</v-icon>
-          Supprimer le contrat
-        </v-btn>
-      </v-col>
     </v-row>
     <v-row v-else>
       <v-col cols="12">
@@ -107,13 +143,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Ref, Vue } from "vue-property-decorator";
 import { contractsStore, contractStore } from "~/utils/store-accessor";
 import { GetSheetFileQuery } from "~/types/types";
 import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
 import CreateContractDialog from "~/components/CreateContractDialog.vue";
 import GetSheetFileQueryGQL from "~/apollo/queries/GetSheetFile.graphql";
 import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
+import { FetchContractQueryWithColor } from "~/store/contracts";
 
 @Component({
   layout: "teacher",
@@ -131,15 +168,43 @@ import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
   }
 })
 export default class TeacherContractsPageBeta extends Vue {
-  date: null | string = this.alreadyPresentDate;
+  @Ref("calendar") readonly calendarRef!: any;
 
-  get alreadyPresentDate() {
-    if (contractStore?.contract?.date) {
-      return new Date(contractStore.contract?.date)
-        .toISOString()
-        .replace(/T.+/g, "");
-    } else {
-      return null;
+  calendarValue = new Date().toISOString();
+  loading = false;
+  loadingDeletion = false;
+
+  getFormattedDate(date: string) {
+    return new Date(date).toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "numeric",
+      year: "numeric"
+    });
+  }
+
+  prev() {
+    //@ts-ignore
+    this.calendarRef.prev();
+  }
+
+  next() {
+    //@ts-ignore
+    this.calendarRef.next();
+  }
+
+
+  async eventClick({
+    event
+  }: {
+    event: { start: string; name: string; end: string; id: number };
+  }) {
+    try {
+      this.loading = true;
+      await contractStore.fetchContract(event.id);
+    } catch (e) {
+      console.log({ e });
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -151,34 +216,13 @@ export default class TeacherContractsPageBeta extends Vue {
     return contractsStore.getContracts;
   }
 
-  loading = false;
-  loadingDeletion = false;
-
-  async fetchSelectedContract() {
-    try {
-      this.loading = true;
-      if (this.date === null) throw new Error("NoSelectedContract");
-      await contractStore.fetchContractByDate(new Date(this.date));
-    } catch (e) {
-    } finally {
-      this.loading = false;
-    }
+  get contractsFormattedForCalendar() {
+    return contractsStore.contractsFormattedForCalendar;
+  }
+  getEventColor(event: FetchContractQueryWithColor) {
+    return event.color;
   }
 
-  allowedDates(date: string): boolean {
-    return !!this.contractsDates.find(
-      contractDate =>
-        contractDate.getDate() === new Date(date).getDate() &&
-        contractDate.getMonth() === new Date(date).getMonth() &&
-        contractDate.getFullYear() === new Date(date).getFullYear()
-    );
-  }
-
-  get contractsDates(): Date[] {
-    return this.contracts.map(
-      contract => new Date(new Date(contract.date).setHours(0, 0, 0, 0))
-    );
-  }
 
   async deleteContract() {
     try {
@@ -186,7 +230,6 @@ export default class TeacherContractsPageBeta extends Vue {
       this.loadingDeletion = true;
       await contractStore.deleteContract();
       await contractsStore.fetchContracts();
-      this.date = null;
     } catch (e) {
       alert("Une erreur est survenue lors de la suppression du contrat");
       console.log({ e });

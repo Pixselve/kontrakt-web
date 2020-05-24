@@ -18,11 +18,13 @@
   import ContractCard from "~/components/ContractCard.vue";
   import ContractPopup from "~/components/ContractPopup.vue";
   import { studentStore } from "~/utils/store-accessor";
+  import SkillsTable from "~/components/SkillsTable.vue";
 
   @Component({
     components: {
       ContractPopup,
-      ContractCard
+      ContractCard,
+      SkillsTable
     }
   })
   export default class ContractCardWithPopup extends Vue {

@@ -1,18 +1,36 @@
-import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
-import { $apollo }                              from "~/utils/getGraphQLClient";
-import FetchContractsQueryGQL
-                                                from "~/apollo/queries/FetchContracts.graphql";
-import DeleteContractMutationGQL                from "~/apollo/mutations/DeleteContract.graphql";
-import CreateOneContractMutationGQL
-                                                from "~/apollo/mutations/CreateOneContract.graphql";
+import { Action, Module, MutationAction, VuexModule } from "vuex-module-decorators";
+import { $apollo } from "~/utils/getGraphQLClient";
+import FetchContractsQueryGQL from "~/apollo/queries/FetchContracts.graphql";
+import DeleteContractMutationGQL from "~/apollo/mutations/DeleteContract.graphql";
+import CreateOneContractMutationGQL from "~/apollo/mutations/CreateOneContract.graphql";
 import {
-  Contract,
   CreateOneContractMutationVariables,
   DeleteContractMutationVariables,
   FetchContractsQuery,
   Maybe,
+  Scalars,
   Skill
-}                                               from "~/types/types";
+} from "~/types/types";
+
+
+const colors = ["red", "pink", "purple", "indigo", "blue", "cyan", "teal", "green", "orange", "brown"];
+
+
+export interface FetchContractQueryWithColor {
+  date: Scalars["DateTime"];
+  skills?: Maybe<Array<{ __typename?: "Skill" } & Pick<Skill, "id" | "name">>>;
+  color: string;
+  __typename?: "Contract";
+  name: Scalars["String"];
+  end: Scalars["DateTime"];
+  id: Scalars["Int"]
+}
+
+
+function getRandomColor() {
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
 
 @Module({
   name: 'contracts',
@@ -20,35 +38,32 @@ import {
   namespaced: true,
 })
 export default class Contracts extends VuexModule {
-  contracts: FetchContractsQuery['contracts'] = [];
+
+
+  contracts: FetchContractQueryWithColor[] = [];
 
   get getContracts() {
     return this.contracts;
   }
 
-  get todayContract() {
-    return this.contracts.find(contract => new Date(contract.date) === new Date());
+  get contractsFormattedForCalendar() {
+    return this.contracts.map(({ date, end, ...restData }) => ({
+      ...restData,
+      start: new Date(date).toISOString().split("T")[0],
+      end: new Date(end).toISOString().split("T")[0]
+    }));
   }
 
-  get laterContracts() {
-    return this.contracts.filter(contract => new Date(new Date().setHours(0, 0, 0, 0)) > new Date(contract.date));
 
-  }
-
-  @Mutation
-  setContracts(contracts: FetchContractsQuery['contracts']) {
-    this.contracts = contracts;
-  }
-
-  @Action
+  @MutationAction({ mutate: ["contracts"] })
   async fetchContracts() {
-    const { data } = await $apollo.query({
+    const { data }: { data: FetchContractsQuery } = await $apollo.query({
       query: FetchContractsQueryGQL,
       fetchPolicy: "no-cache"
     });
-    this.context.commit('setContracts', data.contracts);
-  }
 
+    return { contracts: data.contracts.map(contract => ({ ...contract, color: getRandomColor() })) };
+  }
 
   @Action
   async deleteContract(id: number) {
@@ -62,12 +77,14 @@ export default class Contracts extends VuexModule {
   }
 
   @Action
-  async addContract(contract: { date: string, skills: string[] }) {
+  async addContract(contract: { start: string, end: string, skills: string[], name: string }) {
     await $apollo.mutate({
       mutation: CreateOneContractMutationGQL,
       variables: {
-        date: contract.date,
-        skills: contract.skills
+        date: contract.start,
+        end: contract.end,
+        skills: contract.skills,
+        name: contract.name
       } as CreateOneContractMutationVariables
     });
     await this.context.dispatch("fetchContracts");

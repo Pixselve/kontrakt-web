@@ -17,6 +17,65 @@
         </v-btn>
       </v-col>
     </v-row>
+
+    <v-row class="fill-height">
+      <v-col>
+        <h1>Les contrats</h1>
+        <v-sheet height="64">
+          <v-toolbar flat color="white">
+            <v-btn fab text small color="grey darken-2" @click="prev">
+              <v-icon small>mdi-chevron-left</v-icon>
+            </v-btn>
+            <v-btn fab text small color="grey darken-2" @click="next">
+              <v-icon small>mdi-chevron-right</v-icon>
+            </v-btn>
+            <h3>{{
+              new Date(calendarValue).toLocaleDateString("fr-FR", {
+              month: "long",
+              year: "numeric"
+              })
+              }}</h3>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+        </v-sheet>
+        <v-sheet height="600">
+          <v-calendar
+            :weekdays="[1, 2, 3, 4, 5]"
+            locale="fr-FR"
+            ref="calendar"
+            v-model="calendarValue"
+            color="primary"
+            :events="contractsFormattedForCalendar"
+            @click:event="showEvent"
+            :event-color="getEventColor"
+          ></v-calendar>
+          <v-menu
+            v-if="selectedContract"
+            v-model="selectedOpen"
+            :close-on-content-click="false"
+            :activator="selectedElement"
+            offset-x
+            max-width="500px"
+          >
+            <v-card color="grey lighten-4" min-width="350px" flat>
+              <v-toolbar :color="selectedContract.color" dark>
+                <v-btn icon @click="selectedOpen = false">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+                <v-toolbar-title>{{ selectedContract.name }}</v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <skills-table
+                  :student-skills="skillToStudent"
+                  :skills="selectedContract.skills"
+                ></skills-table>
+              </v-card-text>
+            </v-card>
+          </v-menu>
+        </v-sheet>
+      </v-col>
+    </v-row>
+
     <v-row v-if="skillsCountNeededToBeFinished > 0">
       <v-col cols="12">
         <h1>
@@ -44,40 +103,21 @@
         <h1>Vous n'avez plus rien à faire 😁</h1>
       </v-col>
     </v-row>
-
-    <v-row>
-      <v-col>
-        <h1>Les contrats</h1>
-      </v-col>
-    </v-row>
-    <v-divider></v-divider>
-    <v-row>
-      <v-col
-        cols="12"
-        sm="12"
-        md="6"
-        lg="4"
-        xl="3"
-        v-for="contract in contracts"
-        :key="contract.id"
-      >
-        <contract-card-with-popup
-          :editable="false"
-          :contract="contract"
-        ></contract-card-with-popup>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Ref, Vue } from "vue-property-decorator";
 import ContactPopup from "~/components/ContractPopup.vue";
 import SkillsTable from "~/components/SkillsTable.vue";
 import ContractCard from "~/components/ContractCard.vue";
 import { contractsStore, studentStore } from "~/utils/store-accessor";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
 import AwaitingFinishContractCard from "~/components/AwaitingFinishContractCard.vue";
+import { Skill } from "~/types/types";
+import { FetchContractQueryWithColor } from "~/store/contracts";
+
+
 
 @Component({
   components: {
@@ -93,11 +133,57 @@ import AwaitingFinishContractCard from "~/components/AwaitingFinishContractCard.
   async asyncData() {
     await contractsStore.fetchContracts();
     await studentStore.fetchMe();
-    if (studentStore.id) await studentStore.fetchAwaitingToFinishContracts(studentStore.id);
+    if (studentStore.id)
+      await studentStore.fetchAwaitingToFinishContracts(studentStore.id);
   },
   middleware: "studentLogged"
 })
 export default class StudentPage extends Vue {
+  @Ref("calendar") readonly calendarRef!: HTMLElement;
+
+  calendarValue = new Date().toISOString();
+  selectedOpen = false;
+  selectedContract: FetchContractQueryWithColor | null = null;
+  selectedElement: null | EventTarget = null;
+  colors = ["blue", "indigo", "deep-purple", "cyan", "green", "orange"];
+
+  showEvent({
+              nativeEvent,
+              event
+            }: {
+    nativeEvent: Event;
+    event: FetchContractQueryWithColor;
+  }) {
+    const open = () => {
+      this.selectedContract = event;
+      this.selectedElement = nativeEvent.target;
+      setTimeout(() => (this.selectedOpen = true), 10);
+    };
+
+    if (this.selectedOpen) {
+      this.selectedOpen = false;
+      setTimeout(open, 10);
+    } else {
+      open();
+    }
+
+    nativeEvent.stopPropagation();
+  }
+
+  prev() {
+    //@ts-ignore
+    this.calendarRef.prev();
+  }
+
+  getEventColor(event: FetchContractQueryWithColor) {
+    return event.color;
+  }
+
+  next() {
+    //@ts-ignore
+    this.calendarRef.next();
+  }
+
   get isDarkTheme() {
     return this.$vuetify.theme.dark;
   }
@@ -110,7 +196,6 @@ export default class StudentPage extends Vue {
     await this.$apolloHelpers.onLogout();
     this.$cookies.remove("type");
     await this.$router.push("/login");
-
   }
 
   get contractsNeededToBeFinished() {
@@ -127,6 +212,14 @@ export default class StudentPage extends Vue {
 
   get student() {
     return studentStore.student;
+  }
+
+  get skillToStudent() {
+    return studentStore.skillToStudents;
+  }
+
+  get contractsFormattedForCalendar() {
+    return contractsStore.contractsFormattedForCalendar;
   }
 }
 </script>

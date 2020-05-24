@@ -19,7 +19,9 @@ type Color {
 
 type Contract {
   date: DateTime!
+  end: DateTime!
   id: Int!
+  name: String!
   skills(after: SkillWhereUniqueInput, before: SkillWhereUniqueInput, first: Int, last: Int, orderBy: SkillOrderByInput, skip: Int, where: SkillWhereInput): [Skill!]
 }
 
@@ -231,6 +233,8 @@ input ContractWhereUniqueInput {
 
 input CreateOneContractInput {
   date: DateTime!
+  end: DateTime!
+  name: String!
   skills: [String!]!
 }
 

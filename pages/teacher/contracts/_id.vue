@@ -6,7 +6,8 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
 
-      <v-toolbar-title>Contrat du {{contract.date | dateDayMonth}}</v-toolbar-title>
+      <v-toolbar-title>{{contract.name}} ({{ getFormattedDate(contract.date) }} -
+        {{ getFormattedDate(contract.end) }})</v-toolbar-title>
 
     </v-app-bar>
     <v-container fluid>
@@ -53,6 +54,15 @@
     }
   })
   export default class TeacherContractPage extends Vue {
+
+
+    getFormattedDate(date: string) {
+      return new Date(date).toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric"
+      });
+    }
 
 
     get contract() {

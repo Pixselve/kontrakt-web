@@ -95,24 +95,6 @@
       return contractsStore.getContracts;
     }
 
-    get todayContract() {
-      return contractsStore.todayContract;
-    }
-
-    get laterContracts() {
-      return contractsStore.laterContracts;
-    }
-
-    get todayContractDate() {
-      if (contractsStore.todayContract) {
-        return new Date(contractsStore.todayContract.date).toLocaleDateString("fr-FR", {
-          day: "numeric",
-          month: "long"
-        });
-      } else {
-        return "";
-      }
-    }
 
     /**
      * Exit the current student page

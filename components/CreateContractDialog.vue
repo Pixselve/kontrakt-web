@@ -20,26 +20,55 @@
         </v-toolbar-items>
       </v-toolbar>
       <v-card-text class="mt-4">
+        <v-text-field v-model="name" outlined required label="Nom du contrat"></v-text-field>
+
         <v-menu
-          v-model="dateMenu"
+          v-model="dates.start.isMenuOpen"
           :close-on-content-click="false"
           max-width="290px"
         >
           <template v-slot:activator="{ on }">
             <v-text-field
-              :value="computedDateFormatted"
-              label="Date"
+              :value="dates.start.computedDateFormatted"
+              label="Date de début"
               readonly
               prepend-icon="mdi-calendar"
-              @click:clear="date = null"
+              @click:clear="dates.start.value = null"
               v-on="on"
+              outlined
+              required
             ></v-text-field>
           </template>
           <v-date-picker
             first-day-of-week="1"
             locale="fr-FR"
-            v-model="date"
-            @change="dateMenu = false"
+            v-model="dates.start.value"
+            @change="dates.start.isMenuOpen = false"
+          ></v-date-picker>
+        </v-menu>
+
+        <v-menu
+          v-model="dates.end.isMenuOpen"
+          :close-on-content-click="false"
+          max-width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              :value="dates.end.computedDateFormatted"
+              label="Date de fin"
+              readonly
+              prepend-icon="mdi-calendar"
+              @click:clear="dates.end.value = null"
+              v-on="on"
+              outlined
+              required
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            first-day-of-week="1"
+            locale="fr-FR"
+            v-model="dates.end.value"
+            @change="dates.end.isMenuOpen = false"
           ></v-date-picker>
         </v-menu>
 
@@ -83,11 +112,40 @@ import { contractsStore } from "~/utils/store-accessor";
   components: { EditSkillDialog, CreateSkillDialog }
 })
 export default class CreateContractDialog extends Vue {
-  date = new Date().toISOString().substr(0, 10);
-  dateMenu = false;
   dialog = false;
   skills: string[] = [];
   loading = false;
+
+  dates = {
+    start: {
+      value: new Date().toISOString().substr(0, 10),
+      isMenuOpen: false,
+      get computedDateFormatted() {
+        return this.value
+          ? new Date(this.value).toLocaleDateString("fr-FR", {
+              day: "numeric",
+              month: "long",
+              year: "numeric"
+            })
+          : "";
+      }
+    },
+    end: {
+      value: new Date().toISOString().substr(0, 10),
+      isMenuOpen: false,
+      get computedDateFormatted() {
+        return this.value
+          ? new Date(this.value).toLocaleDateString("fr-FR", {
+              day: "numeric",
+              month: "long",
+              year: "numeric"
+            })
+          : "";
+      }
+    }
+  };
+
+  name = "";
 
   deleteSkill(index: number) {
     this.skills = this.skills.filter((_, i) => i != index);
@@ -114,8 +172,10 @@ export default class CreateContractDialog extends Vue {
     try {
       this.loading = true;
       await contractsStore.addContract({
-        date: this.date,
-        skills: this.skills
+        start: this.dates.start.value,
+        end: this.dates.end.value,
+        skills: this.skills,
+        name: this.name
       });
       this.close();
     } catch (e) {
@@ -124,16 +184,6 @@ export default class CreateContractDialog extends Vue {
     } finally {
       this.loading = false;
     }
-  }
-
-  get computedDateFormatted() {
-    return this.date
-      ? new Date(this.date).toLocaleDateString("fr-FR", {
-          day: "numeric",
-          month: "long",
-          year: "numeric"
-        })
-      : "";
   }
 }
 </script>

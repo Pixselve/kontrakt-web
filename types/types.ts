@@ -92,6 +92,8 @@ export type ColorWhereUniqueInput = {
 export type Contract = {
    __typename?: 'Contract';
   date: Scalars['DateTime'];
+  end: Scalars['DateTime'];
+  name: Scalars['String'];
   id: Scalars['Int'];
   skills?: Maybe<Array<Skill>>;
 };
@@ -159,6 +161,8 @@ export type ContractWhereUniqueInput = {
 
 export type CreateOneContractInput = {
   date: Scalars['DateTime'];
+  end: Scalars['DateTime'];
+  name: Scalars['String'];
   skills: Array<Scalars['String']>;
 };
 
@@ -939,7 +943,9 @@ export type CheckIfStudentExistsMutation = (
 
 export type CreateOneContractMutationVariables = {
   date: Scalars['DateTime'];
+  end: Scalars['DateTime'];
   skills: Array<Scalars['String']>;
+  name: Scalars['String'];
 };
 
 
@@ -1040,18 +1046,7 @@ export type DeleteSkillMutation = (
   { __typename?: 'Mutation' }
   & { deleteOneSkill?: Maybe<(
     { __typename?: 'Skill' }
-    & { contract: (
-      { __typename?: 'Contract' }
-      & Pick<Contract, 'date' | 'id'>
-      & { skills?: Maybe<Array<(
-        { __typename?: 'Skill' }
-        & Pick<Skill, 'id' | 'name'>
-        & { skillToStudents?: Maybe<Array<(
-          { __typename?: 'SkillToStudent' }
-          & Pick<SkillToStudent, 'id' | 'mark'>
-        )>> }
-      )>> }
-    ) }
+    & Pick<Skill, 'id'>
   )> }
 );
 
@@ -1127,7 +1122,7 @@ export type ContractByDateQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'date' | 'id'>
+    & Pick<Contract, 'date' | 'end' | 'id' | 'name'>
     & { skills?: Maybe<Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
@@ -1159,7 +1154,7 @@ export type FetchContractQuery = (
   { __typename?: 'Query' }
   & { contract?: Maybe<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'date'>
+    & Pick<Contract, 'id' | 'date' | 'end' | 'name'>
     & { skills?: Maybe<Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
@@ -1182,7 +1177,7 @@ export type FetchContractsQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'date'>
+    & Pick<Contract, 'id' | 'date' | 'end' | 'name'>
     & { skills?: Maybe<Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
@@ -1199,7 +1194,7 @@ export type FetchContractsAwaitingFinishStudentQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'date'>
+    & Pick<Contract, 'id' | 'date' | 'end' | 'name'>
     & { skills?: Maybe<Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>

@@ -30,6 +30,8 @@ query FetchContractsAwaitingFinishStudent($studentId: Int!) {
   }, orderBy: {date: asc}) {
     id
     date
+    end
+    name
     skills(where: {
       OR: [
         {
