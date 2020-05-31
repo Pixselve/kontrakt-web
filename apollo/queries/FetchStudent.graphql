@@ -3,8 +3,12 @@ query FetchStudent($id: Int!) {
     id
     firstName
     lastName
-    skillToStudents {
-      mark
+    skillsToStudent {
+      mark {
+        value
+        text
+        rgb
+      }
       skill {
         id
       }

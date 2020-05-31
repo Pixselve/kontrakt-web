@@ -1,7 +1,7 @@
 query FetchContracts {
-  contracts(orderBy: {date: desc}) {
+  contracts(orderBy: {start: desc}) {
     id
-    date
+    start
     end
     name
     skills {

@@ -1,15 +1,32 @@
+#query FetchStudentsWithAwaitingToFinishContracts {
+#  students(orderBy: {lastName: asc}) {
+#    id
+#    firstName
+#    lastName
+#    skillsToStudent(where: {
+#      mark: {
+#        in: [AWAITING_CORRECTION, TO_FINISH, TODO]
+#      }
+#    }) {
+#      id
+#      mark
+#    }
+#  }
+#}
+
+
 query FetchStudentsWithAwaitingToFinishContracts {
   students(orderBy: {lastName: asc}) {
     id
     firstName
     lastName
-    skillToStudents(where: {
-      mark: {
-        in: [AWAITING_CORRECTION, TO_FINISH, TODO]
+    skillsToStudent(where: {mark: {value: {in: ["AWAITING_CORRECTION", "TO_FINISH", "TODO"]}}}) {
+      skillId
+      mark {
+        text
+        value
+        rgb
       }
-    }) {
-      id
-      mark
     }
   }
 }

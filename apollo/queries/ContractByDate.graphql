@@ -1,6 +1,6 @@
 query ContractByDate($date: DateTime!) {
-  contracts(where: {date: {equals: $date}}) {
-    date
+  contracts(where: {start: {equals: $date}}) {
+    start
     end
     id
     name
@@ -8,8 +8,13 @@ query ContractByDate($date: DateTime!) {
       id
       name
       skillToStudents {
-        id
-        mark
+        skillId
+        studentId
+        mark {
+          rgb
+          text
+          value
+        }
       }
     }
   }

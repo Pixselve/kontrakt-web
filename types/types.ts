@@ -16,86 +16,14 @@ export type AuthPayload = {
   teacher: Teacher;
 };
 
-export type Color = {
-   __typename?: 'Color';
-  id: Scalars['Int'];
-  name: Scalars['String'];
-  rgb: Scalars['String'];
-  skillsStatuses?: Maybe<Array<SkillStatus>>;
-};
-
-
-export type ColorSkillsStatusesArgs = {
-  where?: Maybe<SkillStatusWhereInput>;
-  orderBy?: Maybe<SkillStatusOrderByInput>;
-  skip?: Maybe<Scalars['Int']>;
-  after?: Maybe<SkillStatusWhereUniqueInput>;
-  before?: Maybe<SkillStatusWhereUniqueInput>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-};
-
-export type ColorCreateInput = {
-  name: Scalars['String'];
-  rgb: Scalars['String'];
-  skillsStatuses?: Maybe<SkillStatusCreateManyWithoutColorInput>;
-};
-
-export type ColorCreateOneWithoutSkillsStatusesInput = {
-  create?: Maybe<ColorCreateWithoutSkillsStatusesInput>;
-  connect?: Maybe<ColorWhereUniqueInput>;
-};
-
-export type ColorCreateWithoutSkillsStatusesInput = {
-  name: Scalars['String'];
-  rgb: Scalars['String'];
-};
-
-export type ColorOrderByInput = {
-  id?: Maybe<OrderByArg>;
-  name?: Maybe<OrderByArg>;
-  rgb?: Maybe<OrderByArg>;
-};
-
-export type ColorUpdateOneRequiredWithoutSkillsStatusesInput = {
-  create?: Maybe<ColorCreateWithoutSkillsStatusesInput>;
-  connect?: Maybe<ColorWhereUniqueInput>;
-  update?: Maybe<ColorUpdateWithoutSkillsStatusesDataInput>;
-  upsert?: Maybe<ColorUpsertWithoutSkillsStatusesInput>;
-};
-
-export type ColorUpdateWithoutSkillsStatusesDataInput = {
-  id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  rgb?: Maybe<Scalars['String']>;
-};
-
-export type ColorUpsertWithoutSkillsStatusesInput = {
-  update: ColorUpdateWithoutSkillsStatusesDataInput;
-  create: ColorCreateWithoutSkillsStatusesInput;
-};
-
-export type ColorWhereInput = {
-  id?: Maybe<IntFilter>;
-  name?: Maybe<StringFilter>;
-  rgb?: Maybe<StringFilter>;
-  skillsStatuses?: Maybe<SkillStatusFilter>;
-  AND?: Maybe<Array<ColorWhereInput>>;
-  OR?: Maybe<Array<ColorWhereInput>>;
-  NOT?: Maybe<Array<ColorWhereInput>>;
-};
-
-export type ColorWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>;
-};
-
 export type Contract = {
    __typename?: 'Contract';
-  date: Scalars['DateTime'];
   end: Scalars['DateTime'];
-  name: Scalars['String'];
   id: Scalars['Int'];
+  name: Scalars['String'];
+  start: Scalars['DateTime'];
   skills?: Maybe<Array<Skill>>;
+  groups?: Maybe<Array<Group>>;
 };
 
 
@@ -109,24 +37,96 @@ export type ContractSkillsArgs = {
   last?: Maybe<Scalars['Int']>;
 };
 
+
+export type ContractGroupsArgs = {
+  where?: Maybe<GroupWhereInput>;
+  orderBy?: Maybe<GroupOrderByInput>;
+  skip?: Maybe<Scalars['Int']>;
+  after?: Maybe<GroupWhereUniqueInput>;
+  before?: Maybe<GroupWhereUniqueInput>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+};
+
+export type ContractCreateInput = {
+  end: Scalars['DateTime'];
+  name: Scalars['String'];
+  start: Scalars['DateTime'];
+  skills?: Maybe<SkillCreateManyWithoutContractInput>;
+  groups?: Maybe<GroupCreateManyWithoutContractsInput>;
+};
+
+export type ContractCreateManyWithoutGroupsInput = {
+  create?: Maybe<Array<ContractCreateWithoutGroupsInput>>;
+  connect?: Maybe<Array<ContractWhereUniqueInput>>;
+};
+
 export type ContractCreateOneWithoutSkillsInput = {
   create?: Maybe<ContractCreateWithoutSkillsInput>;
   connect?: Maybe<ContractWhereUniqueInput>;
 };
 
+export type ContractCreateWithoutGroupsInput = {
+  end: Scalars['DateTime'];
+  name: Scalars['String'];
+  start: Scalars['DateTime'];
+  skills?: Maybe<SkillCreateManyWithoutContractInput>;
+};
+
 export type ContractCreateWithoutSkillsInput = {
-  date: Scalars['DateTime'];
+  end: Scalars['DateTime'];
+  name: Scalars['String'];
+  start: Scalars['DateTime'];
+  groups?: Maybe<GroupCreateManyWithoutContractsInput>;
+};
+
+export type ContractFilter = {
+  every?: Maybe<ContractWhereInput>;
+  some?: Maybe<ContractWhereInput>;
+  none?: Maybe<ContractWhereInput>;
 };
 
 export type ContractOrderByInput = {
-  date?: Maybe<OrderByArg>;
+  end?: Maybe<OrderByArg>;
   id?: Maybe<OrderByArg>;
+  name?: Maybe<OrderByArg>;
+  start?: Maybe<OrderByArg>;
 };
 
-export type ContractUpdateInput = {
-  date?: Maybe<Scalars['DateTime']>;
+export type ContractScalarWhereInput = {
+  end?: Maybe<DateTimeFilter>;
+  id?: Maybe<IntFilter>;
+  name?: Maybe<StringFilter>;
+  start?: Maybe<DateTimeFilter>;
+  skills?: Maybe<SkillFilter>;
+  groups?: Maybe<GroupFilter>;
+  AND?: Maybe<Array<ContractScalarWhereInput>>;
+  OR?: Maybe<Array<ContractScalarWhereInput>>;
+  NOT?: Maybe<Array<ContractScalarWhereInput>>;
+};
+
+export type ContractUpdateManyDataInput = {
+  end?: Maybe<Scalars['DateTime']>;
   id?: Maybe<Scalars['Int']>;
-  skills?: Maybe<SkillUpdateManyWithoutContractInput>;
+  name?: Maybe<Scalars['String']>;
+  start?: Maybe<Scalars['DateTime']>;
+};
+
+export type ContractUpdateManyWithoutGroupsInput = {
+  create?: Maybe<Array<ContractCreateWithoutGroupsInput>>;
+  connect?: Maybe<Array<ContractWhereUniqueInput>>;
+  set?: Maybe<Array<ContractWhereUniqueInput>>;
+  disconnect?: Maybe<Array<ContractWhereUniqueInput>>;
+  delete?: Maybe<Array<ContractWhereUniqueInput>>;
+  update?: Maybe<Array<ContractUpdateWithWhereUniqueWithoutGroupsInput>>;
+  updateMany?: Maybe<Array<ContractUpdateManyWithWhereNestedInput>>;
+  deleteMany?: Maybe<Array<ContractScalarWhereInput>>;
+  upsert?: Maybe<Array<ContractUpsertWithWhereUniqueWithoutGroupsInput>>;
+};
+
+export type ContractUpdateManyWithWhereNestedInput = {
+  where: ContractScalarWhereInput;
+  data: ContractUpdateManyDataInput;
 };
 
 export type ContractUpdateOneRequiredWithoutSkillsInput = {
@@ -136,9 +136,25 @@ export type ContractUpdateOneRequiredWithoutSkillsInput = {
   upsert?: Maybe<ContractUpsertWithoutSkillsInput>;
 };
 
-export type ContractUpdateWithoutSkillsDataInput = {
-  date?: Maybe<Scalars['DateTime']>;
+export type ContractUpdateWithoutGroupsDataInput = {
+  end?: Maybe<Scalars['DateTime']>;
   id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  start?: Maybe<Scalars['DateTime']>;
+  skills?: Maybe<SkillUpdateManyWithoutContractInput>;
+};
+
+export type ContractUpdateWithoutSkillsDataInput = {
+  end?: Maybe<Scalars['DateTime']>;
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  start?: Maybe<Scalars['DateTime']>;
+  groups?: Maybe<GroupUpdateManyWithoutContractsInput>;
+};
+
+export type ContractUpdateWithWhereUniqueWithoutGroupsInput = {
+  where: ContractWhereUniqueInput;
+  data: ContractUpdateWithoutGroupsDataInput;
 };
 
 export type ContractUpsertWithoutSkillsInput = {
@@ -146,10 +162,19 @@ export type ContractUpsertWithoutSkillsInput = {
   create: ContractCreateWithoutSkillsInput;
 };
 
+export type ContractUpsertWithWhereUniqueWithoutGroupsInput = {
+  where: ContractWhereUniqueInput;
+  update: ContractUpdateWithoutGroupsDataInput;
+  create: ContractCreateWithoutGroupsInput;
+};
+
 export type ContractWhereInput = {
-  date?: Maybe<DateTimeFilter>;
+  end?: Maybe<DateTimeFilter>;
   id?: Maybe<IntFilter>;
+  name?: Maybe<StringFilter>;
+  start?: Maybe<DateTimeFilter>;
   skills?: Maybe<SkillFilter>;
+  groups?: Maybe<GroupFilter>;
   AND?: Maybe<Array<ContractWhereInput>>;
   OR?: Maybe<Array<ContractWhereInput>>;
   NOT?: Maybe<Array<ContractWhereInput>>;
@@ -157,13 +182,6 @@ export type ContractWhereInput = {
 
 export type ContractWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>;
-};
-
-export type CreateOneContractInput = {
-  date: Scalars['DateTime'];
-  end: Scalars['DateTime'];
-  name: Scalars['String'];
-  skills: Array<Scalars['String']>;
 };
 
 
@@ -178,14 +196,158 @@ export type DateTimeFilter = {
   gte?: Maybe<Scalars['DateTime']>;
 };
 
-export type DeleteStudentInput = {
+export type Group = {
+   __typename?: 'Group';
   id: Scalars['Int'];
+  name: Scalars['String'];
+  contracts?: Maybe<Array<Contract>>;
+  students?: Maybe<Array<Student>>;
 };
 
-export type EditOrCreateSkillToStudentInput = {
-  mark: Mark;
-  student: StudentWhereUniqueInput;
-  skill: SkillWhereUniqueInput;
+
+export type GroupContractsArgs = {
+  where?: Maybe<ContractWhereInput>;
+  orderBy?: Maybe<ContractOrderByInput>;
+  skip?: Maybe<Scalars['Int']>;
+  after?: Maybe<ContractWhereUniqueInput>;
+  before?: Maybe<ContractWhereUniqueInput>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+};
+
+
+export type GroupStudentsArgs = {
+  where?: Maybe<StudentWhereInput>;
+  orderBy?: Maybe<StudentOrderByInput>;
+  skip?: Maybe<Scalars['Int']>;
+  after?: Maybe<StudentWhereUniqueInput>;
+  before?: Maybe<StudentWhereUniqueInput>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+};
+
+export type GroupCreateManyWithoutContractsInput = {
+  create?: Maybe<Array<GroupCreateWithoutContractsInput>>;
+  connect?: Maybe<Array<GroupWhereUniqueInput>>;
+};
+
+export type GroupCreateManyWithoutStudentsInput = {
+  create?: Maybe<Array<GroupCreateWithoutStudentsInput>>;
+  connect?: Maybe<Array<GroupWhereUniqueInput>>;
+};
+
+export type GroupCreateWithoutContractsInput = {
+  name: Scalars['String'];
+  students?: Maybe<StudentCreateManyWithoutGroupsInput>;
+};
+
+export type GroupCreateWithoutStudentsInput = {
+  name: Scalars['String'];
+  contracts?: Maybe<ContractCreateManyWithoutGroupsInput>;
+};
+
+export type GroupFilter = {
+  every?: Maybe<GroupWhereInput>;
+  some?: Maybe<GroupWhereInput>;
+  none?: Maybe<GroupWhereInput>;
+};
+
+export type GroupOrderByInput = {
+  id?: Maybe<OrderByArg>;
+  name?: Maybe<OrderByArg>;
+};
+
+export type GroupScalarWhereInput = {
+  id?: Maybe<IntFilter>;
+  name?: Maybe<StringFilter>;
+  contracts?: Maybe<ContractFilter>;
+  students?: Maybe<StudentFilter>;
+  AND?: Maybe<Array<GroupScalarWhereInput>>;
+  OR?: Maybe<Array<GroupScalarWhereInput>>;
+  NOT?: Maybe<Array<GroupScalarWhereInput>>;
+};
+
+export type GroupUpdateManyDataInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type GroupUpdateManyWithoutContractsInput = {
+  create?: Maybe<Array<GroupCreateWithoutContractsInput>>;
+  connect?: Maybe<Array<GroupWhereUniqueInput>>;
+  set?: Maybe<Array<GroupWhereUniqueInput>>;
+  disconnect?: Maybe<Array<GroupWhereUniqueInput>>;
+  delete?: Maybe<Array<GroupWhereUniqueInput>>;
+  update?: Maybe<Array<GroupUpdateWithWhereUniqueWithoutContractsInput>>;
+  updateMany?: Maybe<Array<GroupUpdateManyWithWhereNestedInput>>;
+  deleteMany?: Maybe<Array<GroupScalarWhereInput>>;
+  upsert?: Maybe<Array<GroupUpsertWithWhereUniqueWithoutContractsInput>>;
+};
+
+export type GroupUpdateManyWithoutStudentsInput = {
+  create?: Maybe<Array<GroupCreateWithoutStudentsInput>>;
+  connect?: Maybe<Array<GroupWhereUniqueInput>>;
+  set?: Maybe<Array<GroupWhereUniqueInput>>;
+  disconnect?: Maybe<Array<GroupWhereUniqueInput>>;
+  delete?: Maybe<Array<GroupWhereUniqueInput>>;
+  update?: Maybe<Array<GroupUpdateWithWhereUniqueWithoutStudentsInput>>;
+  updateMany?: Maybe<Array<GroupUpdateManyWithWhereNestedInput>>;
+  deleteMany?: Maybe<Array<GroupScalarWhereInput>>;
+  upsert?: Maybe<Array<GroupUpsertWithWhereUniqueWithoutStudentsInput>>;
+};
+
+export type GroupUpdateManyWithWhereNestedInput = {
+  where: GroupScalarWhereInput;
+  data: GroupUpdateManyDataInput;
+};
+
+export type GroupUpdateWithoutContractsDataInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  students?: Maybe<StudentUpdateManyWithoutGroupsInput>;
+};
+
+export type GroupUpdateWithoutStudentsDataInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  contracts?: Maybe<ContractUpdateManyWithoutGroupsInput>;
+};
+
+export type GroupUpdateWithWhereUniqueWithoutContractsInput = {
+  where: GroupWhereUniqueInput;
+  data: GroupUpdateWithoutContractsDataInput;
+};
+
+export type GroupUpdateWithWhereUniqueWithoutStudentsInput = {
+  where: GroupWhereUniqueInput;
+  data: GroupUpdateWithoutStudentsDataInput;
+};
+
+export type GroupUpsertWithWhereUniqueWithoutContractsInput = {
+  where: GroupWhereUniqueInput;
+  update: GroupUpdateWithoutContractsDataInput;
+  create: GroupCreateWithoutContractsInput;
+};
+
+export type GroupUpsertWithWhereUniqueWithoutStudentsInput = {
+  where: GroupWhereUniqueInput;
+  update: GroupUpdateWithoutStudentsDataInput;
+  create: GroupCreateWithoutStudentsInput;
+};
+
+export type GroupWhereInput = {
+  id?: Maybe<IntFilter>;
+  name?: Maybe<StringFilter>;
+  contracts?: Maybe<ContractFilter>;
+  students?: Maybe<StudentFilter>;
+  AND?: Maybe<Array<GroupWhereInput>>;
+  OR?: Maybe<Array<GroupWhereInput>>;
+  NOT?: Maybe<Array<GroupWhereInput>>;
+};
+
+export type GroupWhereUniqueInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type IntFilter = {
@@ -199,151 +361,92 @@ export type IntFilter = {
   gte?: Maybe<Scalars['Int']>;
 };
 
-export type LoginTeacherInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+export type Mark = {
+   __typename?: 'Mark';
+  rgb: Scalars['String'];
+  text: Scalars['String'];
+  value: Scalars['String'];
+  skillsToStudents?: Maybe<Array<SkillToStudent>>;
 };
 
-export enum Mark {
-  AwaitingCorrection = 'AWAITING_CORRECTION',
-  Green = 'GREEN',
-  Marked = 'MARKED',
-  Orange = 'ORANGE',
-  Red = 'RED',
-  Blue = 'BLUE',
-  Todo = 'TODO',
-  ToFinish = 'TO_FINISH'
-}
 
-export type MarkFilter = {
-  equals?: Maybe<Mark>;
-  not?: Maybe<Mark>;
-  in?: Maybe<Array<Mark>>;
-  notIn?: Maybe<Array<Mark>>;
+export type MarkSkillsToStudentsArgs = {
+  where?: Maybe<SkillToStudentWhereInput>;
+  orderBy?: Maybe<SkillToStudentOrderByInput>;
+  skip?: Maybe<Scalars['Int']>;
+  after?: Maybe<SkillToStudentWhereUniqueInput>;
+  before?: Maybe<SkillToStudentWhereUniqueInput>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+};
+
+export type MarkCreateOneWithoutSkillsToStudentsInput = {
+  create?: Maybe<MarkCreateWithoutSkillsToStudentsInput>;
+  connect?: Maybe<MarkWhereUniqueInput>;
+};
+
+export type MarkCreateWithoutSkillsToStudentsInput = {
+  rgb: Scalars['String'];
+  text: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type MarkUpdateOneRequiredWithoutSkillsToStudentsInput = {
+  create?: Maybe<MarkCreateWithoutSkillsToStudentsInput>;
+  connect?: Maybe<MarkWhereUniqueInput>;
+  update?: Maybe<MarkUpdateWithoutSkillsToStudentsDataInput>;
+  upsert?: Maybe<MarkUpsertWithoutSkillsToStudentsInput>;
+};
+
+export type MarkUpdateWithoutSkillsToStudentsDataInput = {
+  rgb?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+};
+
+export type MarkUpsertWithoutSkillsToStudentsInput = {
+  update: MarkUpdateWithoutSkillsToStudentsDataInput;
+  create: MarkCreateWithoutSkillsToStudentsInput;
+};
+
+export type MarkWhereInput = {
+  rgb?: Maybe<StringFilter>;
+  text?: Maybe<StringFilter>;
+  value?: Maybe<StringFilter>;
+  skillsToStudents?: Maybe<SkillToStudentFilter>;
+  AND?: Maybe<Array<MarkWhereInput>>;
+  OR?: Maybe<Array<MarkWhereInput>>;
+  NOT?: Maybe<Array<MarkWhereInput>>;
+};
+
+export type MarkWhereUniqueInput = {
+  value?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
    __typename?: 'Mutation';
-  createTeacher: AuthPayload;
-  loginTeacher: AuthPayload;
-  checkIsStudentExists: Scalars['Boolean'];
-  createOneContract: Contract;
-  removeOneContract: Contract;
-  deleteStudent: Student;
-  editOrCreateSkillToStudent: SkillToStudent;
-  deleteOneContract?: Maybe<Contract>;
-  updateOneContract?: Maybe<Contract>;
-  createOneSkill: Skill;
-  deleteOneSkill?: Maybe<Skill>;
-  updateOneSkill?: Maybe<Skill>;
-  createOneStudent: Student;
-  updateOneStudent?: Maybe<Student>;
-  createOneSkillStatus: SkillStatus;
-  deleteOneSkillStatus?: Maybe<SkillStatus>;
-  updateOneSkillStatus?: Maybe<SkillStatus>;
-  createOneColor: Color;
-  deleteOneColor?: Maybe<Color>;
+  createTeacher: Teacher;
+  deleteTeacher?: Maybe<Teacher>;
   loginStudent: StudentAuthPayload;
-  loginStudentOld: StudentAuthPayload;
+  loginTeacher: AuthPayload;
+  createStudent: Student;
+  createContract: Contract;
+  deleteContract?: Maybe<Contract>;
+  deleteStudent?: Maybe<Student>;
+  upsertSkillToStudent: SkillToStudent;
+  deleteSkill?: Maybe<Skill>;
+  updateSkill?: Maybe<Skill>;
+  createSkill: Skill;
 };
 
 
 export type MutationCreateTeacherArgs = {
-  data: TeacherCreateInputCustom;
+  data: TeacherCreateInput;
 };
 
 
-export type MutationLoginTeacherArgs = {
-  data: LoginTeacherInput;
-};
-
-
-export type MutationCheckIsStudentExistsArgs = {
-  id: Scalars['Float'];
-};
-
-
-export type MutationCreateOneContractArgs = {
-  data: CreateOneContractInput;
-};
-
-
-export type MutationRemoveOneContractArgs = {
-  data: RemoveOneContractInput;
-};
-
-
-export type MutationDeleteStudentArgs = {
-  data: DeleteStudentInput;
-};
-
-
-export type MutationEditOrCreateSkillToStudentArgs = {
-  data: EditOrCreateSkillToStudentInput;
-};
-
-
-export type MutationDeleteOneContractArgs = {
-  where: ContractWhereUniqueInput;
-};
-
-
-export type MutationUpdateOneContractArgs = {
-  data: ContractUpdateInput;
-  where: ContractWhereUniqueInput;
-};
-
-
-export type MutationCreateOneSkillArgs = {
-  data: SkillCreateInput;
-};
-
-
-export type MutationDeleteOneSkillArgs = {
-  where: SkillWhereUniqueInput;
-};
-
-
-export type MutationUpdateOneSkillArgs = {
-  data: SkillUpdateInput;
-  where: SkillWhereUniqueInput;
-};
-
-
-export type MutationCreateOneStudentArgs = {
-  data: StudentCreateInput;
-};
-
-
-export type MutationUpdateOneStudentArgs = {
-  data: StudentUpdateInput;
-  where: StudentWhereUniqueInput;
-};
-
-
-export type MutationCreateOneSkillStatusArgs = {
-  data: SkillStatusCreateInput;
-};
-
-
-export type MutationDeleteOneSkillStatusArgs = {
-  where: SkillStatusWhereUniqueInput;
-};
-
-
-export type MutationUpdateOneSkillStatusArgs = {
-  data: SkillStatusUpdateInput;
-  where: SkillStatusWhereUniqueInput;
-};
-
-
-export type MutationCreateOneColorArgs = {
-  data: ColorCreateInput;
-};
-
-
-export type MutationDeleteOneColorArgs = {
-  where: ColorWhereUniqueInput;
+export type MutationDeleteTeacherArgs = {
+  where: TeacherWhereUniqueInput;
 };
 
 
@@ -352,8 +455,51 @@ export type MutationLoginStudentArgs = {
 };
 
 
-export type MutationLoginStudentOldArgs = {
-  id: Scalars['Float'];
+export type MutationLoginTeacherArgs = {
+  data: TeacherCreateInput;
+};
+
+
+export type MutationCreateStudentArgs = {
+  data: StudentCreateInput;
+};
+
+
+export type MutationCreateContractArgs = {
+  data: ContractCreateInput;
+};
+
+
+export type MutationDeleteContractArgs = {
+  where: ContractWhereUniqueInput;
+};
+
+
+export type MutationDeleteStudentArgs = {
+  where: StudentWhereUniqueInput;
+};
+
+
+export type MutationUpsertSkillToStudentArgs = {
+  where: SkillToStudentWhereUniqueInput;
+  create: SkillToStudentCreateInput;
+  update: SkillToStudentUpdateInput;
+};
+
+
+export type MutationDeleteSkillArgs = {
+  where: SkillWhereUniqueInput;
+};
+
+
+export type MutationUpdateSkillArgs = {
+  data: SkillUpdateInput;
+  where: SkillWhereUniqueInput;
+};
+
+
+export type MutationCreateSkillArgs = {
+  data: SkillCreateInput;
 };
 
 export enum OrderByArg {
@@ -363,55 +509,29 @@ export enum OrderByArg {
 
 export type Query = {
    __typename?: 'Query';
-  contractsToExcel: Scalars['String'];
-  contract?: Maybe<Contract>;
-  contracts: Array<Contract>;
-  skill?: Maybe<Skill>;
-  skills: Array<Skill>;
-  student?: Maybe<Student>;
-  me: User;
+  teacher?: Maybe<Teacher>;
+  teachers: Array<Teacher>;
   students: Array<Student>;
-  skillStatus?: Maybe<SkillStatus>;
-  skillStatuses: Array<SkillStatus>;
-  color?: Maybe<Color>;
-  colors: Array<Color>;
+  student?: Maybe<Student>;
+  contracts: Array<Contract>;
+  contract?: Maybe<Contract>;
+  me: User;
 };
 
 
-export type QueryContractArgs = {
-  where: ContractWhereUniqueInput;
+export type QueryTeacherArgs = {
+  where: TeacherWhereUniqueInput;
 };
 
 
-export type QueryContractsArgs = {
-  where?: Maybe<ContractWhereInput>;
-  orderBy?: Maybe<ContractOrderByInput>;
+export type QueryTeachersArgs = {
+  where?: Maybe<TeacherWhereInput>;
+  orderBy?: Maybe<TeacherOrderByInput>;
   skip?: Maybe<Scalars['Int']>;
-  after?: Maybe<ContractWhereUniqueInput>;
-  before?: Maybe<ContractWhereUniqueInput>;
+  after?: Maybe<TeacherWhereUniqueInput>;
+  before?: Maybe<TeacherWhereUniqueInput>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-};
-
-
-export type QuerySkillArgs = {
-  where: SkillWhereUniqueInput;
-};
-
-
-export type QuerySkillsArgs = {
-  where?: Maybe<SkillWhereInput>;
-  orderBy?: Maybe<SkillOrderByInput>;
-  skip?: Maybe<Scalars['Int']>;
-  after?: Maybe<SkillWhereUniqueInput>;
-  before?: Maybe<SkillWhereUniqueInput>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-};
-
-
-export type QueryStudentArgs = {
-  where: StudentWhereUniqueInput;
 };
 
 
@@ -426,48 +546,33 @@ export type QueryStudentsArgs = {
 };
 
 
-export type QuerySkillStatusArgs = {
-  where: SkillStatusWhereUniqueInput;
+export type QueryStudentArgs = {
+  where: StudentWhereUniqueInput;
 };
 
 
-export type QuerySkillStatusesArgs = {
-  where?: Maybe<SkillStatusWhereInput>;
-  orderBy?: Maybe<SkillStatusOrderByInput>;
+export type QueryContractsArgs = {
+  where?: Maybe<ContractWhereInput>;
+  orderBy?: Maybe<ContractOrderByInput>;
   skip?: Maybe<Scalars['Int']>;
-  after?: Maybe<SkillStatusWhereUniqueInput>;
-  before?: Maybe<SkillStatusWhereUniqueInput>;
+  after?: Maybe<ContractWhereUniqueInput>;
+  before?: Maybe<ContractWhereUniqueInput>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
 };
 
 
-export type QueryColorArgs = {
-  where: ColorWhereUniqueInput;
-};
-
-
-export type QueryColorsArgs = {
-  where?: Maybe<ColorWhereInput>;
-  orderBy?: Maybe<ColorOrderByInput>;
-  skip?: Maybe<Scalars['Int']>;
-  after?: Maybe<ColorWhereUniqueInput>;
-  before?: Maybe<ColorWhereUniqueInput>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-};
-
-export type RemoveOneContractInput = {
-  id: Scalars['Int'];
+export type QueryContractArgs = {
+  where: ContractWhereUniqueInput;
 };
 
 export type Skill = {
    __typename?: 'Skill';
+  contractId: Scalars['Int'];
   id: Scalars['Int'];
   name: Scalars['String'];
-  contractId: Scalars['Int'];
-  skillToStudents?: Maybe<Array<SkillToStudent>>;
   contract: Contract;
+  skillToStudents?: Maybe<Array<SkillToStudent>>;
 };
 
 
@@ -483,8 +588,13 @@ export type SkillSkillToStudentsArgs = {
 
 export type SkillCreateInput = {
   name: Scalars['String'];
-  skillToStudents?: Maybe<SkillToStudentCreateManyWithoutSkillInput>;
   contract: ContractCreateOneWithoutSkillsInput;
+  skillToStudents?: Maybe<SkillToStudentCreateManyWithoutSkillInput>;
+};
+
+export type SkillCreateManyWithoutContractInput = {
+  create?: Maybe<Array<SkillCreateWithoutContractInput>>;
+  connect?: Maybe<Array<SkillWhereUniqueInput>>;
 };
 
 export type SkillCreateOneWithoutSkillToStudentsInput = {
@@ -509,89 +619,35 @@ export type SkillFilter = {
 };
 
 export type SkillOrderByInput = {
+  contractId?: Maybe<OrderByArg>;
   id?: Maybe<OrderByArg>;
   name?: Maybe<OrderByArg>;
-  contractId?: Maybe<OrderByArg>;
 };
 
 export type SkillScalarWhereInput = {
+  contractId?: Maybe<IntFilter>;
   id?: Maybe<IntFilter>;
   name?: Maybe<StringFilter>;
   skillToStudents?: Maybe<SkillToStudentFilter>;
-  contractId?: Maybe<IntFilter>;
   AND?: Maybe<Array<SkillScalarWhereInput>>;
   OR?: Maybe<Array<SkillScalarWhereInput>>;
   NOT?: Maybe<Array<SkillScalarWhereInput>>;
 };
 
-export type SkillStatus = {
-   __typename?: 'SkillStatus';
-  id: Scalars['Int'];
-  mark: Mark;
-  text: Scalars['String'];
-  colorId: Scalars['Int'];
-  color: Color;
-};
-
-export type SkillStatusCreateInput = {
-  mark: Mark;
-  text: Scalars['String'];
-  color: ColorCreateOneWithoutSkillsStatusesInput;
-};
-
-export type SkillStatusCreateManyWithoutColorInput = {
-  create?: Maybe<Array<SkillStatusCreateWithoutColorInput>>;
-  connect?: Maybe<Array<SkillStatusWhereUniqueInput>>;
-};
-
-export type SkillStatusCreateWithoutColorInput = {
-  mark: Mark;
-  text: Scalars['String'];
-};
-
-export type SkillStatusFilter = {
-  every?: Maybe<SkillStatusWhereInput>;
-  some?: Maybe<SkillStatusWhereInput>;
-  none?: Maybe<SkillStatusWhereInput>;
-};
-
-export type SkillStatusOrderByInput = {
-  id?: Maybe<OrderByArg>;
-  mark?: Maybe<OrderByArg>;
-  text?: Maybe<OrderByArg>;
-  colorId?: Maybe<OrderByArg>;
-};
-
-export type SkillStatusUpdateInput = {
-  id?: Maybe<Scalars['Int']>;
-  mark?: Maybe<Mark>;
-  text?: Maybe<Scalars['String']>;
-  color?: Maybe<ColorUpdateOneRequiredWithoutSkillsStatusesInput>;
-};
-
-export type SkillStatusWhereInput = {
-  id?: Maybe<IntFilter>;
-  mark?: Maybe<MarkFilter>;
-  text?: Maybe<StringFilter>;
-  colorId?: Maybe<IntFilter>;
-  AND?: Maybe<Array<SkillStatusWhereInput>>;
-  OR?: Maybe<Array<SkillStatusWhereInput>>;
-  NOT?: Maybe<Array<SkillStatusWhereInput>>;
-  color?: Maybe<ColorWhereInput>;
-};
-
-export type SkillStatusWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>;
-};
-
 export type SkillToStudent = {
    __typename?: 'SkillToStudent';
-  id: Scalars['Int'];
-  mark: Mark;
+  markValue: Scalars['String'];
   skillId: Scalars['Int'];
   studentId: Scalars['Int'];
-  skill?: Maybe<Skill>;
-  student?: Maybe<Student>;
+  mark: Mark;
+  skill: Skill;
+  student: Student;
+};
+
+export type SkillToStudentCreateInput = {
+  mark: MarkCreateOneWithoutSkillsToStudentsInput;
+  skill: SkillCreateOneWithoutSkillToStudentsInput;
+  student: StudentCreateOneWithoutSkillsToStudentInput;
 };
 
 export type SkillToStudentCreateManyWithoutSkillInput = {
@@ -605,12 +661,12 @@ export type SkillToStudentCreateManyWithoutStudentInput = {
 };
 
 export type SkillToStudentCreateWithoutSkillInput = {
-  mark?: Maybe<Mark>;
-  student: StudentCreateOneWithoutSkillToStudentsInput;
+  mark: MarkCreateOneWithoutSkillsToStudentsInput;
+  student: StudentCreateOneWithoutSkillsToStudentInput;
 };
 
 export type SkillToStudentCreateWithoutStudentInput = {
-  mark?: Maybe<Mark>;
+  mark: MarkCreateOneWithoutSkillsToStudentsInput;
   skill: SkillCreateOneWithoutSkillToStudentsInput;
 };
 
@@ -621,15 +677,13 @@ export type SkillToStudentFilter = {
 };
 
 export type SkillToStudentOrderByInput = {
-  id?: Maybe<OrderByArg>;
-  mark?: Maybe<OrderByArg>;
+  markValue?: Maybe<OrderByArg>;
   skillId?: Maybe<OrderByArg>;
   studentId?: Maybe<OrderByArg>;
 };
 
 export type SkillToStudentScalarWhereInput = {
-  id?: Maybe<IntFilter>;
-  mark?: Maybe<MarkFilter>;
+  markValue?: Maybe<StringFilter>;
   skillId?: Maybe<IntFilter>;
   studentId?: Maybe<IntFilter>;
   AND?: Maybe<Array<SkillToStudentScalarWhereInput>>;
@@ -637,9 +691,14 @@ export type SkillToStudentScalarWhereInput = {
   NOT?: Maybe<Array<SkillToStudentScalarWhereInput>>;
 };
 
+export type SkillToStudentUpdateInput = {
+  mark?: Maybe<MarkUpdateOneRequiredWithoutSkillsToStudentsInput>;
+  skill?: Maybe<SkillUpdateOneRequiredWithoutSkillToStudentsInput>;
+  student?: Maybe<StudentUpdateOneRequiredWithoutSkillsToStudentInput>;
+};
+
 export type SkillToStudentUpdateManyDataInput = {
-  id?: Maybe<Scalars['Int']>;
-  mark?: Maybe<Mark>;
+  none: Scalars['String'];
 };
 
 export type SkillToStudentUpdateManyWithoutSkillInput = {
@@ -672,14 +731,12 @@ export type SkillToStudentUpdateManyWithWhereNestedInput = {
 };
 
 export type SkillToStudentUpdateWithoutSkillDataInput = {
-  id?: Maybe<Scalars['Int']>;
-  mark?: Maybe<Mark>;
-  student?: Maybe<StudentUpdateOneRequiredWithoutSkillToStudentsInput>;
+  mark?: Maybe<MarkUpdateOneRequiredWithoutSkillsToStudentsInput>;
+  student?: Maybe<StudentUpdateOneRequiredWithoutSkillsToStudentInput>;
 };
 
 export type SkillToStudentUpdateWithoutStudentDataInput = {
-  id?: Maybe<Scalars['Int']>;
-  mark?: Maybe<Mark>;
+  mark?: Maybe<MarkUpdateOneRequiredWithoutSkillsToStudentsInput>;
   skill?: Maybe<SkillUpdateOneRequiredWithoutSkillToStudentsInput>;
 };
 
@@ -706,26 +763,26 @@ export type SkillToStudentUpsertWithWhereUniqueWithoutStudentInput = {
 };
 
 export type SkillToStudentWhereInput = {
-  id?: Maybe<IntFilter>;
-  mark?: Maybe<MarkFilter>;
+  markValue?: Maybe<StringFilter>;
   skillId?: Maybe<IntFilter>;
   studentId?: Maybe<IntFilter>;
   AND?: Maybe<Array<SkillToStudentWhereInput>>;
   OR?: Maybe<Array<SkillToStudentWhereInput>>;
   NOT?: Maybe<Array<SkillToStudentWhereInput>>;
+  mark?: Maybe<MarkWhereInput>;
   skill?: Maybe<SkillWhereInput>;
   student?: Maybe<StudentWhereInput>;
 };
 
 export type SkillToStudentWhereUniqueInput = {
-  id?: Maybe<Scalars['Int']>;
+  studentId_skillId?: Maybe<StudentIdSkillIdCompoundUniqueInput>;
 };
 
 export type SkillUpdateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
-  skillToStudents?: Maybe<SkillToStudentUpdateManyWithoutSkillInput>;
   contract?: Maybe<ContractUpdateOneRequiredWithoutSkillsInput>;
+  skillToStudents?: Maybe<SkillToStudentUpdateManyWithoutSkillInput>;
 };
 
 export type SkillUpdateManyDataInput = {
@@ -786,10 +843,10 @@ export type SkillUpsertWithWhereUniqueWithoutContractInput = {
 };
 
 export type SkillWhereInput = {
+  contractId?: Maybe<IntFilter>;
   id?: Maybe<IntFilter>;
   name?: Maybe<StringFilter>;
   skillToStudents?: Maybe<SkillToStudentFilter>;
-  contractId?: Maybe<IntFilter>;
   AND?: Maybe<Array<SkillWhereInput>>;
   OR?: Maybe<Array<SkillWhereInput>>;
   NOT?: Maybe<Array<SkillWhereInput>>;
@@ -816,20 +873,32 @@ export type StringFilter = {
 
 export type Student = {
    __typename?: 'Student';
-  id: Scalars['Int'];
   firstName: Scalars['String'];
+  id: Scalars['Int'];
   lastName: Scalars['String'];
   username: Scalars['Int'];
-  skillToStudents?: Maybe<Array<SkillToStudent>>;
+  skillsToStudent?: Maybe<Array<SkillToStudent>>;
+  groups?: Maybe<Array<Group>>;
 };
 
 
-export type StudentSkillToStudentsArgs = {
+export type StudentSkillsToStudentArgs = {
   where?: Maybe<SkillToStudentWhereInput>;
   orderBy?: Maybe<SkillToStudentOrderByInput>;
   skip?: Maybe<Scalars['Int']>;
   after?: Maybe<SkillToStudentWhereUniqueInput>;
   before?: Maybe<SkillToStudentWhereUniqueInput>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+};
+
+
+export type StudentGroupsArgs = {
+  where?: Maybe<GroupWhereInput>;
+  orderBy?: Maybe<GroupOrderByInput>;
+  skip?: Maybe<Scalars['Int']>;
+  after?: Maybe<GroupWhereUniqueInput>;
+  before?: Maybe<GroupWhereUniqueInput>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
 };
@@ -843,55 +912,133 @@ export type StudentAuthPayload = {
 export type StudentCreateInput = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
-  skillToStudents?: Maybe<SkillToStudentCreateManyWithoutStudentInput>;
+  groups?: Maybe<GroupCreateManyWithoutStudentsInput>;
 };
 
-export type StudentCreateOneWithoutSkillToStudentsInput = {
-  create?: Maybe<StudentCreateWithoutSkillToStudentsInput>;
+export type StudentCreateManyWithoutGroupsInput = {
+  create?: Maybe<Array<StudentCreateWithoutGroupsInput>>;
+  connect?: Maybe<Array<StudentWhereUniqueInput>>;
+};
+
+export type StudentCreateOneWithoutSkillsToStudentInput = {
+  create?: Maybe<StudentCreateWithoutSkillsToStudentInput>;
   connect?: Maybe<StudentWhereUniqueInput>;
 };
 
-export type StudentCreateWithoutSkillToStudentsInput = {
+export type StudentCreateWithoutGroupsInput = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+  username: Scalars['Int'];
+  skillsToStudent?: Maybe<SkillToStudentCreateManyWithoutStudentInput>;
+};
+
+export type StudentCreateWithoutSkillsToStudentInput = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  username: Scalars['Int'];
+  groups?: Maybe<GroupCreateManyWithoutStudentsInput>;
+};
+
+export type StudentFilter = {
+  every?: Maybe<StudentWhereInput>;
+  some?: Maybe<StudentWhereInput>;
+  none?: Maybe<StudentWhereInput>;
+};
+
+export type StudentIdSkillIdCompoundUniqueInput = {
+  studentId: Scalars['Int'];
+  skillId: Scalars['Int'];
 };
 
 export type StudentOrderByInput = {
   firstName?: Maybe<OrderByArg>;
   id?: Maybe<OrderByArg>;
   lastName?: Maybe<OrderByArg>;
+  username?: Maybe<OrderByArg>;
 };
 
-export type StudentUpdateInput = {
+export type StudentScalarWhereInput = {
+  firstName?: Maybe<StringFilter>;
+  id?: Maybe<IntFilter>;
+  lastName?: Maybe<StringFilter>;
+  username?: Maybe<IntFilter>;
+  skillsToStudent?: Maybe<SkillToStudentFilter>;
+  groups?: Maybe<GroupFilter>;
+  AND?: Maybe<Array<StudentScalarWhereInput>>;
+  OR?: Maybe<Array<StudentScalarWhereInput>>;
+  NOT?: Maybe<Array<StudentScalarWhereInput>>;
+};
+
+export type StudentUpdateManyDataInput = {
   firstName?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['Int']>;
   lastName?: Maybe<Scalars['String']>;
-  skillToStudents?: Maybe<SkillToStudentUpdateManyWithoutStudentInput>;
+  username?: Maybe<Scalars['Int']>;
 };
 
-export type StudentUpdateOneRequiredWithoutSkillToStudentsInput = {
-  create?: Maybe<StudentCreateWithoutSkillToStudentsInput>;
+export type StudentUpdateManyWithoutGroupsInput = {
+  create?: Maybe<Array<StudentCreateWithoutGroupsInput>>;
+  connect?: Maybe<Array<StudentWhereUniqueInput>>;
+  set?: Maybe<Array<StudentWhereUniqueInput>>;
+  disconnect?: Maybe<Array<StudentWhereUniqueInput>>;
+  delete?: Maybe<Array<StudentWhereUniqueInput>>;
+  update?: Maybe<Array<StudentUpdateWithWhereUniqueWithoutGroupsInput>>;
+  updateMany?: Maybe<Array<StudentUpdateManyWithWhereNestedInput>>;
+  deleteMany?: Maybe<Array<StudentScalarWhereInput>>;
+  upsert?: Maybe<Array<StudentUpsertWithWhereUniqueWithoutGroupsInput>>;
+};
+
+export type StudentUpdateManyWithWhereNestedInput = {
+  where: StudentScalarWhereInput;
+  data: StudentUpdateManyDataInput;
+};
+
+export type StudentUpdateOneRequiredWithoutSkillsToStudentInput = {
+  create?: Maybe<StudentCreateWithoutSkillsToStudentInput>;
   connect?: Maybe<StudentWhereUniqueInput>;
-  update?: Maybe<StudentUpdateWithoutSkillToStudentsDataInput>;
-  upsert?: Maybe<StudentUpsertWithoutSkillToStudentsInput>;
+  update?: Maybe<StudentUpdateWithoutSkillsToStudentDataInput>;
+  upsert?: Maybe<StudentUpsertWithoutSkillsToStudentInput>;
 };
 
-export type StudentUpdateWithoutSkillToStudentsDataInput = {
+export type StudentUpdateWithoutGroupsDataInput = {
   firstName?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['Int']>;
   lastName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['Int']>;
+  skillsToStudent?: Maybe<SkillToStudentUpdateManyWithoutStudentInput>;
 };
 
-export type StudentUpsertWithoutSkillToStudentsInput = {
-  update: StudentUpdateWithoutSkillToStudentsDataInput;
-  create: StudentCreateWithoutSkillToStudentsInput;
+export type StudentUpdateWithoutSkillsToStudentDataInput = {
+  firstName?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['Int']>;
+  lastName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['Int']>;
+  groups?: Maybe<GroupUpdateManyWithoutStudentsInput>;
+};
+
+export type StudentUpdateWithWhereUniqueWithoutGroupsInput = {
+  where: StudentWhereUniqueInput;
+  data: StudentUpdateWithoutGroupsDataInput;
+};
+
+export type StudentUpsertWithoutSkillsToStudentInput = {
+  update: StudentUpdateWithoutSkillsToStudentDataInput;
+  create: StudentCreateWithoutSkillsToStudentInput;
+};
+
+export type StudentUpsertWithWhereUniqueWithoutGroupsInput = {
+  where: StudentWhereUniqueInput;
+  update: StudentUpdateWithoutGroupsDataInput;
+  create: StudentCreateWithoutGroupsInput;
 };
 
 export type StudentWhereInput = {
   firstName?: Maybe<StringFilter>;
   id?: Maybe<IntFilter>;
   lastName?: Maybe<StringFilter>;
-  skillToStudents?: Maybe<SkillToStudentFilter>;
+  username?: Maybe<IntFilter>;
+  skillsToStudent?: Maybe<SkillToStudentFilter>;
+  groups?: Maybe<GroupFilter>;
   AND?: Maybe<Array<StudentWhereInput>>;
   OR?: Maybe<Array<StudentWhereInput>>;
   NOT?: Maybe<Array<StudentWhereInput>>;
@@ -899,16 +1046,35 @@ export type StudentWhereInput = {
 
 export type StudentWhereUniqueInput = {
   id?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['Int']>;
 };
 
 export type Teacher = {
    __typename?: 'Teacher';
   email: Scalars['String'];
+  password: Scalars['String'];
 };
 
-export type TeacherCreateInputCustom = {
+export type TeacherCreateInput = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type TeacherOrderByInput = {
+  email?: Maybe<OrderByArg>;
+  password?: Maybe<OrderByArg>;
+};
+
+export type TeacherWhereInput = {
+  email?: Maybe<StringFilter>;
+  password?: Maybe<StringFilter>;
+  AND?: Maybe<Array<TeacherWhereInput>>;
+  OR?: Maybe<Array<TeacherWhereInput>>;
+  NOT?: Maybe<Array<TeacherWhereInput>>;
+};
+
+export type TeacherWhereUniqueInput = {
+  email?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -925,35 +1091,25 @@ export type AddStudentMutationVariables = {
 
 export type AddStudentMutation = (
   { __typename?: 'Mutation' }
-  & { createOneStudent: (
+  & { createStudent: (
     { __typename?: 'Student' }
     & Pick<Student, 'id'>
   ) }
 );
 
-export type CheckIfStudentExistsMutationVariables = {
-  id: Scalars['Float'];
-};
-
-
-export type CheckIfStudentExistsMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'checkIsStudentExists'>
-);
-
 export type CreateOneContractMutationVariables = {
-  date: Scalars['DateTime'];
+  start: Scalars['DateTime'];
   end: Scalars['DateTime'];
-  skills: Array<Scalars['String']>;
+  skills?: Maybe<SkillCreateManyWithoutContractInput>;
   name: Scalars['String'];
 };
 
 
 export type CreateOneContractMutation = (
   { __typename?: 'Mutation' }
-  & { createOneContract: (
+  & { createContract: (
     { __typename?: 'Contract' }
-    & Pick<Contract, 'date'>
+    & Pick<Contract, 'start'>
   ) }
 );
 
@@ -964,10 +1120,10 @@ export type DeleteContractMutationVariables = {
 
 export type DeleteContractMutation = (
   { __typename?: 'Mutation' }
-  & { removeOneContract: (
+  & { deleteContract?: Maybe<(
     { __typename?: 'Contract' }
     & Pick<Contract, 'id'>
-  ) }
+  )> }
 );
 
 export type DeleteStudentMutationVariables = {
@@ -977,14 +1133,14 @@ export type DeleteStudentMutationVariables = {
 
 export type DeleteStudentMutation = (
   { __typename?: 'Mutation' }
-  & { deleteStudent: (
+  & { deleteStudent?: Maybe<(
     { __typename?: 'Student' }
     & Pick<Student, 'id'>
-  ) }
+  )> }
 );
 
 export type EditSkillToStudentMutationVariables = {
-  mark: Mark;
+  markValue: Scalars['String'];
   skillId: Scalars['Int'];
   studentId: Scalars['Int'];
 };
@@ -992,9 +1148,12 @@ export type EditSkillToStudentMutationVariables = {
 
 export type EditSkillToStudentMutation = (
   { __typename?: 'Mutation' }
-  & { editOrCreateSkillToStudent: (
+  & { upsertSkillToStudent: (
     { __typename?: 'SkillToStudent' }
-    & Pick<SkillToStudent, 'id'>
+    & { mark: (
+      { __typename?: 'Mark' }
+      & Pick<Mark, 'text' | 'value'>
+    ) }
   ) }
 );
 
@@ -1020,17 +1179,20 @@ export type CreateOneSkillToContractMutationVariables = {
 
 export type CreateOneSkillToContractMutation = (
   { __typename?: 'Mutation' }
-  & { createOneSkill: (
+  & { createSkill: (
     { __typename?: 'Skill' }
     & { contract: (
       { __typename?: 'Contract' }
-      & Pick<Contract, 'date' | 'id'>
+      & Pick<Contract, 'start' | 'id'>
       & { skills?: Maybe<Array<(
         { __typename?: 'Skill' }
         & Pick<Skill, 'id' | 'name'>
         & { skillToStudents?: Maybe<Array<(
           { __typename?: 'SkillToStudent' }
-          & Pick<SkillToStudent, 'id' | 'mark'>
+          & { mark: (
+            { __typename?: 'Mark' }
+            & Pick<Mark, 'text' | 'value' | 'rgb'>
+          ) }
         )>> }
       )>> }
     ) }
@@ -1044,7 +1206,7 @@ export type DeleteSkillMutationVariables = {
 
 export type DeleteSkillMutation = (
   { __typename?: 'Mutation' }
-  & { deleteOneSkill?: Maybe<(
+  & { deleteSkill?: Maybe<(
     { __typename?: 'Skill' }
     & Pick<Skill, 'id'>
   )> }
@@ -1058,17 +1220,20 @@ export type EditSkillNameMutationVariables = {
 
 export type EditSkillNameMutation = (
   { __typename?: 'Mutation' }
-  & { updateOneSkill?: Maybe<(
+  & { updateSkill?: Maybe<(
     { __typename?: 'Skill' }
     & { contract: (
       { __typename?: 'Contract' }
-      & Pick<Contract, 'date' | 'id'>
+      & Pick<Contract, 'start' | 'id'>
       & { skills?: Maybe<Array<(
         { __typename?: 'Skill' }
         & Pick<Skill, 'id' | 'name'>
         & { skillToStudents?: Maybe<Array<(
           { __typename?: 'SkillToStudent' }
-          & Pick<SkillToStudent, 'id' | 'mark'>
+          & { mark: (
+            { __typename?: 'Mark' }
+            & Pick<Mark, 'text' | 'value' | 'rgb'>
+          ) }
         )>> }
       )>> }
     ) }
@@ -1088,31 +1253,6 @@ export type LoginStudentMutation = (
   ) }
 );
 
-export type LoginStudentOldMutationVariables = {
-  id: Scalars['Float'];
-};
-
-
-export type LoginStudentOldMutation = (
-  { __typename?: 'Mutation' }
-  & { loginStudentOld: (
-    { __typename?: 'StudentAuthPayload' }
-    & Pick<StudentAuthPayload, 'token'>
-    & { student: (
-      { __typename?: 'Student' }
-      & Pick<Student, 'id' | 'firstName' | 'lastName'>
-      & { skillToStudents?: Maybe<Array<(
-        { __typename?: 'SkillToStudent' }
-        & Pick<SkillToStudent, 'mark'>
-        & { skill?: Maybe<(
-          { __typename?: 'Skill' }
-          & Pick<Skill, 'id'>
-        )> }
-      )>> }
-    ) }
-  ) }
-);
-
 export type ContractByDateQueryVariables = {
   date: Scalars['DateTime'];
 };
@@ -1122,13 +1262,17 @@ export type ContractByDateQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'date' | 'end' | 'id' | 'name'>
+    & Pick<Contract, 'start' | 'end' | 'id' | 'name'>
     & { skills?: Maybe<Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
       & { skillToStudents?: Maybe<Array<(
         { __typename?: 'SkillToStudent' }
-        & Pick<SkillToStudent, 'id' | 'mark'>
+        & Pick<SkillToStudent, 'skillId' | 'studentId'>
+        & { mark: (
+          { __typename?: 'Mark' }
+          & Pick<Mark, 'rgb' | 'text' | 'value'>
+        ) }
       )>> }
     )>> }
   )> }
@@ -1141,7 +1285,7 @@ export type ContractsDatesOnlyQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'date'>
+    & Pick<Contract, 'start' | 'end'>
   )> }
 );
 
@@ -1154,17 +1298,19 @@ export type FetchContractQuery = (
   { __typename?: 'Query' }
   & { contract?: Maybe<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'date' | 'end' | 'name'>
+    & Pick<Contract, 'id' | 'start' | 'end' | 'name'>
     & { skills?: Maybe<Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
       & { skillToStudents?: Maybe<Array<(
         { __typename?: 'SkillToStudent' }
-        & Pick<SkillToStudent, 'id' | 'mark'>
-        & { student?: Maybe<(
+        & { mark: (
+          { __typename?: 'Mark' }
+          & Pick<Mark, 'text' | 'value' | 'rgb'>
+        ), student: (
           { __typename?: 'Student' }
           & Pick<Student, 'id' | 'firstName' | 'lastName'>
-        )> }
+        ) }
       )>> }
     )>> }
   )> }
@@ -1177,7 +1323,7 @@ export type FetchContractsQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'date' | 'end' | 'name'>
+    & Pick<Contract, 'id' | 'start' | 'end' | 'name'>
     & { skills?: Maybe<Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
@@ -1194,13 +1340,16 @@ export type FetchContractsAwaitingFinishStudentQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'date' | 'end' | 'name'>
+    & Pick<Contract, 'id' | 'start' | 'end' | 'name'>
     & { skills?: Maybe<Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
       & { skillToStudents?: Maybe<Array<(
         { __typename?: 'SkillToStudent' }
-        & Pick<SkillToStudent, 'id' | 'mark'>
+        & { mark: (
+          { __typename?: 'Mark' }
+          & Pick<Mark, 'text' | 'value' | 'rgb'>
+        ) }
       )>> }
     )>> }
   )> }
@@ -1216,13 +1365,15 @@ export type FetchStudentQuery = (
   & { student?: Maybe<(
     { __typename?: 'Student' }
     & Pick<Student, 'id' | 'firstName' | 'lastName'>
-    & { skillToStudents?: Maybe<Array<(
+    & { skillsToStudent?: Maybe<Array<(
       { __typename?: 'SkillToStudent' }
-      & Pick<SkillToStudent, 'mark'>
-      & { skill?: Maybe<(
+      & { mark: (
+        { __typename?: 'Mark' }
+        & Pick<Mark, 'value' | 'text' | 'rgb'>
+      ), skill: (
         { __typename?: 'Skill' }
         & Pick<Skill, 'id'>
-      )> }
+      ) }
     )>> }
   )> }
 );
@@ -1246,19 +1397,15 @@ export type FetchStudentsWithAwaitingToFinishContractsQuery = (
   & { students: Array<(
     { __typename?: 'Student' }
     & Pick<Student, 'id' | 'firstName' | 'lastName'>
-    & { skillToStudents?: Maybe<Array<(
+    & { skillsToStudent?: Maybe<Array<(
       { __typename?: 'SkillToStudent' }
-      & Pick<SkillToStudent, 'id' | 'mark'>
+      & Pick<SkillToStudent, 'skillId'>
+      & { mark: (
+        { __typename?: 'Mark' }
+        & Pick<Mark, 'text' | 'value' | 'rgb'>
+      ) }
     )>> }
   )> }
-);
-
-export type GetSheetFileQueryVariables = {};
-
-
-export type GetSheetFileQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'contractsToExcel'>
 );
 
 export type MeQueryVariables = {};
@@ -1271,13 +1418,15 @@ export type MeQuery = (
     & { student?: Maybe<(
       { __typename?: 'Student' }
       & Pick<Student, 'id' | 'firstName' | 'lastName'>
-      & { skillToStudents?: Maybe<Array<(
+      & { skillsToStudent?: Maybe<Array<(
         { __typename?: 'SkillToStudent' }
-        & Pick<SkillToStudent, 'id' | 'mark'>
-        & { skill?: Maybe<(
+        & { mark: (
+          { __typename?: 'Mark' }
+          & Pick<Mark, 'value' | 'text' | 'rgb'>
+        ), skill: (
           { __typename?: 'Skill' }
           & Pick<Skill, 'id'>
-        )> }
+        ) }
       )>> }
     )>, teacher?: Maybe<(
       { __typename?: 'Teacher' }

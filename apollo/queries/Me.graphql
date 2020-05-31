@@ -4,9 +4,12 @@ query Me {
       id
       firstName
       lastName
-      skillToStudents {
-        id
-        mark
+      skillsToStudent {
+        mark {
+          value
+          text
+          rgb
+        }
         skill {
           id
         }

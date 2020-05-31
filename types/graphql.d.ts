@@ -8,15 +8,6 @@ declare module '*/AddStudent.graphql' {
 }
     
 
-declare module '*/CheckIfStudentExists.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const CheckIfStudentExists: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
 declare module '*/CreateOneContract.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -98,15 +89,6 @@ declare module '*/LoginStudent.graphql' {
 }
     
 
-declare module '*/LoginStudentOld.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const LoginStudentOld: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
 declare module '*/ContractByDate.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -174,15 +156,6 @@ declare module '*/FetchStudentsWithAwaitingToFinishContracts.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const FetchStudentsWithAwaitingToFinishContracts: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/GetSheetFile.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const GetSheetFile: DocumentNode;
 
   export default defaultDocument;
 }

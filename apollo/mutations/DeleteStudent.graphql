@@ -1,5 +1,5 @@
 mutation DeleteStudent($id: Int!) {
-  deleteStudent(data: {id: $id}) {
+  deleteStudent(where: {id: $id}) {
     id
   }
 }

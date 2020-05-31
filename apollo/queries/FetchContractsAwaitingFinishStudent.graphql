@@ -11,7 +11,7 @@ query FetchContractsAwaitingFinishStudent($studentId: Int!) {
                     equals: $studentId
                   }
                 },
-                mark: {in: [TODO, AWAITING_CORRECTION, TO_FINISH]}
+                mark: {value: {in: ["TODO", "AWAITING_CORRECTION", "TO_FINISH"]}}
               }
             }
           }
@@ -27,9 +27,9 @@ query FetchContractsAwaitingFinishStudent($studentId: Int!) {
         }
       }
     ]
-  }, orderBy: {date: asc}) {
+  }, orderBy: {start: asc}) {
     id
-    date
+    start
     end
     name
     skills(where: {
@@ -39,7 +39,7 @@ query FetchContractsAwaitingFinishStudent($studentId: Int!) {
             some: {
               AND: [
                 {
-                  mark: {in: [TODO, AWAITING_CORRECTION, TO_FINISH]},
+                  mark: {value: {in: ["TODO", "AWAITING_CORRECTION", "TO_FINISH"]}},
                 },
                 {
                   student: {id: {equals: $studentId}}
@@ -61,15 +61,18 @@ query FetchContractsAwaitingFinishStudent($studentId: Int!) {
       skillToStudents(where: {
         AND: [
           {
-            mark: {in: [TODO, AWAITING_CORRECTION, TO_FINISH]},
+            mark: {value: {in: ["TODO", "AWAITING_CORRECTION", "TO_FINISH"]}},
           },
           {
             student: {id: {equals: $studentId}}
           }
         ]
       }) {
-        id
-        mark
+        mark {
+          text
+          value
+          rgb
+        }
       }
     }
   }
