@@ -4,7 +4,6 @@
       <v-col>
         <h1 class="secondary--text mr-5">
           Mes contracts
-          <v-chip color="secondary">BETA</v-chip>
         </h1>
       </v-col>
       <v-col class="text-right">

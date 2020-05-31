@@ -3,7 +3,6 @@
     <v-row align="center" justify="space-between">
       <v-col>
         <h1 class="secondary--text mr-5">Mes élèves
-          <v-chip color="secondary">BETA</v-chip>
         </h1>
       </v-col>
       <v-col class="text-right">
