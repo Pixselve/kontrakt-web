@@ -7,10 +7,18 @@
         </h1>
       </v-col>
       <v-col class="text-right">
-        <v-btn color="secondary" @click="generateSheetFile">
-          <v-icon left>mdi-file</v-icon>
-          Télécharger le fichier tableur
-        </v-btn>
+        <v-tooltip bottom>
+          <template v-slot:activator="{on}">
+            <v-btn v-on="on"  color="secondary" @click="generateSheetFile">
+              <v-icon left>mdi-file</v-icon>
+              Télécharger le fichier tableur
+            </v-btn>
+          </template>
+          Non implémenté dans cette version
+        </v-tooltip>
+
+
+
         <create-contract-dialog>
           <template v-slot="{ on }">
             <v-btn color="secondary" v-on="on">
