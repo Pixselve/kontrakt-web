@@ -1,8 +1,15 @@
 mutation EditSkillName($id: Int!, $name: String!) {
-  updateSkill(where: {id: $id}, data: {name: $name}) {
+  updateOneSkill(id: $id, skill: {name: $name}) {
     contract {
-      start
       id
+      start
+      end
+      name
+      rgb
+      groups {
+        id
+        name
+      }
       skills {
         id
         name
@@ -11,6 +18,11 @@ mutation EditSkillName($id: Int!, $name: String!) {
             text
             value
             rgb
+          }
+          student {
+            id
+            firstName
+            lastName
           }
         }
       }

@@ -1,9 +1,25 @@
 query FetchStudent($id: Int!) {
-  student(where: {id: $id}) {
+  student(id: $id) {
     id
     firstName
     lastName
+    groups {
+      id
+      name
+    }
     skillsToStudent {
+      mark {
+        value
+        text
+        rgb
+      }
+      skill {
+        id
+      }
+    }
+    skillsToStudentToFinish: skillsToStudent(
+      markFilter: ["AWAITING_CORRECTION", "TO_FINISH", "TODO"]
+    ) {
       mark {
         value
         text

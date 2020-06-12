@@ -1,7 +1,35 @@
 query FetchStudents {
-  students(orderBy: {lastName: asc}) {
+  students {
     id
     firstName
     lastName
+    groups {
+      id
+      name
+    }
+
+    skillsToStudent {
+      skillId
+      mark {
+        text
+        value
+        rgb
+      }
+    }
+
+    skillsToStudentToFinish: skillsToStudent(
+      markFilter: ["AWAITING_CORRECTION", "TO_FINISH", "TODO"]
+    ) {
+      mark {
+        value
+        text
+        rgb
+      }
+      skill {
+        id
+      }
+    }
+
+
   }
 }

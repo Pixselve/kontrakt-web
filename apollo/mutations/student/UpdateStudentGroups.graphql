@@ -1,0 +1,7 @@
+mutation UpdateStudentGroups($studentId: Int!, $groups: [Int!]!) {
+  updateOneStudent(student: {groupIds: $groups}, id: $studentId) {
+    groups {
+      id
+    }
+  }
+}

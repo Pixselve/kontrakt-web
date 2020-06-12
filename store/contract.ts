@@ -1,9 +1,12 @@
-import { Action, Module, MutationAction, VuexModule } from "vuex-module-decorators";
+import {
+  Action,
+  Module,
+  MutationAction,
+  VuexModule
+} from "vuex-module-decorators";
 import { $apollo } from "~/utils/getGraphQLClient";
 import FetchContractQueryGQL from "~/apollo/queries/FetchContract.graphql";
 import {
-  ContractByDateQuery,
-  ContractByDateQueryVariables,
   CreateOneSkillToContractMutation,
   CreateOneSkillToContractMutationVariables,
   DeleteContractMutationVariables,
@@ -14,14 +17,15 @@ import {
   EditSkillToStudentMutationVariables,
   FetchContractQuery,
   FetchContractQueryVariables,
-  Mark
+  UpdateContractGroupsMutation,
+  UpdateContractGroupsMutationVariables
 } from "~/types/types";
 import EditSkillToStudentMutationGQL from "~/apollo/mutations/EditSkillToStudent.graphql";
-import ContractByDateQueryGQL from "~/apollo/queries/ContractByDate.graphql";
 import EditSkillNameMutationGQL from "~/apollo/mutations/skill/EditSkillName.graphql";
 import DeleteContractMutationGQL from "~/apollo/mutations/DeleteContract.graphql";
 import CreateOneSkillToContractMutationGQL from "~/apollo/mutations/skill/CreateOneSkillToContract.graphql";
 import DeleteSkillMutationGQL from "~/apollo/mutations/skill/DeleteSkill.graphql";
+import UpdateContractGroupsMutationGQL from "~/apollo/mutations/contract/UpdateContractGroups.graphql";
 
 @Module({
   name: "contract",
@@ -29,12 +33,11 @@ import DeleteSkillMutationGQL from "~/apollo/mutations/skill/DeleteSkill.graphql
   namespaced: true
 })
 export default class ContractModule extends VuexModule {
-  contract: FetchContractQuery["contract"] = null;
+  contract: FetchContractQuery["contract"] | null = null;
 
   get contractID(): number | null {
     return this.contract?.id ?? null;
   }
-
 
   @MutationAction({ mutate: ["contract"] })
   async fetchContract(id: number) {
@@ -49,6 +52,21 @@ export default class ContractModule extends VuexModule {
   }
 
   @MutationAction({ mutate: ["contract"] })
+  async updateGroups(groupIds: number[]) {
+    const {
+      data
+    }: { data: UpdateContractGroupsMutation } = await $apollo.query({
+      query: UpdateContractGroupsMutationGQL,
+      variables: {
+        contractId: this.getters?.contractID as unknown,
+        groups: groupIds
+      } as UpdateContractGroupsMutationVariables,
+      fetchPolicy: "no-cache"
+    });
+    return { contract: data.updateOneContract };
+  }
+
+  @MutationAction({ mutate: ["contract"] })
   async deleteContract() {
     if (this.contract?.id === null) {
       throw new Error("NoContractSet");
@@ -56,25 +74,11 @@ export default class ContractModule extends VuexModule {
       await $apollo.mutate({
         mutation: DeleteContractMutationGQL,
         variables: {
-          id: this.getters?.contractID as unknown as number
+          id: (this.getters?.contractID as unknown) as number
         } as DeleteContractMutationVariables
       });
       return { contract: null };
     }
-  }
-
-  @MutationAction({ mutate: ["contract"] })
-  async fetchContractByDate(date: Date) {
-    const { data }: { data: ContractByDateQuery } = await $apollo.query({
-      query: ContractByDateQueryGQL,
-      variables: {
-        date: new Date(
-          Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-        )
-      } as ContractByDateQueryVariables
-    });
-    if (data.contracts.length <= 0) throw new Error("ContractNotFound");
-    return { contract: data.contracts[0] };
   }
 
   @MutationAction({ mutate: ["contract"] })
@@ -102,10 +106,10 @@ export default class ContractModule extends VuexModule {
         data?: CreateOneSkillToContractMutation | undefined | null;
       } = await $apollo.mutate({
         mutation: CreateOneSkillToContractMutationGQL,
-        variables: {
+        variables: ({
           name,
           contractID: this.getters.contractID
-        } as unknown as CreateOneSkillToContractMutationVariables
+        } as unknown) as CreateOneSkillToContractMutationVariables
       });
       return { contract: data?.createOneSkill?.contract ?? null };
     } else {
@@ -129,10 +133,9 @@ export default class ContractModule extends VuexModule {
     await this.context.dispatch("fetchContract", this.contract?.id);
   }
 
-
   @Action
   async editMarkSkillToStudent(data: {
-    mark: Mark;
+    markValue: string;
     skillId: number;
     studentId: number;
   }) {
@@ -140,9 +143,9 @@ export default class ContractModule extends VuexModule {
       await $apollo.mutate({
         mutation: EditSkillToStudentMutationGQL,
         variables: {
-          mark: data.mark,
           studentId: data.studentId,
-          skillId: data.skillId
+          skillId: data.skillId,
+          markValue: data.markValue
         } as EditSkillToStudentMutationVariables
       });
       await this.context.dispatch("fetchContract", this.contract?.id);

@@ -1,7 +1,7 @@
 <template>
   <div>
     <contract-popup :editable="editable" :contract="contract" ref="popup"></contract-popup>
-    <contract-card @click="cardClick" :dateString="contract.date">
+    <contract-card @click="cardClick" :date-string="contract.start">
       <v-row no-gutters align-content="center" justify="center">
         <v-col cols="12">
           <v-icon small>mdi-marker</v-icon>
@@ -36,7 +36,7 @@
     popup = false;
 
     get studentSkills() {
-      return studentStore.skillToStudents;
+      return studentStore.student?.skillsToStudent;
     }
 
 

@@ -26,39 +26,34 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
-  import { studentsStore } from "~/utils/store-accessor";
-  import FetchStudentsWithAwaitingToFinishContractsQueryGQL
-    from "@/apollo/queries/FetchStudentsWithAwaitingToFinishContracts.graphql";
-  import { FetchStudentsWithAwaitingToFinishContractsQuery } from "~/types/types";
-  import StudentListItem from "~/components/StudentListItem.vue";
-  import CreateStudentDialog from "~/components/CreateStudentDialog.vue";
+import { Component, Vue } from 'vue-property-decorator';
+import { groupsStore, studentsStore } from "~/utils/store-accessor";
+import StudentListItem from "~/components/StudentListItem.vue";
+import CreateStudentDialog from "~/components/CreateStudentDialog.vue";
 
-  @Component({
-    layout: "teacher",
-    async asyncData() {
-      await studentsStore.fetchStudents();
-    },
-    components: {
-      StudentListItem,
-      CreateStudentDialog
-    },
-    apollo: {
-      students: {
-        query: FetchStudentsWithAwaitingToFinishContractsQueryGQL
-      }
-    }
-  })
-  export default class TeacherStudentsPageBeta extends Vue {
-    students: FetchStudentsWithAwaitingToFinishContractsQuery["students"] | null = null;
-    // get students() {
-    //   return studentsStore.students;
-    // }
-    get highestAwaitingToFinishSkillCount() {
-      let result = 0;
-      this.students?.forEach(student => result = Math.max(result, student.skillToStudents?.length ?? 0));
-      return result;
-    }
+@Component({
+  layout: "teacher",
+  async asyncData() {
+    await studentsStore.fetchStudents();
 
+    await groupsStore.fetchGroups();
+
+  },
+  components: {
+    StudentListItem,
+    CreateStudentDialog
+  },
+})
+export default class TeacherStudentsPageBeta extends Vue {
+  get students() {
+    return studentsStore.students;
   }
+
+  get highestAwaitingToFinishSkillCount() {
+    let result = 0;
+    this.students?.forEach(student => result = Math.max(result, student.skillsToStudentToFinish?.length ?? 0));
+    return result;
+  }
+
+}
 </script>

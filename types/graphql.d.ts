@@ -53,6 +53,24 @@ declare module '*/LoginTeacher.graphql' {
 }
     
 
+declare module '*/UpdateContractGroups.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const UpdateContractGroups: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/CreateGroup.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const CreateGroup: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/CreateOneSkillToContract.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -89,10 +107,10 @@ declare module '*/LoginStudent.graphql' {
 }
     
 
-declare module '*/ContractByDate.graphql' {
+declare module '*/UpdateStudentGroups.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  export const ContractByDate: DocumentNode;
+  export const UpdateStudentGroups: DocumentNode;
 
   export default defaultDocument;
 }
@@ -152,19 +170,37 @@ declare module '*/FetchStudents.graphql' {
 }
     
 
-declare module '*/FetchStudentsWithAwaitingToFinishContracts.graphql' {
+declare module '*/Me.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  export const FetchStudentsWithAwaitingToFinishContracts: DocumentNode;
+  export const Me: DocumentNode;
 
   export default defaultDocument;
 }
     
 
-declare module '*/Me.graphql' {
+declare module '*/FindManyContractsOfGroups.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  export const Me: DocumentNode;
+  export const FindManyContractsOfGroups: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/FindManyGroups.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const FindManyGroups: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/FetchMarks.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const FetchMarks: DocumentNode;
 
   export default defaultDocument;
 }

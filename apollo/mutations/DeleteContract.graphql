@@ -1,5 +1,5 @@
 mutation DeleteContract($id: Int!) {
-  deleteContract(where: {id: $id}) {
+  deleteOneContract(id: $id) {
     id
   }
 }

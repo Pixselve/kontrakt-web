@@ -1,30 +1,30 @@
-import { Action, Module, Mutation, VuexModule }                                                    from 'vuex-module-decorators';
-import { $apollo }                                                                                 from "~/utils/getGraphQLClient";
-import FetchStudentsQueryGQL
-                                                                                                   from "~/apollo/queries/FetchStudents.graphql";
-import FetchStudentQueryGQL
-                                                                                                   from "~/apollo/queries/FetchStudent.graphql";
-import AddStudentMutationGQL
-                                                                                                   from "~/apollo/mutations/AddStudent.graphql";
-import { AddStudentMutationVariables, FetchContractsQuery, FetchStudentQuery, FetchStudentsQuery } from "~/types/types";
+import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
+import { $apollo } from "~/utils/getGraphQLClient";
+import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
+import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
+import AddStudentMutationGQL from "~/apollo/mutations/AddStudent.graphql";
+import {
+  AddStudentMutationVariables,
+  FetchContractsQuery,
+  FetchStudentQuery,
+  FetchStudentsQuery, UpdateStudentGroupsMutation, UpdateStudentGroupsMutationVariables
+} from "~/types/types";
+import UpdateStudentGroupsMutationGQL from "~/apollo/mutations/student/UpdateStudentGroups.graphql";
 
 @Module({
-  name: 'students',
+  name: "students",
   stateFactory: true,
-  namespaced: true,
+  namespaced: true
 })
 export default class Students extends VuexModule {
   students: FetchStudentsQuery["students"] = [];
 
   get studentsComboboxFormatted() {
-
     return this.students.map(({ firstName, lastName, id }) => ({
-      text: `${ lastName } ${ firstName }`,
+      text: `${lastName} ${firstName}`,
       value: id
     }));
-
   }
-
 
   get allStudents() {
     return this.students;
@@ -42,7 +42,7 @@ export default class Students extends VuexModule {
       fetchPolicy: "no-cache"
     });
 
-    this.context.commit('setStudents', data.students);
+    this.context.commit("setStudents", data.students);
   }
 
   @Action
@@ -58,4 +58,18 @@ export default class Students extends VuexModule {
 
     await this.context.dispatch("fetchStudents");
   }
+
+
+  @Action
+  async editStudentGroups({ groupIds, studentId }: {groupIds: number[], studentId: number}) {
+    const { data }: { data?: UpdateStudentGroupsMutation | null } = await $apollo.mutate({
+      mutation: UpdateStudentGroupsMutationGQL,
+      variables: {
+        studentId: studentId,
+        groups: groupIds
+      } as UpdateStudentGroupsMutationVariables
+    });
+    await this.context.dispatch("fetchStudents");
+  }
+
 }

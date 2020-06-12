@@ -1,7 +1,20 @@
 <template>
   <v-container>
     <v-row>
-      <v-col class="text-right" cols="12">
+      <v-col>
+        <h1>{{ student.firstName }} {{ student.lastName }}</h1>
+        <v-chip-group>
+          <v-chip
+            color="primary"
+            small
+            label
+            v-for="group in student.groups"
+            :key="group.id"
+            >{{ group.name }}
+          </v-chip>
+        </v-chip-group>
+      </v-col>
+      <v-col class="text-right">
         <v-btn icon @click="toggleTheme">
           <v-icon
             v-text="
@@ -29,12 +42,14 @@
             <v-btn fab text small color="grey darken-2" @click="next">
               <v-icon small>mdi-chevron-right</v-icon>
             </v-btn>
-            <h3>{{
-              new Date(calendarValue).toLocaleDateString("fr-FR", {
-              month: "long",
-              year: "numeric"
-              })
-              }}</h3>
+            <h3>
+              {{
+                new Date(calendarValue).toLocaleDateString("fr-FR", {
+                  month: "long",
+                  year: "numeric"
+                })
+              }}
+            </h3>
             <v-spacer></v-spacer>
           </v-toolbar>
         </v-sheet>
@@ -114,10 +129,7 @@ import ContractCard from "~/components/ContractCard.vue";
 import { contractsStore, studentStore } from "~/utils/store-accessor";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
 import AwaitingFinishContractCard from "~/components/AwaitingFinishContractCard.vue";
-import { Skill } from "~/types/types";
-import { FetchContractQueryWithColor } from "~/store/contracts";
-
-
+import { FetchContractsQuery } from "~/types/types";
 
 @Component({
   components: {
@@ -131,10 +143,17 @@ import { FetchContractQueryWithColor } from "~/store/contracts";
     title: "Élève"
   }),
   async asyncData() {
-    await contractsStore.fetchContracts();
     await studentStore.fetchMe();
-    if (studentStore.id)
-      await studentStore.fetchAwaitingToFinishContracts(studentStore.id);
+    if (studentStore.student?.id) {
+      await contractsStore.fetchContractsOfGroups(
+        studentStore.student.groups.map(group => group.id) ?? []
+      );
+      await studentStore.fetchAwaitingToFinishContracts(
+        studentStore.student?.id
+      );
+    } else {
+      throw "Student fetch not completed";
+    }
   },
   middleware: "studentLogged"
 })
@@ -143,16 +162,15 @@ export default class StudentPage extends Vue {
 
   calendarValue = new Date().toISOString();
   selectedOpen = false;
-  selectedContract: FetchContractQueryWithColor | null = null;
+  selectedContract: FetchContractsQuery["contracts"][0] | null = null;
   selectedElement: null | EventTarget = null;
-  colors = ["blue", "indigo", "deep-purple", "cyan", "green", "orange"];
 
   showEvent({
-              nativeEvent,
-              event
-            }: {
+    nativeEvent,
+    event
+  }: {
     nativeEvent: Event;
-    event: FetchContractQueryWithColor;
+    event: FetchContractsQuery["contracts"][0];
   }) {
     const open = () => {
       this.selectedContract = event;
@@ -175,8 +193,8 @@ export default class StudentPage extends Vue {
     this.calendarRef.prev();
   }
 
-  getEventColor(event: FetchContractQueryWithColor) {
-    return event.color;
+  getEventColor(event: FetchContractsQuery["contracts"][0]) {
+    return event.rgb;
   }
 
   next() {
@@ -207,7 +225,7 @@ export default class StudentPage extends Vue {
   }
 
   get contracts() {
-    return contractsStore.getContracts;
+    return contractsStore.contracts;
   }
 
   get student() {
@@ -215,7 +233,7 @@ export default class StudentPage extends Vue {
   }
 
   get skillToStudent() {
-    return studentStore.skillToStudents;
+    return studentStore.student?.skillsToStudent;
   }
 
   get contractsFormattedForCalendar() {

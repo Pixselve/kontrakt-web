@@ -22,10 +22,10 @@
 
   @Component({})
   export default class ContractCard extends Vue {
-    @Prop({ type: String }) readonly dateString!: string;
+    @Prop() readonly dateString!: string;
 
     get date() {
-      return new Date(this.dateString);
+      return new Date(this.dateString)
     }
 
 

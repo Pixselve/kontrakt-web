@@ -3,13 +3,11 @@ mutation EditSkillToStudent(
   $skillId: Int!
   $studentId: Int!
 ) {
-  upsertSkillToStudent(
-    where: { studentId_skillId: { skillId: $skillId, studentId: $studentId } }
-    update: { mark: { connect: { value: $markValue } } }
-    create: {
-      student: { connect: { id: $studentId } }
-      skill: { connect: { id: $skillId } }
-      mark: { connect: { value: $markValue } }
+  upsertOneSkillToStudent(
+    skillToStudent: {
+      markValue: $markValue
+      studentId: $studentId
+      skillId: $skillId
     }
   ) {
     mark {

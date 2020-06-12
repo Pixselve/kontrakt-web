@@ -1,5 +1,5 @@
 mutation LoginStudent($username: Int!) {
-  loginStudent(username: $username) {
+  loginStudent(student: {username: $username}) {
     token
   }
 }

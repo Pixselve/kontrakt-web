@@ -1,5 +1,5 @@
-query FetchContracts {
-  contracts {
+query FindManyContractsOfGroups($groups: [Int!]!) {
+  contracts(groups: $groups) {
     id
     start
     end

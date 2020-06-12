@@ -1,9 +1,9 @@
 import { Module, Mutation, VuexModule } from "vuex-module-decorators";
 
 @Module({
-  name: 'loggedUser',
+  name: "loggedUser",
   stateFactory: true,
-  namespaced: true,
+  namespaced: true
 })
 export default class LoggedUserModule extends VuexModule {
   get isLogged(): boolean {
@@ -17,7 +17,6 @@ export default class LoggedUserModule extends VuexModule {
   isLoggedD = false;
   typeD: "TEACHER" | "STUDENT" | null = null;
 
-
   @Mutation
   login(type: "TEACHER" | "STUDENT") {
     console.log("LOGIN");
@@ -30,6 +29,4 @@ export default class LoggedUserModule extends VuexModule {
     this.isLoggedD = false;
     this.typeD = null;
   }
-
-
 }

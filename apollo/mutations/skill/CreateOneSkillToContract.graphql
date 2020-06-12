@@ -1,8 +1,14 @@
 mutation CreateOneSkillToContract($name: String!, $contractID: Int!) {
-  createSkill(data: {name: $name, contract: {connect: {id: $contractID}}}) {
+  createOneSkill(skill: {name: $name, contractId: $contractID}) {
     contract {
-      start
       id
+      start
+      end
+      name
+      groups {
+        id
+        name
+      }
       skills {
         id
         name
@@ -12,8 +18,14 @@ mutation CreateOneSkillToContract($name: String!, $contractID: Int!) {
             value
             rgb
           }
+          student {
+            id
+            firstName
+            lastName
+          }
         }
       }
     }
+
   }
 }

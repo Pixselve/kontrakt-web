@@ -1,5 +1,5 @@
-query FetchContract($id: Int!) {
-  contract(id: $id) {
+mutation UpdateContractGroups($contractId: Int!, $groups: [Int!]!) {
+  updateOneContract(id: $contractId, contract: {groupIds: $groups}) {
     id
     start
     end
@@ -27,4 +27,3 @@ query FetchContract($id: Int!) {
     }
   }
 }
-
