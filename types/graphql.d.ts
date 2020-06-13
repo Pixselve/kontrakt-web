@@ -98,6 +98,15 @@ declare module '*/EditSkillName.graphql' {
 }
     
 
+declare module '*/CreateManyStudentWithCSV.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const CreateManyStudentWithCSV: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/LoginStudent.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

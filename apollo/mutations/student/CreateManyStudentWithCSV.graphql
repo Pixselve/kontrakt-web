@@ -1,5 +1,5 @@
-query FetchStudents {
-  students {
+mutation CreateManyStudentWithCSV($file: Upload!) {
+  createManyStudentCSV(file: $file) {
     id
     firstName
     lastName
@@ -30,5 +30,6 @@ query FetchStudents {
         id
       }
     }
+
   }
 }

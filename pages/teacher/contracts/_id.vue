@@ -74,7 +74,7 @@ export default class TeacherContractPage extends Vue {
     return contractStore.contract;
   };
 
-  mapGroupsId(groups: Group[]) {
+  mapGroupsId(groups: { __typename?: "Group" | undefined; } & Pick<Group, "id" | "name">[]) {
     return groups.map(group => (group.id));
   }
 

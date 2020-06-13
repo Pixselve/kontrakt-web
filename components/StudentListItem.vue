@@ -1,27 +1,35 @@
 <template>
   <v-card flat>
     <v-row justify="space-between" class="px-5" dense align="center">
-      <v-col
-      >{{ student.lastName.toUpperCase() }} {{ student.firstName }}
-        <!--   Groups chip list   -->
-        <v-row no-gutters align="center">
-          <v-chip-group>
-            <v-chip
-              color="primary"
-              small
-              label
-              v-for="group in student.groups"
-              :key="group.id"
-            >{{ group.name }}
-            </v-chip>
-          </v-chip-group>
+      <v-col class="d-flex">
+        <div class="mr-5">
+          <v-chip color="primary"
+            ><v-avatar left><v-icon>mdi-account-circle</v-icon></v-avatar>
+            {{ student.username }}</v-chip
+          >
+        </div>
+        <div>
+          {{ student.lastName.toUpperCase() }} {{ student.firstName }}
+          <!--   Groups chip list   -->
+          <v-row no-gutters align="center">
+            <v-chip-group>
+              <v-chip
+                color="primary"
+                small
+                label
+                v-for="group in student.groups"
+                :key="group.id"
+                >{{ group.name }}
+              </v-chip>
+            </v-chip-group>
 
-          <GroupsSelector
-            @input="editGroups"
-            :groups="groups"
-            v-model="selectedGroup"
-          />
-        </v-row>
+            <GroupsSelector
+              @input="editGroups"
+              :groups="groups"
+              v-model="selectedGroup"
+            />
+          </v-row>
+        </div>
       </v-col>
       <v-col>
         <div
@@ -71,7 +79,10 @@ export default class StudentListItem extends Vue {
    */
   async editGroups() {
     try {
-      await studentsStore.editStudentGroups({ studentId: this.student.id, groupIds: this.selectedGroup });
+      await studentsStore.editStudentGroups({
+        studentId: this.student.id,
+        groupIds: this.selectedGroup
+      });
       await studentsStore.fetchStudents();
 
       this.selectedGroup = this.student.groups?.map(({ id }) => id) ?? [];
@@ -90,10 +101,10 @@ export default class StudentListItem extends Vue {
     return this.highestAwaitingToFinishSkillCount === 0
       ? 100
       : ((this.highestAwaitingToFinishSkillCount -
-      (this.student.skillsToStudentToFinish?.length ??
-        this.highestAwaitingToFinishSkillCount)) *
-      100) /
-      this.highestAwaitingToFinishSkillCount;
+          (this.student.skillsToStudentToFinish?.length ??
+            this.highestAwaitingToFinishSkillCount)) *
+          100) /
+          this.highestAwaitingToFinishSkillCount;
   }
 
   get progressBarColor() {

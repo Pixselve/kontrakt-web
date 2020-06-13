@@ -8,6 +8,8 @@ export type Scalars = {
   Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: any;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 export type AuthPayload = {
@@ -36,6 +38,11 @@ export type Contract = {
   archived: Scalars['Boolean'];
   skills: Array<Skill>;
   groups: Array<Group>;
+};
+
+
+export type ContractSkillsArgs = {
+  markValues?: Maybe<Array<Scalars['String']>>;
 };
 
 export type CreateOneContractInput = {
@@ -105,6 +112,7 @@ export type Mutation = {
   deleteOneContract: Contract;
   deleteOneStudent: Student;
   upsertOneSkillToStudent: SkillToStudent;
+  createManyStudentCSV: Array<Student>;
 };
 
 
@@ -183,6 +191,11 @@ export type MutationDeleteOneStudentArgs = {
 
 export type MutationUpsertOneSkillToStudentArgs = {
   skillToStudent: UpsertOneSkillToStudentInput;
+};
+
+
+export type MutationCreateManyStudentCsvArgs = {
+  file: Scalars['Upload'];
 };
 
 export type Query = {
@@ -281,6 +294,7 @@ export type UpdateOneStudentInput = {
   lastName?: Maybe<Scalars['String']>;
   groupIds?: Maybe<Array<Scalars['Int']>>;
 };
+
 
 export type UpsertOneSkillToStudentInput = {
   skillId: Scalars['Int'];
@@ -504,6 +518,39 @@ export type EditSkillNameMutation = (
   ) }
 );
 
+export type CreateManyStudentWithCsvMutationVariables = {
+  file: Scalars['Upload'];
+};
+
+
+export type CreateManyStudentWithCsvMutation = (
+  { __typename?: 'Mutation' }
+  & { createManyStudentCSV: Array<(
+    { __typename?: 'Student' }
+    & Pick<Student, 'id' | 'firstName' | 'lastName' | 'username'>
+    & { groups: Array<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
+    )>, skillsToStudent: Array<(
+      { __typename?: 'SkillToStudent' }
+      & Pick<SkillToStudent, 'skillId'>
+      & { mark: (
+        { __typename?: 'Mark' }
+        & Pick<Mark, 'text' | 'value' | 'rgb'>
+      ) }
+    )>, skillsToStudentToFinish: Array<(
+      { __typename?: 'SkillToStudent' }
+      & { mark: (
+        { __typename?: 'Mark' }
+        & Pick<Mark, 'value' | 'text' | 'rgb'>
+      ), skill: (
+        { __typename?: 'Skill' }
+        & Pick<Skill, 'id'>
+      ) }
+    )> }
+  )> }
+);
+
 export type LoginStudentMutationVariables = {
   username: Scalars['Int'];
 };
@@ -659,7 +706,7 @@ export type FetchStudentsQuery = (
   { __typename?: 'Query' }
   & { students: Array<(
     { __typename?: 'Student' }
-    & Pick<Student, 'id' | 'firstName' | 'lastName'>
+    & Pick<Student, 'id' | 'firstName' | 'lastName' | 'username'>
     & { groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>

@@ -1,13 +1,21 @@
-import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
+import {
+  Action,
+  Module,
+  Mutation,
+  MutationAction,
+  VuexModule
+} from "vuex-module-decorators";
 import { $apollo } from "~/utils/getGraphQLClient";
 import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
-import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
 import AddStudentMutationGQL from "~/apollo/mutations/AddStudent.graphql";
+import CreateManyStudentWithCSVMutationGQL from "~/apollo/mutations/student/CreateManyStudentWithCSV.graphql";
 import {
   AddStudentMutationVariables,
-  FetchContractsQuery,
-  FetchStudentQuery,
-  FetchStudentsQuery, UpdateStudentGroupsMutation, UpdateStudentGroupsMutationVariables
+  CreateManyStudentWithCsvMutation,
+  CreateManyStudentWithCsvMutationVariables,
+  FetchStudentsQuery,
+  UpdateStudentGroupsMutation,
+  UpdateStudentGroupsMutationVariables
 } from "~/types/types";
 import UpdateStudentGroupsMutationGQL from "~/apollo/mutations/student/UpdateStudentGroups.graphql";
 
@@ -59,10 +67,17 @@ export default class Students extends VuexModule {
     await this.context.dispatch("fetchStudents");
   }
 
-
   @Action
-  async editStudentGroups({ groupIds, studentId }: {groupIds: number[], studentId: number}) {
-    const { data }: { data?: UpdateStudentGroupsMutation | null } = await $apollo.mutate({
+  async editStudentGroups({
+    groupIds,
+    studentId
+  }: {
+    groupIds: number[];
+    studentId: number;
+  }) {
+    const {
+      data
+    }: { data?: UpdateStudentGroupsMutation | null } = await $apollo.mutate({
       mutation: UpdateStudentGroupsMutationGQL,
       variables: {
         studentId: studentId,
@@ -72,4 +87,18 @@ export default class Students extends VuexModule {
     await this.context.dispatch("fetchStudents");
   }
 
+  @MutationAction({ mutate: ["students"] })
+  async importStudentsWithCSV(file: File) {
+    const {
+      data
+    }: {
+      data?: CreateManyStudentWithCsvMutation | null;
+    } = await $apollo.mutate({
+      mutation: CreateManyStudentWithCSVMutationGQL,
+      variables: {
+        file
+      } as CreateManyStudentWithCsvMutationVariables
+    });
+    return { students: data?.createManyStudentCSV };
+  }
 }

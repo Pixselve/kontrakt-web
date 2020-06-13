@@ -6,7 +6,7 @@
       </slot>
 
     </template>
-    <v-card>
+    <v-card :loading="loading">
       <v-form ref="form" @submit.prevent="submit">
         <v-card-title>
           Ajouter un élève
@@ -34,7 +34,7 @@
 
     @Ref("form") readonly formRef!: HTMLFormElement;
     dialog = false;
-    loading = true;
+    loading = false;
 
 
     studentData = {
