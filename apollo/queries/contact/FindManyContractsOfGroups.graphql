@@ -1,0 +1,17 @@
+query FindManyContractsOfGroups($groups: [Int!]!) {
+  contracts(groups: $groups) {
+    id
+    start
+    end
+    name
+    rgb
+    groups {
+      id
+      name
+    }
+    skills {
+      id
+      name
+    }
+  }
+}

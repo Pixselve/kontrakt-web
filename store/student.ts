@@ -1,15 +1,18 @@
-import { Action, Module, Mutation, MutationAction, VuexModule } from "vuex-module-decorators";
+import {
+  Action,
+  Module,
+  Mutation,
+  MutationAction,
+  VuexModule
+} from "vuex-module-decorators";
 import {
   DeleteStudentMutationVariables,
   EditSkillToStudentMutationVariables,
   FetchContractsAwaitingFinishStudentQuery,
   FetchContractsAwaitingFinishStudentQueryVariables,
   FetchStudentQuery,
-  Mark,
-  Maybe,
-  MeQuery,
-  Skill,
-  SkillToStudent
+  FetchStudentQueryVariables,
+  MeQuery
 } from "~/types/types";
 import { $apollo } from "~/utils/getGraphQLClient";
 import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
@@ -26,33 +29,11 @@ import FetchContractsAwaitingFinishStudentQueryGQL from "~/apollo/queries/FetchC
   namespaced: true
 })
 export default class TeacherStudentModule extends VuexModule {
-  id: number | null = null;
-  firstName: string | null = null;
-  lastName: string | null = null;
-  skillToStudents: Array<{ __typename?: "SkillToStudent" } & Pick<SkillToStudent, "mark"> & {
-    skill?: Maybe<{ __typename?: "Skill" } & Pick<Skill, "id">>;
-  }> = [];
-  contractsNeededToBeFinished: FetchContractsAwaitingFinishStudentQuery["contracts"] = [];
-
-  get student(): FetchStudentQuery["student"] | null {
-    if (this.id && this.firstName && this.lastName && this.skillToStudents) {
-      return {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        id: this.id,
-        skillToStudents: this.skillToStudents
-      };
-    } else {
-      return null;
-    }
-  }
+  student: FetchStudentQuery["student"] | null = null;
+  contractsNeededToBeFinished: FetchContractsAwaitingFinishStudentQuery["findManyContractNotFinishedByStudent"] = [];
 
   get studentId() {
-    return this.id;
-  }
-
-  get getContractsNeededToBeFinished() {
-    return this.contractsNeededToBeFinished;
+    return this.student?.id;
   }
 
   get skillsCountNeededToBeFinished() {
@@ -68,21 +49,18 @@ export default class TeacherStudentModule extends VuexModule {
    * Logout the current student
    */
   logout() {
-    this.id = null;
-    this.firstName = null;
-    this.lastName = null;
-    this.skillToStudents = [];
+    this.student = null;
     this.contractsNeededToBeFinished = [];
   }
 
   @Action
-  async editMarkSkillToStudent(data: { mark: Mark; skillId: number }) {
+  async editMarkSkillToStudent(data: { markValue: String; skillId: number }) {
     await $apollo.mutate({
       mutation: EditSkillToStudentMutationGQL,
       variables: {
-        mark: data.mark,
         studentId: this.studentId,
-        skillId: data.skillId
+        skillId: data.skillId,
+        markValue: data.markValue
       } as EditSkillToStudentMutationVariables
     });
     await this.context.dispatch("fetchStudent", this.studentId);
@@ -100,12 +78,8 @@ export default class TeacherStudentModule extends VuexModule {
 
   @Mutation
   async setStudent(data: FetchStudentQuery["student"]) {
-    if (data && data.skillToStudents) {
-      const { id, lastName, firstName, skillToStudents } = data;
-      this.id = id;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.skillToStudents = skillToStudents;
+    if (data && data.skillsToStudent) {
+      this.student = data;
     }
   }
 
@@ -115,14 +89,14 @@ export default class TeacherStudentModule extends VuexModule {
       query: FetchStudentQueryGQL,
       variables: {
         id
-      } as FetchStudentQuery,
+      } as FetchStudentQueryVariables,
       fetchPolicy: "no-cache"
     });
     this.context.commit("setStudent", data.student);
   }
 
   @MutationAction({
-    mutate: ["id", "firstName", "lastName", "skillToStudents"]
+    mutate: ["student"]
   })
   async fetchMe() {
     const { data }: { data: MeQuery } = await $apollo.query({
@@ -131,10 +105,7 @@ export default class TeacherStudentModule extends VuexModule {
     });
 
     return {
-      id: data.me.student?.id,
-      firstName: data.me.student?.firstName,
-      lastName: data.me.student?.lastName,
-      skillToStudents: data.me.student?.skillToStudents
+      student: data.me
     };
   }
 
@@ -150,7 +121,8 @@ export default class TeacherStudentModule extends VuexModule {
         } as FetchContractsAwaitingFinishStudentQueryVariables
       }
     );
-    return { contractsNeededToBeFinished: data.contracts };
+    return {
+      contractsNeededToBeFinished: data.findManyContractNotFinishedByStudent
+    };
   }
-
 }

@@ -1,5 +1,6 @@
 query ContractsDatesOnly {
   contracts {
-    date
+    start
+    end
   }
 }

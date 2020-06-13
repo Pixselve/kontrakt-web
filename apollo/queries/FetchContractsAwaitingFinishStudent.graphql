@@ -1,76 +1,24 @@
 query FetchContractsAwaitingFinishStudent($studentId: Int!) {
-  contracts(where: {
-    OR: [
-      {
-        skills: {
-          some: {
-            skillToStudents: {
-              some: {
-                student: {
-                  id: {
-                    equals: $studentId
-                  }
-                },
-                mark: {in: [TODO, AWAITING_CORRECTION, TO_FINISH]}
-              }
-            }
-          }
-        }
-      },
-      {
-        skills: {
-          some: {
-            skillToStudents: {
-              none: {student: {id: {equals: $studentId}}}
-            }
-          }
-        }
-      }
-    ]
-  }, orderBy: {date: asc}) {
+  findManyContractNotFinishedByStudent(studentId: $studentId) {
     id
-    date
+    start
     end
     name
-    skills(where: {
-      OR: [
-        {
-          skillToStudents: {
-            some: {
-              AND: [
-                {
-                  mark: {in: [TODO, AWAITING_CORRECTION, TO_FINISH]},
-                },
-                {
-                  student: {id: {equals: $studentId}}
-                }
-              ]
-            }
-          }
-        },
-        {
-          skillToStudents: {none: {
-            student: {id: {equals: $studentId}}
-          }}
-        }
-      ]
-
-    }) {
+    rgb
+    skills(markValues: ["TODO", "AWAITING_CORRECTION", "TO_FINISH"]) {
       id
       name
-      skillToStudents(where: {
-        AND: [
-          {
-            mark: {in: [TODO, AWAITING_CORRECTION, TO_FINISH]},
-          },
-          {
-            student: {id: {equals: $studentId}}
-          }
-        ]
-      }) {
-        id
-        mark
+      skillToStudent(studentId: $studentId) {
+        mark {
+          text
+          value
+          rgb
+          icon
+        }
       }
     }
   }
 }
+
+
+

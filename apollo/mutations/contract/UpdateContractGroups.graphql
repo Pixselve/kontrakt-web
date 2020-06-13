@@ -1,0 +1,29 @@
+mutation UpdateContractGroups($contractId: Int!, $groups: [Int!]!) {
+  updateOneContract(id: $contractId, contract: {groupIds: $groups}) {
+    id
+    start
+    end
+    name
+    rgb
+    groups {
+      id
+      name
+    }
+    skills {
+      id
+      name
+      skillToStudents {
+        mark {
+          text
+          value
+          rgb
+        }
+        student {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,18 @@
-mutation EditSkillToStudent($mark: Mark!, $skillId: Int!, $studentId: Int!) {
-  editOrCreateSkillToStudent(data: {mark: $mark, skill: {id: $skillId}, student: {id: $studentId}}) {
-    id
+mutation EditSkillToStudent(
+  $markValue: String!
+  $skillId: Int!
+  $studentId: Int!
+) {
+  upsertOneSkillToStudent(
+    skillToStudent: {
+      markValue: $markValue
+      studentId: $studentId
+      skillId: $skillId
+    }
+  ) {
+    mark {
+      text
+      value
+    }
   }
 }

@@ -22,17 +22,18 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
 
-  @Component({
-    middleware: "teacherLogged"
-  })
-  export default class TeacherLayout extends Vue {
-    // Logout the teacher
-    async logout() {
-      await this.$apolloHelpers.onLogout();
-      this.$cookies.remove("type");
-      await this.$router.push("/teacher/login");
-    }
+import { Component, Vue } from 'vue-property-decorator';
+
+@Component({
+  middleware: "teacherLogged"
+})
+export default class TeacherLayout extends Vue {
+  // Logout the teacher
+  async logout() {
+    await this.$apolloHelpers.onLogout();
+    this.$cookies.remove("type");
+    await this.$router.push("/teacher/login");
   }
+}
 </script>

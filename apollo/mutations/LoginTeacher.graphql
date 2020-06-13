@@ -1,4 +1,4 @@
 mutation LoginTeacher($email: String!, $password: String!) {
-  loginTeacher(data: {email: $email, password: $password}) {
+  loginTeacher(teacher: {email: $email, password: $password}) {
     token
   }}

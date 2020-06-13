@@ -46,7 +46,7 @@
 
 
     get studentSkills() {
-      return studentStore.skillToStudents;
+      return studentStore.student?.skillsToStudent;
     }
   }
 </script>

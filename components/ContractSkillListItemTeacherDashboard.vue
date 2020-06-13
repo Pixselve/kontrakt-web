@@ -9,8 +9,6 @@
           </v-btn>
         </template>
       </contract-skill-edit-dialog>
-
-
     </v-list-item-action>
     <v-list-item-content>
       <v-list-item-title>{{ skill.name }}</v-list-item-title>
@@ -34,7 +32,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Mark, Maybe, Skill, SkillToStudent } from "~/types/types";
+import { Skill } from "~/types/types";
 import ContractSkillEditDialog from "~/components/contract/skill/EditDialog.vue";
 
 @Component({
@@ -43,11 +41,8 @@ import ContractSkillEditDialog from "~/components/contract/skill/EditDialog.vue"
   }
 })
 export default class ContractSkillListItemTeacherDashboard extends Vue {
-  @Prop() readonly skill!: { __typename?: "Skill" } & Pick<Skill,
-    "id" | "name"> & {
-    skillToStudents?: Maybe<Array<{ __typename?: "SkillToStudent" } & Pick<SkillToStudent,
-      "id" | "mark">>>;
-  };
+  @Prop() readonly skill!: Skill;
+
 
   get progressBarColor() {
     if (this.successSkillFinishedSkillToStudentPercentage >= 75) {
@@ -69,17 +64,16 @@ export default class ContractSkillListItemTeacherDashboard extends Vue {
   get successSkillFinishedSkillToStudent() {
     return (
       this.skillFinishedSkillToStudent?.filter(skillToStudent =>
-        [Mark.Green, Mark.Marked].includes(skillToStudent.mark)
+        ["VERY_GOOD", "DONE"].includes(skillToStudent.mark.value)
       ) ?? []
     );
   }
 
-  get skillFinishedSkillToStudent(): ({ __typename?: "SkillToStudent" } & Pick<SkillToStudent,
-    "id" | "mark">)[] {
+  get skillFinishedSkillToStudent() {
     return (
       this.skill.skillToStudents?.filter(skillToStudent =>
-        [Mark.Blue, Mark.Green, Mark.Marked, Mark.Orange, Mark.Red].includes(
-          skillToStudent.mark
+        ["VERY_GOOD", "GOOD", "BAD", "VERY_BAD", "DONE"].includes(
+          skillToStudent.mark.value
         )
       ) ?? []
     );

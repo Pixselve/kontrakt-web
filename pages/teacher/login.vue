@@ -34,75 +34,69 @@
 </template>
 
 <script lang="ts">
-  import { Component, Ref, Vue } from "vue-property-decorator";
-  import { $apollo } from "~/utils/getGraphQLClient";
-  import LoginTeacherMutationGQL from "~/apollo/mutations/LoginTeacher.graphql";
-  import { LoginTeacherMutationVariables } from "~/types/types";
-  import { loggedUserStore } from "~/utils/store-accessor";
-
-  @Component({
-    head: () => ({
-      title: "Connexion enseignant"
-    }),
-    layout: "login"
-  })
-  export default class TeacherLoginPage extends Vue {
-    @Ref("form") readonly formRef!: HTMLFormElement;
-
-    loading = false;
-
-    form = {
-      email: "",
-      password: ""
-    };
-
-    rules = {
-      email: [(v: string | null) => !!v || "Veuillez entrer une adresse email"],
-      password: [(v: string | null) => !!v || "Veuillez entrer un mot de passe"]
-    };
-
-    errors = {
-      email: "",
-      password: ""
-    };
-
-    /**
-     * Login the teacher
-     */
-    async login() {
-      try {
-        this.errors = {
-          email: "",
-          password: ""
-        };
-        if (this.formRef.validate()) {
-          this.loading = true;
-          const res = await $apollo.mutate({
-            mutation: LoginTeacherMutationGQL,
-            variables: {
-              email: this.form.email,
-              password: this.form.password
-            } as LoginTeacherMutationVariables
-          });
-          await this.$apolloHelpers.onLogin(res.data.loginTeacher.token);
-          this.$cookies.set("type", "TEACHER");
-          await this.$router.push("/teacher/contracts");
-        }
-      } catch (e) {
-        if (e.message) {
-          if (e.message.includes("INVALID_USER")) {
-            this.errors.email = "Cet utilisateur n'existe pas";
-          } else if (e.message.includes("INVALID_PASSWORD")) {
-            this.errors.password = "Mot de passe incorect";
-          } else {
-            this.errors.email = "Une erreur est survenue";
-          }
+import { Component, Ref, Vue } from "vue-property-decorator";
+import { $apollo } from "~/utils/getGraphQLClient";
+import LoginTeacherMutationGQL from "~/apollo/mutations/LoginTeacher.graphql";
+import { LoginTeacherMutationVariables } from "~/types/types";
+import { loggedUserStore } from "~/utils/store-accessor";
+@Component({
+  head: () => ({
+    title: "Connexion enseignant"
+  }),
+  layout: "login"
+})
+export default class TeacherLoginPage extends Vue {
+  @Ref("form") readonly formRef!: HTMLFormElement;
+  loading = false;
+  form = {
+    email: "",
+    password: ""
+  };
+  rules = {
+    email: [(v: string | null) => !!v || "Veuillez entrer une adresse email"],
+    password: [(v: string | null) => !!v || "Veuillez entrer un mot de passe"]
+  };
+  errors = {
+    email: "",
+    password: ""
+  };
+  /**
+   * Login the teacher
+   */
+  async login() {
+    try {
+      this.errors = {
+        email: "",
+        password: ""
+      };
+      if (this.formRef.validate()) {
+        this.loading = true;
+        const res = await $apollo.mutate({
+          mutation: LoginTeacherMutationGQL,
+          variables: {
+            email: this.form.email,
+            password: this.form.password
+          } as LoginTeacherMutationVariables
+        });
+        await this.$apolloHelpers.onLogin(res.data.loginTeacher.token);
+        this.$cookies.set("type", "TEACHER");
+        await this.$router.push("/teacher/contracts");
+      }
+    } catch (e) {
+      if (e.message) {
+        if (e.message.includes("INVALID_USER")) {
+          this.errors.email = "Cet utilisateur n'existe pas";
+        } else if (e.message.includes("INVALID_PASSWORD")) {
+          this.errors.password = "Mot de passe incorect";
         } else {
           this.errors.email = "Une erreur est survenue";
         }
-      } finally {
-        this.loading = false;
+      } else {
+        this.errors.email = "Une erreur est survenue";
       }
+    } finally {
+      this.loading = false;
     }
   }
+}
 </script>

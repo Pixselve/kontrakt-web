@@ -1,19 +1,27 @@
 query Me {
   me {
-    student {
+    ... on Teacher {
+      email
+    }
+    ... on Student {
       id
       firstName
       lastName
-      skillToStudents {
+      groups {
         id
-        mark
+        name
+      }
+      skillsToStudent {
+        mark {
+          value
+          text
+          rgb
+          icon
+        }
         skill {
           id
         }
       }
-    }
-    teacher {
-      email
     }
   }
 }

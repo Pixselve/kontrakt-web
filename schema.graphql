@@ -5,63 +5,77 @@ schema {
   mutation: Mutation
 }
 
-type AuthPayload {
+interface AuthPayload {
+  token: String!
+}
+
+union User = Student | Teacher
+
+type AuthPayloadStudent implements AuthPayload {
+  student: Student!
+  token: String!
+}
+
+type AuthPayloadTeacher implements AuthPayload {
   teacher: Teacher!
   token: String!
 }
 
-type Color {
+type Contract {
+  archived: Boolean!
+  end: DateTime!
+  groups: [Group!]!
   id: Int!
   name: String!
   rgb: String!
-  skillsStatuses(after: SkillStatusWhereUniqueInput, before: SkillStatusWhereUniqueInput, first: Int, last: Int, orderBy: SkillStatusOrderByInput, skip: Int, where: SkillStatusWhereInput): [SkillStatus!]
+  skills(markValues: [String!]): [Skill!]!
+  start: DateTime!
 }
 
-type Contract {
-  date: DateTime!
-  end: DateTime!
+type Group {
+  contracts: [Contract!]!
   id: Int!
   name: String!
-  skills(after: SkillWhereUniqueInput, before: SkillWhereUniqueInput, first: Int, last: Int, orderBy: SkillOrderByInput, skip: Int, where: SkillWhereInput): [Skill!]
+  students: [Student!]!
+}
+
+type Mark {
+  icon: String!
+  rgb: String!
+  skillsToStudents: [SkillToStudent!]!
+  text: String!
+  value: String!
 }
 
 type Mutation {
-  checkIsStudentExists(id: Float!): Boolean!
-  createOneColor(data: ColorCreateInput!): Color!
-  createOneContract(data: CreateOneContractInput!): Contract!
-  createOneSkill(data: SkillCreateInput!): Skill!
-  createOneSkillStatus(data: SkillStatusCreateInput!): SkillStatus!
-  createOneStudent(data: StudentCreateInput!): Student!
-  createTeacher(data: TeacherCreateInputCustom!): AuthPayload!
-  deleteOneColor(where: ColorWhereUniqueInput!): Color
-  deleteOneContract(where: ContractWhereUniqueInput!): Contract
-  deleteOneSkill(where: SkillWhereUniqueInput!): Skill
-  deleteOneSkillStatus(where: SkillStatusWhereUniqueInput!): SkillStatus
-  deleteStudent(data: DeleteStudentInput!): Student!
-  editOrCreateSkillToStudent(data: EditOrCreateSkillToStudentInput!): SkillToStudent!
-  loginStudent(username: Int!): StudentAuthPayload!
-  loginStudentOld(id: Float!): StudentAuthPayload!
-  loginTeacher(data: LoginTeacherInput!): AuthPayload!
-  removeOneContract(data: RemoveOneContractInput!): Contract!
-  updateOneContract(data: ContractUpdateInput!, where: ContractWhereUniqueInput!): Contract
-  updateOneSkill(data: SkillUpdateInput!, where: SkillWhereUniqueInput!): Skill
-  updateOneSkillStatus(data: SkillStatusUpdateInput!, where: SkillStatusWhereUniqueInput!): SkillStatus
-  updateOneStudent(data: StudentUpdateInput!, where: StudentWhereUniqueInput!): Student
+  createManyStudentCSV(file: Upload!): [Student!]!
+  createOneContract(contract: CreateOneContractInput!): Contract!
+  createOneGroup(group: CreateOneGroupInput!): Group!
+  createOneSkill(skill: CreateOneSkillInput!): Skill!
+  createOneStudent(student: CreateOneStudentInput!): Student!
+  createOneTeacher(teacher: CreateOneTeacherInput!): Teacher!
+  deleteOneContract(id: Int!): Contract!
+  deleteOneSkill(id: Int!): Skill!
+  deleteOneStudent(id: Int!): Student!
+  deleteOneTeacher(email: String!): Teacher!
+  loginStudent(student: LoginStudentInput!): AuthPayloadStudent!
+  loginTeacher(teacher: CreateOneTeacherInput!): AuthPayloadTeacher!
+  updateOneContract(contract: UpdateOneContractInput!, id: Int!): Contract!
+  updateOneSkill(id: Int!, skill: UpdateOneSkillInput!): Skill!
+  updateOneStudent(id: Int!, student: UpdateOneStudentInput!): Student!
+  upsertOneSkillToStudent(skillToStudent: UpsertOneSkillToStudentInput!): SkillToStudent!
 }
 
 type Query {
-  color(where: ColorWhereUniqueInput!): Color
-  colors(after: ColorWhereUniqueInput, before: ColorWhereUniqueInput, first: Int, last: Int, orderBy: ColorOrderByInput, skip: Int, where: ColorWhereInput): [Color!]!
-  contract(where: ContractWhereUniqueInput!): Contract
-  contracts(after: ContractWhereUniqueInput, before: ContractWhereUniqueInput, first: Int, last: Int, orderBy: ContractOrderByInput, skip: Int, where: ContractWhereInput): [Contract!]!
-  contractsToExcel: String!
+  contract(id: Int!): Contract!
+  contracts(groups: [Int!]): [Contract!]!
+  findManyContractNotFinishedByStudent(studentId: Int!): [Contract!]!
+  groups: [Group!]!
+  marks: [Mark!]!
   me: User!
-  skill(where: SkillWhereUniqueInput!): Skill
-  skillStatus(where: SkillStatusWhereUniqueInput!): SkillStatus
-  skillStatuses(after: SkillStatusWhereUniqueInput, before: SkillStatusWhereUniqueInput, first: Int, last: Int, orderBy: SkillStatusOrderByInput, skip: Int, where: SkillStatusWhereInput): [SkillStatus!]!
-  skills(after: SkillWhereUniqueInput, before: SkillWhereUniqueInput, first: Int, last: Int, orderBy: SkillOrderByInput, skip: Int, where: SkillWhereInput): [Skill!]!
-  student(where: StudentWhereUniqueInput!): Student
-  students(after: StudentWhereUniqueInput, before: StudentWhereUniqueInput, first: Int, last: Int, orderBy: StudentOrderByInput, skip: Int, where: StudentWhereInput): [Student!]!
+  student(id: Int!): Student!
+  students: [Student!]!
+  teachers: [Teacher!]!
 }
 
 type Skill {
@@ -69,603 +83,92 @@ type Skill {
   contractId: Int!
   id: Int!
   name: String!
-  skillToStudents(after: SkillToStudentWhereUniqueInput, before: SkillToStudentWhereUniqueInput, first: Int, last: Int, orderBy: SkillToStudentOrderByInput, skip: Int, where: SkillToStudentWhereInput): [SkillToStudent!]
-}
-
-type SkillStatus {
-  color: Color!
-  colorId: Int!
-  id: Int!
-  mark: Mark!
-  text: String!
+  skillToStudent(studentId: Int!): SkillToStudent
+  skillToStudents: [SkillToStudent!]!
 }
 
 type SkillToStudent {
-  id: Int!
   mark: Mark!
-  skill: Skill
+  markValue: String!
+  skill: Skill!
   skillId: Int!
-  student: Student
+  student: Student!
   studentId: Int!
 }
 
 type Student {
   firstName: String!
+  groups: [Group!]!
   id: Int!
   lastName: String!
-  skillToStudents(after: SkillToStudentWhereUniqueInput, before: SkillToStudentWhereUniqueInput, first: Int, last: Int, orderBy: SkillToStudentOrderByInput, skip: Int, where: SkillToStudentWhereInput): [SkillToStudent!]
+  skillsToStudent(markFilter: [String!] = []): [SkillToStudent!]!
   username: Int!
-}
-
-type StudentAuthPayload {
-  student: Student!
-  token: String!
 }
 
 type Teacher {
   email: String!
-}
-
-type User {
-  student: Student
-  teacher: Teacher
-}
-
-enum Mark {
-  AWAITING_CORRECTION
-  BLUE
-  GREEN
-  MARKED
-  ORANGE
-  RED
-  TODO
-  TO_FINISH
-}
-
-enum OrderByArg {
-  asc
-  desc
-}
-
-input ColorCreateInput {
-  name: String!
-  rgb: String!
-  skillsStatuses: SkillStatusCreateManyWithoutColorInput
-}
-
-input ColorCreateOneWithoutSkillsStatusesInput {
-  connect: ColorWhereUniqueInput
-  create: ColorCreateWithoutSkillsStatusesInput
-}
-
-input ColorCreateWithoutSkillsStatusesInput {
-  name: String!
-  rgb: String!
-}
-
-input ColorOrderByInput {
-  id: OrderByArg
-  name: OrderByArg
-  rgb: OrderByArg
-}
-
-input ColorUpdateOneRequiredWithoutSkillsStatusesInput {
-  connect: ColorWhereUniqueInput
-  create: ColorCreateWithoutSkillsStatusesInput
-  update: ColorUpdateWithoutSkillsStatusesDataInput
-  upsert: ColorUpsertWithoutSkillsStatusesInput
-}
-
-input ColorUpdateWithoutSkillsStatusesDataInput {
-  id: Int
-  name: String
-  rgb: String
-}
-
-input ColorUpsertWithoutSkillsStatusesInput {
-  create: ColorCreateWithoutSkillsStatusesInput!
-  update: ColorUpdateWithoutSkillsStatusesDataInput!
-}
-
-input ColorWhereInput {
-  AND: [ColorWhereInput!]
-  NOT: [ColorWhereInput!]
-  OR: [ColorWhereInput!]
-  id: IntFilter
-  name: StringFilter
-  rgb: StringFilter
-  skillsStatuses: SkillStatusFilter
-}
-
-input ColorWhereUniqueInput {
-  id: Int
-}
-
-input ContractCreateOneWithoutSkillsInput {
-  connect: ContractWhereUniqueInput
-  create: ContractCreateWithoutSkillsInput
-}
-
-input ContractCreateWithoutSkillsInput {
-  date: DateTime!
-}
-
-input ContractOrderByInput {
-  date: OrderByArg
-  id: OrderByArg
-}
-
-input ContractUpdateInput {
-  date: DateTime
-  id: Int
-  skills: SkillUpdateManyWithoutContractInput
-}
-
-input ContractUpdateOneRequiredWithoutSkillsInput {
-  connect: ContractWhereUniqueInput
-  create: ContractCreateWithoutSkillsInput
-  update: ContractUpdateWithoutSkillsDataInput
-  upsert: ContractUpsertWithoutSkillsInput
-}
-
-input ContractUpdateWithoutSkillsDataInput {
-  date: DateTime
-  id: Int
-}
-
-input ContractUpsertWithoutSkillsInput {
-  create: ContractCreateWithoutSkillsInput!
-  update: ContractUpdateWithoutSkillsDataInput!
-}
-
-input ContractWhereInput {
-  AND: [ContractWhereInput!]
-  NOT: [ContractWhereInput!]
-  OR: [ContractWhereInput!]
-  date: DateTimeFilter
-  id: IntFilter
-  skills: SkillFilter
-}
-
-input ContractWhereUniqueInput {
-  id: Int
+  password: String!
 }
 
 input CreateOneContractInput {
-  date: DateTime!
   end: DateTime!
   name: String!
-  skills: [String!]!
+  rgb: String!
+  skillNames: [String!]!
+  start: DateTime!
 }
 
-input DateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: DateTime
-  notIn: [DateTime!]
+input CreateOneGroupInput {
+  name: String!
 }
 
-input DeleteStudentInput {
-  id: Int!
+input CreateOneSkillInput {
+  contractId: Int!
+  name: String!
 }
 
-input EditOrCreateSkillToStudentInput {
-  mark: Mark!
-  skill: SkillWhereUniqueInput!
-  student: StudentWhereUniqueInput!
+input CreateOneStudentInput {
+  firstName: String!
+  groupIds: [Int!] = []
+  lastName: String!
 }
 
-input IntFilter {
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: Int
-  notIn: [Int!]
-}
-
-input LoginTeacherInput {
+input CreateOneTeacherInput {
   email: String!
   password: String!
 }
 
-input MarkFilter {
-  equals: Mark
-  in: [Mark!]
-  not: Mark
-  notIn: [Mark!]
+input LoginStudentInput {
+  username: Int!
 }
 
-input RemoveOneContractInput {
-  id: Int!
-}
-
-input SkillCreateInput {
-  contract: ContractCreateOneWithoutSkillsInput!
-  name: String!
-  skillToStudents: SkillToStudentCreateManyWithoutSkillInput
-}
-
-input SkillCreateOneWithoutSkillToStudentsInput {
-  connect: SkillWhereUniqueInput
-  create: SkillCreateWithoutSkillToStudentsInput
-}
-
-input SkillCreateWithoutContractInput {
-  name: String!
-  skillToStudents: SkillToStudentCreateManyWithoutSkillInput
-}
-
-input SkillCreateWithoutSkillToStudentsInput {
-  contract: ContractCreateOneWithoutSkillsInput!
-  name: String!
-}
-
-input SkillFilter {
-  every: SkillWhereInput
-  none: SkillWhereInput
-  some: SkillWhereInput
-}
-
-input SkillOrderByInput {
-  contractId: OrderByArg
-  id: OrderByArg
-  name: OrderByArg
-}
-
-input SkillScalarWhereInput {
-  AND: [SkillScalarWhereInput!]
-  NOT: [SkillScalarWhereInput!]
-  OR: [SkillScalarWhereInput!]
-  contractId: IntFilter
-  id: IntFilter
-  name: StringFilter
-  skillToStudents: SkillToStudentFilter
-}
-
-input SkillStatusCreateInput {
-  color: ColorCreateOneWithoutSkillsStatusesInput!
-  mark: Mark!
-  text: String!
-}
-
-input SkillStatusCreateManyWithoutColorInput {
-  connect: [SkillStatusWhereUniqueInput!]
-  create: [SkillStatusCreateWithoutColorInput!]
-}
-
-input SkillStatusCreateWithoutColorInput {
-  mark: Mark!
-  text: String!
-}
-
-input SkillStatusFilter {
-  every: SkillStatusWhereInput
-  none: SkillStatusWhereInput
-  some: SkillStatusWhereInput
-}
-
-input SkillStatusOrderByInput {
-  colorId: OrderByArg
-  id: OrderByArg
-  mark: OrderByArg
-  text: OrderByArg
-}
-
-input SkillStatusUpdateInput {
-  color: ColorUpdateOneRequiredWithoutSkillsStatusesInput
-  id: Int
-  mark: Mark
-  text: String
-}
-
-input SkillStatusWhereInput {
-  AND: [SkillStatusWhereInput!]
-  NOT: [SkillStatusWhereInput!]
-  OR: [SkillStatusWhereInput!]
-  color: ColorWhereInput
-  colorId: IntFilter
-  id: IntFilter
-  mark: MarkFilter
-  text: StringFilter
-}
-
-input SkillStatusWhereUniqueInput {
-  id: Int
-}
-
-input SkillToStudentCreateManyWithoutSkillInput {
-  connect: [SkillToStudentWhereUniqueInput!]
-  create: [SkillToStudentCreateWithoutSkillInput!]
-}
-
-input SkillToStudentCreateManyWithoutStudentInput {
-  connect: [SkillToStudentWhereUniqueInput!]
-  create: [SkillToStudentCreateWithoutStudentInput!]
-}
-
-input SkillToStudentCreateWithoutSkillInput {
-  mark: Mark
-  student: StudentCreateOneWithoutSkillToStudentsInput!
-}
-
-input SkillToStudentCreateWithoutStudentInput {
-  mark: Mark
-  skill: SkillCreateOneWithoutSkillToStudentsInput!
-}
-
-input SkillToStudentFilter {
-  every: SkillToStudentWhereInput
-  none: SkillToStudentWhereInput
-  some: SkillToStudentWhereInput
-}
-
-input SkillToStudentOrderByInput {
-  id: OrderByArg
-  mark: OrderByArg
-  skillId: OrderByArg
-  studentId: OrderByArg
-}
-
-input SkillToStudentScalarWhereInput {
-  AND: [SkillToStudentScalarWhereInput!]
-  NOT: [SkillToStudentScalarWhereInput!]
-  OR: [SkillToStudentScalarWhereInput!]
-  id: IntFilter
-  mark: MarkFilter
-  skillId: IntFilter
-  studentId: IntFilter
-}
-
-input SkillToStudentUpdateManyDataInput {
-  id: Int
-  mark: Mark
-}
-
-input SkillToStudentUpdateManyWithWhereNestedInput {
-  data: SkillToStudentUpdateManyDataInput!
-  where: SkillToStudentScalarWhereInput!
-}
-
-input SkillToStudentUpdateManyWithoutSkillInput {
-  connect: [SkillToStudentWhereUniqueInput!]
-  create: [SkillToStudentCreateWithoutSkillInput!]
-  delete: [SkillToStudentWhereUniqueInput!]
-  deleteMany: [SkillToStudentScalarWhereInput!]
-  disconnect: [SkillToStudentWhereUniqueInput!]
-  set: [SkillToStudentWhereUniqueInput!]
-  update: [SkillToStudentUpdateWithWhereUniqueWithoutSkillInput!]
-  updateMany: [SkillToStudentUpdateManyWithWhereNestedInput!]
-  upsert: [SkillToStudentUpsertWithWhereUniqueWithoutSkillInput!]
-}
-
-input SkillToStudentUpdateManyWithoutStudentInput {
-  connect: [SkillToStudentWhereUniqueInput!]
-  create: [SkillToStudentCreateWithoutStudentInput!]
-  delete: [SkillToStudentWhereUniqueInput!]
-  deleteMany: [SkillToStudentScalarWhereInput!]
-  disconnect: [SkillToStudentWhereUniqueInput!]
-  set: [SkillToStudentWhereUniqueInput!]
-  update: [SkillToStudentUpdateWithWhereUniqueWithoutStudentInput!]
-  updateMany: [SkillToStudentUpdateManyWithWhereNestedInput!]
-  upsert: [SkillToStudentUpsertWithWhereUniqueWithoutStudentInput!]
-}
-
-input SkillToStudentUpdateWithWhereUniqueWithoutSkillInput {
-  data: SkillToStudentUpdateWithoutSkillDataInput!
-  where: SkillToStudentWhereUniqueInput!
-}
-
-input SkillToStudentUpdateWithWhereUniqueWithoutStudentInput {
-  data: SkillToStudentUpdateWithoutStudentDataInput!
-  where: SkillToStudentWhereUniqueInput!
-}
-
-input SkillToStudentUpdateWithoutSkillDataInput {
-  id: Int
-  mark: Mark
-  student: StudentUpdateOneRequiredWithoutSkillToStudentsInput
-}
-
-input SkillToStudentUpdateWithoutStudentDataInput {
-  id: Int
-  mark: Mark
-  skill: SkillUpdateOneRequiredWithoutSkillToStudentsInput
-}
-
-input SkillToStudentUpsertWithWhereUniqueWithoutSkillInput {
-  create: SkillToStudentCreateWithoutSkillInput!
-  update: SkillToStudentUpdateWithoutSkillDataInput!
-  where: SkillToStudentWhereUniqueInput!
-}
-
-input SkillToStudentUpsertWithWhereUniqueWithoutStudentInput {
-  create: SkillToStudentCreateWithoutStudentInput!
-  update: SkillToStudentUpdateWithoutStudentDataInput!
-  where: SkillToStudentWhereUniqueInput!
-}
-
-input SkillToStudentWhereInput {
-  AND: [SkillToStudentWhereInput!]
-  NOT: [SkillToStudentWhereInput!]
-  OR: [SkillToStudentWhereInput!]
-  id: IntFilter
-  mark: MarkFilter
-  skill: SkillWhereInput
-  skillId: IntFilter
-  student: StudentWhereInput
-  studentId: IntFilter
-}
-
-input SkillToStudentWhereUniqueInput {
-  id: Int
-}
-
-input SkillUpdateInput {
-  contract: ContractUpdateOneRequiredWithoutSkillsInput
-  id: Int
+input UpdateOneContractInput {
+  end: DateTime
+  groupIds: [Int!]
   name: String
-  skillToStudents: SkillToStudentUpdateManyWithoutSkillInput
+  rgb: String
+  start: DateTime
 }
 
-input SkillUpdateManyDataInput {
-  id: Int
+input UpdateOneSkillInput {
   name: String
 }
 
-input SkillUpdateManyWithWhereNestedInput {
-  data: SkillUpdateManyDataInput!
-  where: SkillScalarWhereInput!
-}
-
-input SkillUpdateManyWithoutContractInput {
-  connect: [SkillWhereUniqueInput!]
-  create: [SkillCreateWithoutContractInput!]
-  delete: [SkillWhereUniqueInput!]
-  deleteMany: [SkillScalarWhereInput!]
-  disconnect: [SkillWhereUniqueInput!]
-  set: [SkillWhereUniqueInput!]
-  update: [SkillUpdateWithWhereUniqueWithoutContractInput!]
-  updateMany: [SkillUpdateManyWithWhereNestedInput!]
-  upsert: [SkillUpsertWithWhereUniqueWithoutContractInput!]
-}
-
-input SkillUpdateOneRequiredWithoutSkillToStudentsInput {
-  connect: SkillWhereUniqueInput
-  create: SkillCreateWithoutSkillToStudentsInput
-  update: SkillUpdateWithoutSkillToStudentsDataInput
-  upsert: SkillUpsertWithoutSkillToStudentsInput
-}
-
-input SkillUpdateWithWhereUniqueWithoutContractInput {
-  data: SkillUpdateWithoutContractDataInput!
-  where: SkillWhereUniqueInput!
-}
-
-input SkillUpdateWithoutContractDataInput {
-  id: Int
-  name: String
-  skillToStudents: SkillToStudentUpdateManyWithoutSkillInput
-}
-
-input SkillUpdateWithoutSkillToStudentsDataInput {
-  contract: ContractUpdateOneRequiredWithoutSkillsInput
-  id: Int
-  name: String
-}
-
-input SkillUpsertWithWhereUniqueWithoutContractInput {
-  create: SkillCreateWithoutContractInput!
-  update: SkillUpdateWithoutContractDataInput!
-  where: SkillWhereUniqueInput!
-}
-
-input SkillUpsertWithoutSkillToStudentsInput {
-  create: SkillCreateWithoutSkillToStudentsInput!
-  update: SkillUpdateWithoutSkillToStudentsDataInput!
-}
-
-input SkillWhereInput {
-  AND: [SkillWhereInput!]
-  NOT: [SkillWhereInput!]
-  OR: [SkillWhereInput!]
-  contract: ContractWhereInput
-  contractId: IntFilter
-  id: IntFilter
-  name: StringFilter
-  skillToStudents: SkillToStudentFilter
-}
-
-input SkillWhereUniqueInput {
-  id: Int
-}
-
-input StringFilter {
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  not: String
-  notIn: [String!]
-  startsWith: String
-}
-
-input StudentCreateInput {
-  firstName: String!
-  lastName: String!
-  skillToStudents: SkillToStudentCreateManyWithoutStudentInput
-}
-
-input StudentCreateOneWithoutSkillToStudentsInput {
-  connect: StudentWhereUniqueInput
-  create: StudentCreateWithoutSkillToStudentsInput
-}
-
-input StudentCreateWithoutSkillToStudentsInput {
-  firstName: String!
-  lastName: String!
-}
-
-input StudentOrderByInput {
-  firstName: OrderByArg
-  id: OrderByArg
-  lastName: OrderByArg
-}
-
-input StudentUpdateInput {
+input UpdateOneStudentInput {
   firstName: String
-  id: Int
-  lastName: String
-  skillToStudents: SkillToStudentUpdateManyWithoutStudentInput
-}
-
-input StudentUpdateOneRequiredWithoutSkillToStudentsInput {
-  connect: StudentWhereUniqueInput
-  create: StudentCreateWithoutSkillToStudentsInput
-  update: StudentUpdateWithoutSkillToStudentsDataInput
-  upsert: StudentUpsertWithoutSkillToStudentsInput
-}
-
-input StudentUpdateWithoutSkillToStudentsDataInput {
-  firstName: String
-  id: Int
+  groupIds: [Int!]
   lastName: String
 }
 
-input StudentUpsertWithoutSkillToStudentsInput {
-  create: StudentCreateWithoutSkillToStudentsInput!
-  update: StudentUpdateWithoutSkillToStudentsDataInput!
-}
-
-input StudentWhereInput {
-  AND: [StudentWhereInput!]
-  NOT: [StudentWhereInput!]
-  OR: [StudentWhereInput!]
-  firstName: StringFilter
-  id: IntFilter
-  lastName: StringFilter
-  skillToStudents: SkillToStudentFilter
-}
-
-input StudentWhereUniqueInput {
-  id: Int
-}
-
-input TeacherCreateInputCustom {
-  email: String!
-  password: String!
+input UpsertOneSkillToStudentInput {
+  markValue: String!
+  skillId: Int!
+  studentId: Int!
 }
 
 
 "The javascript `Date` as string. Type represents date and time as the ISO Date string."
 scalar DateTime
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload

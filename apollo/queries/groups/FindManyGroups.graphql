@@ -1,0 +1,6 @@
+query FindManyGroups {
+  groups {
+    id
+    name
+  }
+}

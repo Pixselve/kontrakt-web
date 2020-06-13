@@ -19,81 +19,91 @@
           <v-btn text @click="addContract">Ajouter</v-btn>
         </v-toolbar-items>
       </v-toolbar>
-      <v-card-text class="mt-4">
-        <v-text-field v-model="name" outlined required label="Nom du contrat"></v-text-field>
+      <v-card-text>
+        <v-row align="center">
+          <v-col>
+            <v-text-field v-model="name" outlined required label="Nom du contrat"></v-text-field>
+            <v-menu
+              v-model="dates.start.isMenuOpen"
+              :close-on-content-click="false"
+              max-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  :value="dates.start.computedDateFormatted"
+                  label="Date de début"
+                  readonly
+                  prepend-icon="mdi-calendar"
+                  @click:clear="dates.start.value = null"
+                  v-on="on"
+                  outlined
+                  required
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                first-day-of-week="1"
+                locale="fr-FR"
+                v-model="dates.start.value"
+                @change="dates.start.isMenuOpen = false"
+              ></v-date-picker>
+            </v-menu>
 
-        <v-menu
-          v-model="dates.start.isMenuOpen"
-          :close-on-content-click="false"
-          max-width="290px"
-        >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              :value="dates.start.computedDateFormatted"
-              label="Date de début"
-              readonly
-              prepend-icon="mdi-calendar"
-              @click:clear="dates.start.value = null"
-              v-on="on"
-              outlined
-              required
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            first-day-of-week="1"
-            locale="fr-FR"
-            v-model="dates.start.value"
-            @change="dates.start.isMenuOpen = false"
-          ></v-date-picker>
-        </v-menu>
+            <v-menu
+              v-model="dates.end.isMenuOpen"
+              :close-on-content-click="false"
+              max-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  :value="dates.end.computedDateFormatted"
+                  label="Date de fin"
+                  readonly
+                  prepend-icon="mdi-calendar"
+                  @click:clear="dates.end.value = null"
+                  v-on="on"
+                  outlined
+                  required
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                first-day-of-week="1"
+                locale="fr-FR"
+                v-model="dates.end.value"
+                @change="dates.end.isMenuOpen = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-color-picker v-model="color" hide-mode-switch mode="hexa" hide-canvas></v-color-picker>
+          </v-col>
+        </v-row>
 
-        <v-menu
-          v-model="dates.end.isMenuOpen"
-          :close-on-content-click="false"
-          max-width="290px"
-        >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              :value="dates.end.computedDateFormatted"
-              label="Date de fin"
-              readonly
-              prepend-icon="mdi-calendar"
-              @click:clear="dates.end.value = null"
-              v-on="on"
-              outlined
-              required
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            first-day-of-week="1"
-            locale="fr-FR"
-            v-model="dates.end.value"
-            @change="dates.end.isMenuOpen = false"
-          ></v-date-picker>
-        </v-menu>
+
+
+
 
         <v-simple-table>
           <template v-slot:default>
             <thead>
-              <tr>
-                <th class="text-left">Compétence</th>
-                <th class="text-left">Action</th>
-              </tr>
+            <tr>
+              <th class="text-left">Compétence</th>
+              <th class="text-left">Action</th>
+            </tr>
             </thead>
             <tbody>
-              <tr v-for="(skill, i) in skills" :key="`skillKEY${i}`">
-                <td>{{ skill }}</td>
-                <td>
-                  <v-btn @click="deleteSkill(i)" icon x-small>
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                  <EditSkillDialog
-                    @edit="editSkill"
-                    :index="i"
-                    :skill-prop="skill"
-                  />
-                </td>
-              </tr>
+            <tr v-for="(skill, i) in skills" :key="`skillKEY${i}`">
+              <td>{{ skill }}</td>
+              <td>
+                <v-btn @click="deleteSkill(i)" icon x-small>
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+                <EditSkillDialog
+                  @edit="editSkill"
+                  :index="i"
+                  :skill-prop="skill"
+                />
+              </td>
+            </tr>
             </tbody>
           </template>
         </v-simple-table>
@@ -123,10 +133,10 @@ export default class CreateContractDialog extends Vue {
       get computedDateFormatted() {
         return this.value
           ? new Date(this.value).toLocaleDateString("fr-FR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric"
-            })
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          })
           : "";
       }
     },
@@ -136,16 +146,17 @@ export default class CreateContractDialog extends Vue {
       get computedDateFormatted() {
         return this.value
           ? new Date(this.value).toLocaleDateString("fr-FR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric"
-            })
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          })
           : "";
       }
     }
   };
 
   name = "";
+  color = ""
 
   deleteSkill(index: number) {
     this.skills = this.skills.filter((_, i) => i != index);
@@ -175,7 +186,8 @@ export default class CreateContractDialog extends Vue {
         start: this.dates.start.value,
         end: this.dates.end.value,
         skills: this.skills,
-        name: this.name
+        name: this.name,
+        rgb: this.color
       });
       this.close();
     } catch (e) {

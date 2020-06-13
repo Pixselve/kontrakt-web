@@ -1,5 +1,5 @@
 mutation DeleteContract($id: Int!) {
-  removeOneContract(data: {id: $id}) {
+  deleteOneContract(id: $id) {
     id
   }
 }
