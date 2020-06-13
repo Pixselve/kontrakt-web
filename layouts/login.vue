@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <v-card
         color="transparent"
         class="mx-auto"
@@ -16,7 +16,7 @@
           <nuxt/>
         </v-card-text>
       </v-card>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

@@ -24,22 +24,20 @@
       </v-col>
     </v-row>
     <v-divider class="mb-5"></v-divider>
-    <v-alert v-if="students.length <= 0" type="info">Vous n'avez pas encore ajouté d'élève</v-alert>
+    <v-alert v-if="students.length <= 0" type="info"
+      >Vous n'avez pas encore ajouté d'élève</v-alert
+    >
 
-    <student-list-item v-else
-                       :highest-awaiting-to-finish-skill-count="
-        highestAwaitingToFinishSkillCount
-      "
-                       v-for="student in viewStudent"
-                       :key="student.id"
-                       :student="student"
-    ></student-list-item>
 
-    <v-pagination
-      circle
-      v-model="page"
-      :length="pages"
-    ></v-pagination>
+        <student-list-item
+          :highest-awaiting-to-finish-skill-count="
+            highestAwaitingToFinishSkillCount
+          "
+          v-for="student in students"
+          :key="student.id"
+          :student="student"
+        ></student-list-item>
+
   </v-container>
 </template>
 
@@ -67,18 +65,6 @@ export default class TeacherStudentsPageBeta extends Vue {
   get students() {
     return studentsStore.students;
   }
-
-
-  get viewStudent() {
-    return this.students.slice(20 * (this.page - 1), 20 * (this.page - 1) + 20);
-  }
-
-  page = 1;
-
-  get pages() {
-    return Math.ceil(this.students.length / 20);
-  }
-
 
   get highestAwaitingToFinishSkillCount() {
     let result = 0;

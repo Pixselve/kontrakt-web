@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <nuxt/>
 
-    </v-content>
+    </v-main>
     <v-bottom-navigation color="secondary" app grow>
       <v-btn to="/teacher/students">
         <span>Élèves</span>
