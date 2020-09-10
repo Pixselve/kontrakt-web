@@ -73,6 +73,7 @@ type Query {
   groups: [Group!]!
   marks: [Mark!]!
   me: User!
+  status: Int!
   student(id: Int!): Student!
   students: [Student!]!
   teachers: [Teacher!]!

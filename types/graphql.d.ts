@@ -188,6 +188,15 @@ declare module '*/Me.graphql' {
 }
     
 
+declare module '*/Status.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const Status: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/FindManyContractsOfGroups.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

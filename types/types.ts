@@ -1,4 +1,5 @@
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -17,19 +18,19 @@ export type AuthPayload = {
 };
 
 export type AuthPayloadStudent = AuthPayload & {
-   __typename?: 'AuthPayloadStudent';
+  __typename?: 'AuthPayloadStudent';
   token: Scalars['String'];
   student: Student;
 };
 
 export type AuthPayloadTeacher = AuthPayload & {
-   __typename?: 'AuthPayloadTeacher';
+  __typename?: 'AuthPayloadTeacher';
   token: Scalars['String'];
   teacher: Teacher;
 };
 
 export type Contract = {
-   __typename?: 'Contract';
+  __typename?: 'Contract';
   id: Scalars['Int'];
   name: Scalars['String'];
   start: Scalars['DateTime'];
@@ -75,7 +76,7 @@ export type CreateOneTeacherInput = {
 
 
 export type Group = {
-   __typename?: 'Group';
+  __typename?: 'Group';
   id: Scalars['Int'];
   name: Scalars['String'];
   contracts: Array<Contract>;
@@ -87,7 +88,7 @@ export type LoginStudentInput = {
 };
 
 export type Mark = {
-   __typename?: 'Mark';
+  __typename?: 'Mark';
   rgb: Scalars['String'];
   text: Scalars['String'];
   value: Scalars['String'];
@@ -96,7 +97,7 @@ export type Mark = {
 };
 
 export type Mutation = {
-   __typename?: 'Mutation';
+  __typename?: 'Mutation';
   createOneTeacher: Teacher;
   deleteOneTeacher: Teacher;
   loginTeacher: AuthPayloadTeacher;
@@ -199,7 +200,7 @@ export type MutationCreateManyStudentCsvArgs = {
 };
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   groups: Array<Group>;
   students: Array<Student>;
   teachers: Array<Teacher>;
@@ -209,6 +210,7 @@ export type Query = {
   student: Student;
   me: User;
   findManyContractNotFinishedByStudent: Array<Contract>;
+  status: Scalars['Int'];
 };
 
 
@@ -232,7 +234,7 @@ export type QueryFindManyContractNotFinishedByStudentArgs = {
 };
 
 export type Skill = {
-   __typename?: 'Skill';
+  __typename?: 'Skill';
   contractId: Scalars['Int'];
   id: Scalars['Int'];
   name: Scalars['String'];
@@ -247,7 +249,7 @@ export type SkillSkillToStudentArgs = {
 };
 
 export type SkillToStudent = {
-   __typename?: 'SkillToStudent';
+  __typename?: 'SkillToStudent';
   markValue: Scalars['String'];
   skillId: Scalars['Int'];
   studentId: Scalars['Int'];
@@ -257,7 +259,7 @@ export type SkillToStudent = {
 };
 
 export type Student = {
-   __typename?: 'Student';
+  __typename?: 'Student';
   firstName: Scalars['String'];
   id: Scalars['Int'];
   lastName: Scalars['String'];
@@ -272,7 +274,7 @@ export type StudentSkillsToStudentArgs = {
 };
 
 export type Teacher = {
-   __typename?: 'Teacher';
+  __typename?: 'Teacher';
   email: Scalars['String'];
   password: Scalars['String'];
 };
@@ -304,10 +306,10 @@ export type UpsertOneSkillToStudentInput = {
 
 export type User = Teacher | Student;
 
-export type AddStudentMutationVariables = {
+export type AddStudentMutationVariables = Exact<{
   firstName: Scalars['String'];
   lastName: Scalars['String'];
-};
+}>;
 
 
 export type AddStudentMutation = (
@@ -318,13 +320,13 @@ export type AddStudentMutation = (
   ) }
 );
 
-export type CreateOneContractMutationVariables = {
+export type CreateOneContractMutationVariables = Exact<{
   start: Scalars['DateTime'];
   end: Scalars['DateTime'];
   skills: Array<Scalars['String']>;
   name: Scalars['String'];
   rgb: Scalars['String'];
-};
+}>;
 
 
 export type CreateOneContractMutation = (
@@ -335,9 +337,9 @@ export type CreateOneContractMutation = (
   ) }
 );
 
-export type DeleteContractMutationVariables = {
+export type DeleteContractMutationVariables = Exact<{
   id: Scalars['Int'];
-};
+}>;
 
 
 export type DeleteContractMutation = (
@@ -348,9 +350,9 @@ export type DeleteContractMutation = (
   ) }
 );
 
-export type DeleteStudentMutationVariables = {
+export type DeleteStudentMutationVariables = Exact<{
   id: Scalars['Int'];
-};
+}>;
 
 
 export type DeleteStudentMutation = (
@@ -361,11 +363,11 @@ export type DeleteStudentMutation = (
   ) }
 );
 
-export type EditSkillToStudentMutationVariables = {
+export type EditSkillToStudentMutationVariables = Exact<{
   markValue: Scalars['String'];
   skillId: Scalars['Int'];
   studentId: Scalars['Int'];
-};
+}>;
 
 
 export type EditSkillToStudentMutation = (
@@ -379,10 +381,10 @@ export type EditSkillToStudentMutation = (
   ) }
 );
 
-export type LoginTeacherMutationVariables = {
+export type LoginTeacherMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
-};
+}>;
 
 
 export type LoginTeacherMutation = (
@@ -393,10 +395,10 @@ export type LoginTeacherMutation = (
   ) }
 );
 
-export type UpdateContractGroupsMutationVariables = {
+export type UpdateContractGroupsMutationVariables = Exact<{
   contractId: Scalars['Int'];
   groups: Array<Scalars['Int']>;
-};
+}>;
 
 
 export type UpdateContractGroupsMutation = (
@@ -424,9 +426,9 @@ export type UpdateContractGroupsMutation = (
   ) }
 );
 
-export type CreateGroupMutationVariables = {
+export type CreateGroupMutationVariables = Exact<{
   name: Scalars['String'];
-};
+}>;
 
 
 export type CreateGroupMutation = (
@@ -437,10 +439,10 @@ export type CreateGroupMutation = (
   ) }
 );
 
-export type CreateOneSkillToContractMutationVariables = {
+export type CreateOneSkillToContractMutationVariables = Exact<{
   name: Scalars['String'];
   contractID: Scalars['Int'];
-};
+}>;
 
 
 export type CreateOneSkillToContractMutation = (
@@ -471,9 +473,9 @@ export type CreateOneSkillToContractMutation = (
   ) }
 );
 
-export type DeleteSkillMutationVariables = {
+export type DeleteSkillMutationVariables = Exact<{
   id: Scalars['Int'];
-};
+}>;
 
 
 export type DeleteSkillMutation = (
@@ -484,10 +486,10 @@ export type DeleteSkillMutation = (
   ) }
 );
 
-export type EditSkillNameMutationVariables = {
+export type EditSkillNameMutationVariables = Exact<{
   id: Scalars['Int'];
   name: Scalars['String'];
-};
+}>;
 
 
 export type EditSkillNameMutation = (
@@ -518,9 +520,9 @@ export type EditSkillNameMutation = (
   ) }
 );
 
-export type CreateManyStudentWithCsvMutationVariables = {
+export type CreateManyStudentWithCsvMutationVariables = Exact<{
   file: Scalars['Upload'];
-};
+}>;
 
 
 export type CreateManyStudentWithCsvMutation = (
@@ -551,9 +553,9 @@ export type CreateManyStudentWithCsvMutation = (
   )> }
 );
 
-export type LoginStudentMutationVariables = {
+export type LoginStudentMutationVariables = Exact<{
   username: Scalars['Int'];
-};
+}>;
 
 
 export type LoginStudentMutation = (
@@ -564,10 +566,10 @@ export type LoginStudentMutation = (
   ) }
 );
 
-export type UpdateStudentGroupsMutationVariables = {
+export type UpdateStudentGroupsMutationVariables = Exact<{
   studentId: Scalars['Int'];
   groups: Array<Scalars['Int']>;
-};
+}>;
 
 
 export type UpdateStudentGroupsMutation = (
@@ -581,7 +583,7 @@ export type UpdateStudentGroupsMutation = (
   ) }
 );
 
-export type ContractsDatesOnlyQueryVariables = {};
+export type ContractsDatesOnlyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ContractsDatesOnlyQuery = (
@@ -592,9 +594,9 @@ export type ContractsDatesOnlyQuery = (
   )> }
 );
 
-export type FetchContractQueryVariables = {
+export type FetchContractQueryVariables = Exact<{
   id: Scalars['Int'];
-};
+}>;
 
 
 export type FetchContractQuery = (
@@ -622,7 +624,7 @@ export type FetchContractQuery = (
   ) }
 );
 
-export type FetchContractsQueryVariables = {};
+export type FetchContractsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FetchContractsQuery = (
@@ -640,9 +642,9 @@ export type FetchContractsQuery = (
   )> }
 );
 
-export type FetchContractsAwaitingFinishStudentQueryVariables = {
+export type FetchContractsAwaitingFinishStudentQueryVariables = Exact<{
   studentId: Scalars['Int'];
-};
+}>;
 
 
 export type FetchContractsAwaitingFinishStudentQuery = (
@@ -664,9 +666,9 @@ export type FetchContractsAwaitingFinishStudentQuery = (
   )> }
 );
 
-export type FetchStudentQueryVariables = {
+export type FetchStudentQueryVariables = Exact<{
   id: Scalars['Int'];
-};
+}>;
 
 
 export type FetchStudentQuery = (
@@ -699,7 +701,7 @@ export type FetchStudentQuery = (
   ) }
 );
 
-export type FetchStudentsQueryVariables = {};
+export type FetchStudentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FetchStudentsQuery = (
@@ -730,7 +732,7 @@ export type FetchStudentsQuery = (
   )> }
 );
 
-export type MeQueryVariables = {};
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = (
@@ -757,9 +759,17 @@ export type MeQuery = (
   ) }
 );
 
-export type FindManyContractsOfGroupsQueryVariables = {
+export type StatusQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StatusQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'status'>
+);
+
+export type FindManyContractsOfGroupsQueryVariables = Exact<{
   groups: Array<Scalars['Int']>;
-};
+}>;
 
 
 export type FindManyContractsOfGroupsQuery = (
@@ -777,7 +787,7 @@ export type FindManyContractsOfGroupsQuery = (
   )> }
 );
 
-export type FindManyGroupsQueryVariables = {};
+export type FindManyGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FindManyGroupsQuery = (
@@ -788,7 +798,7 @@ export type FindManyGroupsQuery = (
   )> }
 );
 
-export type FetchMarksQueryVariables = {};
+export type FetchMarksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FetchMarksQuery = (
