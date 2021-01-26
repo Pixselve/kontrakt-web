@@ -83,10 +83,6 @@ const config: Configuration = {
      ** You can extend webpack config here
      */
   },
-  server: {
-    host: "0.0.0.0",
-    port: process.env.PORT || 8080
-  }
 };
 
 export default config;
