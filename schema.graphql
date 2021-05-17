@@ -5,31 +5,20 @@ schema {
   mutation: Mutation
 }
 
-interface AuthPayload {
+type AuthPayload {
   token: String!
-}
-
-union User = Student | Teacher
-
-type AuthPayloadStudent implements AuthPayload {
-  student: Student!
-  token: String!
-}
-
-type AuthPayloadTeacher implements AuthPayload {
-  teacher: Teacher!
-  token: String!
+  user: User!
 }
 
 type Contract {
   archived: Boolean!
-  end: DateTime!
+  end: String!
   groups: [Group!]!
+  hexColor: String!
   id: Int!
   name: String!
-  rgb: String!
-  skills(markValues: [String!]): [Skill!]!
-  start: DateTime!
+  skills: [Skill!]!
+  start: String!
 }
 
 type Group {
@@ -39,42 +28,16 @@ type Group {
   students: [Student!]!
 }
 
-type Mark {
-  icon: String!
-  rgb: String!
-  skillsToStudents: [SkillToStudent!]!
-  text: String!
-  value: String!
-}
-
 type Mutation {
-  createManyStudentCSV(file: Upload!): [Student!]!
-  createOneContract(contract: CreateOneContractInput!): Contract!
-  createOneGroup(group: CreateOneGroupInput!): Group!
-  createOneSkill(skill: CreateOneSkillInput!): Skill!
-  createOneStudent(student: CreateOneStudentInput!): Student!
-  createOneTeacher(teacher: CreateOneTeacherInput!): Teacher!
-  deleteOneContract(id: Int!): Contract!
-  deleteOneSkill(id: Int!): Skill!
-  deleteOneStudent(id: Int!): Student!
-  deleteOneTeacher(email: String!): Teacher!
-  loginStudent(student: LoginStudentInput!): AuthPayloadStudent!
-  loginTeacher(teacher: CreateOneTeacherInput!): AuthPayloadTeacher!
-  updateOneContract(contract: UpdateOneContractInput!, id: Int!): Contract!
-  updateOneSkill(id: Int!, skill: UpdateOneSkillInput!): Skill!
-  updateOneStudent(id: Int!, student: UpdateOneStudentInput!): Student!
-  upsertOneSkillToStudent(skillToStudent: UpsertOneSkillToStudentInput!): SkillToStudent!
+  login(password: String!, username: String!): AuthPayload!
 }
 
 type Query {
   contract(id: Int!): Contract!
-  contracts(groups: [Int!]): [Contract!]!
-  findManyContractNotFinishedByStudent(studentId: Int!): [Contract!]!
+  contracts(groupIds: [Int!]): [Contract!]!
   groups: [Group!]!
-  marks: [Mark!]!
   me: User!
-  status: Int!
-  student(id: Int!): Student!
+  student(ownerUsername: String!): Student!
   students: [Student!]!
   teachers: [Teacher!]!
 }
@@ -84,92 +47,48 @@ type Skill {
   contractId: Int!
   id: Int!
   name: String!
-  skillToStudent(studentId: Int!): SkillToStudent
-  skillToStudents: [SkillToStudent!]!
-}
-
-type SkillToStudent {
-  mark: Mark!
-  markValue: String!
-  skill: Skill!
-  skillId: Int!
-  student: Student!
-  studentId: Int!
+  studentSkills: [StudentSkill!]!
 }
 
 type Student {
   firstName: String!
   groups: [Group!]!
-  id: Int!
   lastName: String!
-  skillsToStudent(markFilter: [String!] = []): [SkillToStudent!]!
-  username: Int!
+  owner: User!
+  ownerUsername: String!
+  studentSkills: [StudentSkill!]!
+}
+
+type StudentSkill {
+  mark: Mark!
+  skill: Skill!
+  skillID: Int!
+  student: Student!
+  studentID: String!
 }
 
 type Teacher {
-  email: String!
-  password: String!
-}
-
-input CreateOneContractInput {
-  end: DateTime!
-  name: String!
-  rgb: String!
-  skillNames: [String!]!
-  start: DateTime!
-}
-
-input CreateOneGroupInput {
-  name: String!
-}
-
-input CreateOneSkillInput {
-  contractId: Int!
-  name: String!
-}
-
-input CreateOneStudentInput {
   firstName: String!
-  groupIds: [Int!] = []
   lastName: String!
+  owner: User!
+  ownerUsername: String!
 }
 
-input CreateOneTeacherInput {
-  email: String!
-  password: String!
+type User {
+  role: Role!
+  student: [Student!]!
+  teacher: [Teacher!]!
+  username: String!
 }
 
-input LoginStudentInput {
-  username: Int!
+enum Mark {
+  BAD
+  GOOD
+  TODO
 }
 
-input UpdateOneContractInput {
-  end: DateTime
-  groupIds: [Int!]
-  name: String
-  rgb: String
-  start: DateTime
+enum Role {
+  ADMIN
+  STUDENT
+  TEACHER
 }
-
-input UpdateOneSkillInput {
-  name: String
-}
-
-input UpdateOneStudentInput {
-  firstName: String
-  groupIds: [Int!]
-  lastName: String
-}
-
-input UpsertOneSkillToStudentInput {
-  markValue: String!
-  skillId: Int!
-  studentId: Int!
-}
-
-
-"The javascript `Date` as string. Type represents date and time as the ISO Date string."
-scalar DateTime
-
-"The `Upload` scalar type represents a file upload."
-scalar Upload

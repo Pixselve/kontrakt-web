@@ -1,57 +1,72 @@
 <template>
   <v-form lazy-validation ref="form" @submit.prevent="login">
-    <h1 class="mb-10">Connexion élève</h1>
+    <h1 class="mb-10">Connexion</h1>
     <v-text-field
       autofocus
-      :rules="rules.input"
+      :rules="rules.username"
       v-model="username"
-      type="number"
+      type="text"
       class="mt-7"
       prepend-inner-icon="mdi-account"
       label="Identifiant"
       outlined
+      required
       :error-messages="errors.username"
     ></v-text-field>
+    <v-text-field
+      required
+      label="Mot de passe"
+      :rules="rules.password"
+      outlined
+      type="password"
+      v-model="password"
+      :error-messages="errors.password"
+      prepend-inner-icon="mdi-lock"
+    ></v-text-field>
     <v-row no-gutters>
-      <v-btn to="/teacher/login" color="primary" text
-      >Je suis un enseignant
-      </v-btn>
-      <v-spacer></v-spacer>
-      <v-btn :loading="loading" type="submit" color="primary">Connexion</v-btn>
+      <v-btn block :loading="loading" type="submit" color="primary">Connexion</v-btn>
     </v-row>
   </v-form>
 </template>
 
 <script lang="ts">
-
 import { Component, Ref, Vue } from "vue-property-decorator";
 import { studentsStore } from "~/utils/store-accessor";
 import { $apollo } from "~/utils/getGraphQLClient";
 
 import LoginStudentMutationGQL from "~/apollo/mutations/student/LoginStudent.graphql";
-import { LoginStudentMutation, LoginStudentMutationVariables } from "~/types/types";
+import {
+  LoginStudentMutation,
+  LoginStudentMutationVariables,
+} from "~/types/types";
 
 @Component({
   head: () => ({
-    title: "Connexion élève"
+    title: "Connexion élève",
   }),
   layout: "login",
   async fetch() {
     await studentsStore.fetchStudents();
-  }
+  },
 })
 export default class LoginPage extends Vue {
   @Ref("form") formRef!: HTMLFormElement;
 
   loading = false;
   username: string = "";
+  password = ""
   rules = {
-    input: [(v: string) => v?.length === 6 || "Veuillez entrer un identifiant valide"]
+    username: [
+      (v: string) => !!v || "Veuillez entrer un identifiant valide",
+    ],
+    password: [
+      (v: string) => !!v || "Veuillez entrer un mot de passe valide",
+    ]
   };
   errors: { username: string[] } = {
-    username: []
+    username: [],
+    password: []
   };
-
 
   /**
    * Login the student
@@ -63,18 +78,19 @@ export default class LoginPage extends Vue {
       if (this.username.length >= 1) {
         //  The method of authentication used is the username
         const {
-          data
+          data,
         }: {
           data?: LoginStudentMutation | undefined | null;
         } = await $apollo.mutate({
           mutation: LoginStudentMutationGQL,
           variables: {
-            username: parseInt(this.username)
-          } as LoginStudentMutationVariables
+            username: this.username,
+            password: this.password
+          }
         });
         if (data) {
-          await this.$apolloHelpers.onLogin(data.loginStudent.token);
-          this.$cookies.set("type", "STUDENT");
+          await this.$apolloHelpers.onLogin(data.login.token);
+          this.$cookies.set("role", data.login.user.role);
           await this.$router.push("/student");
         }
       }
@@ -83,8 +99,10 @@ export default class LoginPage extends Vue {
       if (this.username.length >= 1) {
         //  The method of authentication used is the username
         if (e.message) {
-          if (e.message.includes("INVALID_USER")) {
+          if (e.message.includes("ErrNotFound")) {
             this.errors.username.push("Utilisateur inconnu");
+          } else if (e.message.includes("bad password")) {
+            this.errors.password.push("Mot de passe incorrect");
           }
         }
       } else {
@@ -93,35 +111,6 @@ export default class LoginPage extends Vue {
     } finally {
       this.loading = false;
     }
-  }
-
-  /**
-   * Login the student with its username
-   */
-  async loginWithUsername() {
-    //  Get the student's token with its username
-    const {
-      data
-    }: {
-      data?: LoginStudentMutation | undefined | null;
-    } = await $apollo.mutate({
-      mutation: LoginStudentMutationGQL,
-      variables: {
-        username: parseInt(this.username)
-      } as LoginStudentMutationVariables
-    });
-
-    //  Login the student with the token and with a cookie of type STUDENT
-    //  Redirect the student to /student
-  }
-
-  /**
-   * Login the student with its id (based on the full name picker)
-   */
-  async loginWithId() {
-    //  Get the student's token with its id
-    //  Login the student with the token and with a cookie of type STUDENT
-    //  Redirect the student to /student
   }
 }
 </script>
