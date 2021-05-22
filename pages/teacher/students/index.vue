@@ -27,8 +27,6 @@
     <v-alert v-if="students.length <= 0" type="info"
       >Vous n'avez pas encore ajouté d'élève</v-alert
     >
-
-
         <student-list-item
           :highest-awaiting-to-finish-skill-count="
             highestAwaitingToFinishSkillCount
