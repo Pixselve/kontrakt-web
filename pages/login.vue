@@ -63,7 +63,7 @@ export default class LoginPage extends Vue {
       (v: string) => !!v || "Veuillez entrer un mot de passe valide",
     ]
   };
-  errors: { username: string[] } = {
+  errors: { password: string[]; username: string[] } = {
     username: [],
     password: []
   };
@@ -79,8 +79,6 @@ export default class LoginPage extends Vue {
         //  The method of authentication used is the username
         const {
           data,
-        }: {
-          data?: LoginStudentMutation | undefined | null;
         } = await $apollo.mutate({
           mutation: LoginStudentMutationGQL,
           variables: {
