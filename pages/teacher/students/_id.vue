@@ -61,7 +61,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { $apollo } from "~/utils/getGraphQLClient";
 
 import SkillsTable from "~/components/SkillsTable.vue";
-import { contractsStore, marksStore, studentStore } from "~/utils/store-accessor";
+import { contractsStore, studentStore } from "~/utils/store-accessor";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
 import { FetchStudentQuery, FetchStudentQueryVariables } from "~/types/types";
 
@@ -81,8 +81,7 @@ import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
     studentStore.logout();
     await studentStore.fetchStudent(parseInt(params.id));
     await Promise.all([
-      contractsStore.fetchContractsOfGroups(studentStore.student?.groups.map(group => group.id) ?? []),
-      marksStore.fetchMarks()
+      contractsStore.fetchContractsOfGroups(studentStore.student?.groups.map(group => group.id) ?? [])
     ]);
   },
   layout: "teacher",

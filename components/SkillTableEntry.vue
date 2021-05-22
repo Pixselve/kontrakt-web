@@ -21,7 +21,7 @@ import {Mark} from "~/types/types";
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Mark, Skill, SkillToStudent } from "~/types/types";
-import { marksStore, studentStore } from "~/utils/store-accessor";
+import { studentStore } from "~/utils/store-accessor";
 
 @Component({})
 export default class SkillTableEntry extends Vue {

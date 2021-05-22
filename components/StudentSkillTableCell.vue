@@ -9,7 +9,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Mark, Skill, Student } from "~/types/types";
-import { contractStore, marksStore } from "~/utils/store-accessor";
+import { contractStore } from "~/utils/store-accessor";
 
 @Component({})
 export default class StudentSkillTableCell extends Vue {
@@ -21,13 +21,8 @@ export default class StudentSkillTableCell extends Vue {
 
 
   get mark(): ({ __typename?: "Mark" } & Pick<Mark, "text" | "value" | "rgb">) | undefined {
-    return this.skill.skillToStudents?.find(skillToStudent => skillToStudent.student.id === this.student.id)?.mark ?? this.marks.find(mark => mark.value === "TODO");
-  }
-
-
-
-  get marks() {
-    return marksStore.marks;
+    return undefined //TODO
+    // return this.skill.skillToStudents?.find(skillToStudent => skillToStudent.student.id === this.student.id)?.mark ?? this.marks.find((mark: string) => mark === "TODO");
   }
 
 

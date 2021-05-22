@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { contractStore, marksStore, studentsStore } from "~/utils/store-accessor";
+import { contractStore, studentsStore } from "~/utils/store-accessor";
 import StudentSkillTableRow from "~/components/StudentSkillTableRow.vue";
 import { Group } from "~/types/types";
 import { shareCommonElements } from "~/utils/shareCommonElements"
@@ -48,7 +48,7 @@ import { shareCommonElements } from "~/utils/shareCommonElements"
     StudentSkillTableRow
   },
   async asyncData() {
-    await Promise.all([studentsStore.fetchStudents(), marksStore.fetchMarks()]);
+    await Promise.all([studentsStore.fetchStudents()]);
   },
   //@ts-ignore
   async validate({ params }) {

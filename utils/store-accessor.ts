@@ -6,7 +6,7 @@ import TeacherStudentModule from "~/store/student";
 import ContractModule from "~/store/contract";
 import LoggedUserModule from "~/store/loggedUser";
 import GroupsModule from "~/store/groups";
-import MarksModule from "~/store/marks";
+
 
 let studentsStore: Students;
 let contractsStore: Contracts;
@@ -14,7 +14,6 @@ let studentStore: TeacherStudentModule;
 let contractStore: ContractModule;
 let loggedUserStore: LoggedUserModule;
 let groupsStore: GroupsModule;
-let marksStore: MarksModule;
 
 function initialiseStores(store: Store<any>): void {
   studentsStore = getModule(Students, store);
@@ -23,7 +22,7 @@ function initialiseStores(store: Store<any>): void {
   contractStore = getModule(ContractModule, store);
   loggedUserStore = getModule(LoggedUserModule, store);
   groupsStore = getModule(GroupsModule, store);
-  marksStore = getModule(MarksModule, store);
+
 }
 
 export {
@@ -34,5 +33,4 @@ export {
   studentStore,
   loggedUserStore,
   groupsStore,
-  marksStore
 };
