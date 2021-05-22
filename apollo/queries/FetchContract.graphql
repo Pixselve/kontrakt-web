@@ -4,7 +4,7 @@ query FetchContract($id: Int!) {
     start
     end
     name
-    rgb
+    hexColor
     groups {
       id
       name
@@ -12,14 +12,10 @@ query FetchContract($id: Int!) {
     skills {
       id
       name
-      skillToStudents {
-        mark {
-          text
-          value
-          rgb
-        }
+      studentSkills {
+        mark
         student {
-          id
+          ownerUsername
           firstName
           lastName
         }

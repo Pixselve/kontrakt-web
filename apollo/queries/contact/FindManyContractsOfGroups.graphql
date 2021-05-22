@@ -1,10 +1,10 @@
 query FindManyContractsOfGroups($groups: [Int!]!) {
-  contracts(groups: $groups) {
+  contracts(groupIds: $groups) {
     id
     start
     end
     name
-    rgb
+    hexColor
     groups {
       id
       name

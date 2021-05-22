@@ -21,7 +21,7 @@ import MeQueryGQL from "~/apollo/queries/Me.graphql";
 
 import EditSkillToStudentMutationGQL from "~/apollo/mutations/EditSkillToStudent.graphql";
 
-import FetchContractsAwaitingFinishStudentQueryGQL from "~/apollo/queries/FetchContractsAwaitingFinishStudent.graphql";
+import FetchContractsAwaitingFinishStudentQueryGQL from "~/apollo/queries/FetchContractsAwaitingFinishStudent.graphql.bark";
 
 @Module({
   name: "student",

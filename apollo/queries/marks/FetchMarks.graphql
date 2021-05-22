@@ -1,7 +1,0 @@
-query FetchMarks {
-  marks {
-    text
-    value
-    rgb
-  }
-}

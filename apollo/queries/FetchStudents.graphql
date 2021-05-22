@@ -1,31 +1,20 @@
 query FetchStudents {
   students {
-    id
+    ownerUsername
     firstName
     lastName
-    username
     groups {
       id
       name
     }
 
-    skillsToStudent {
-      skillId
-      mark {
-        text
-        value
-        rgb
-      }
+    studentSkills {
+      skillID
+      mark
     }
 
-    skillsToStudentToFinish: skillsToStudent(
-      markFilter: ["AWAITING_CORRECTION", "TO_FINISH", "TODO"]
-    ) {
-      mark {
-        value
-        text
-        rgb
-      }
+    skillsToStudentToFinish: studentSkills {
+      mark
       skill {
         id
       }
