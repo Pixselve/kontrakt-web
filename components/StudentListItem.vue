@@ -5,7 +5,7 @@
         <div class="mr-5">
           <v-chip color="primary"
             ><v-avatar left><v-icon>mdi-account-circle</v-icon></v-avatar>
-            {{ student.username }}</v-chip
+            {{ student.ownerUsername }}</v-chip
           >
         </div>
         <div>
@@ -31,22 +31,22 @@
           </v-row>
         </div>
       </v-col>
-      <v-col>
-        <div
-          v-if="student.skillsToStudentToFinish.length > 0"
-          class="text-center"
-        >
-          {{ student.skillsToStudentToFinish.length }}
-          compétences à terminer
-        </div>
-        <div v-else class="text-center">À jour</div>
-        <v-progress-linear
-          :color="progressBarColor"
-          height="7"
-          rounded
-          :value="progressBarValue"
-        ></v-progress-linear>
-      </v-col>
+<!--      <v-col>-->
+<!--        <div-->
+<!--          v-if="student.skillsToStudentToFinish.length > 0"-->
+<!--          class="text-center"-->
+<!--        >-->
+<!--          {{ student.skillsToStudentToFinish.length }}-->
+<!--          compétences à terminer-->
+<!--        </div>-->
+<!--        <div v-else class="text-center">À jour</div>-->
+<!--        <v-progress-linear-->
+<!--          :color="progressBarColor"-->
+<!--          height="7"-->
+<!--          rounded-->
+<!--          :value="progressBarValue"-->
+<!--        ></v-progress-linear>-->
+<!--      </v-col>-->
       <v-col class="text-right">
         <v-btn :to="`/teacher/students/${student.id}`" icon>
           <v-icon>mdi-chevron-right</v-icon>
