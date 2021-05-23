@@ -32,7 +32,7 @@
             highestAwaitingToFinishSkillCount
           "
           v-for="student in students"
-          :key="student.id"
+          :key="student.ownerUsername"
           :student="student"
         ></student-list-item>
 
@@ -45,13 +45,24 @@ import { groupsStore, studentsStore } from "~/utils/store-accessor";
 import StudentListItem from "~/components/StudentListItem.vue";
 import CreateStudentDialog from "~/components/CreateStudentDialog.vue";
 import ImportStudentWithCSVDialog from "~/components/student/ImportStudentWithCSVDialog.vue";
+import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
+import { FetchStudentsQuery } from "~/types/types";
 
 @Component({
   layout: "teacher",
-  async asyncData() {
-    await studentsStore.fetchStudents();
+  async fetch() {
+    let client = this.$nuxt.context.app.apolloProvider.defaultClient
+    const { data }: { data: FetchStudentsQuery } = await client.query({
+      query: FetchStudentsQueryGQL,
+      fetchPolicy: "no-cache"
+    })
+    console.log(data.students);
+    this.students = data.students
 
-    await groupsStore.fetchGroups();
+    //
+    // await studentsStore.fetchStudents();
+    //
+    // await groupsStore.fetchGroups();
   },
   components: {
     StudentListItem,
@@ -60,20 +71,21 @@ import ImportStudentWithCSVDialog from "~/components/student/ImportStudentWithCS
   }
 })
 export default class TeacherStudentsPageBeta extends Vue {
-  get students() {
-    return studentsStore.students;
-  }
-
-  get highestAwaitingToFinishSkillCount() {
-    let result = 0;
-    this.students?.forEach(
-      student =>
-        (result = Math.max(
-          result,
-          student.skillsToStudentToFinish?.length ?? 0
-        ))
-    );
-    return result;
-  }
+  students = []
+  // get students() {
+  //   return studentsStore.students;
+  // }
+  //
+  // get highestAwaitingToFinishSkillCount() {
+  //   let result = 0;
+  //   this.students?.forEach(
+  //     student =>
+  //       (result = Math.max(
+  //         result,
+  //         student.skillsToStudentToFinish?.length ?? 0
+  //       ))
+  //   );
+  //   return result;
+  // }
 }
 </script>
