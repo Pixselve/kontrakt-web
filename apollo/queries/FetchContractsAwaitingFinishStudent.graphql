@@ -1,0 +1,5 @@
+query FetchContractsAwaitingFinishStudent {
+  student(ownerUsername: "qwd") {
+    ownerUsername
+  }
+}
