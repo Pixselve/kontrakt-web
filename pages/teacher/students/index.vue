@@ -45,13 +45,15 @@ import { FetchStudentsQuery } from "~/types/types";
 
 @Component<TeacherStudentsPageBeta>({
   layout: "teacher",
-  async fetch() {
-    let client = this.$nuxt.context.app.apolloProvider.defaultClient;
+  async asyncData({ app }) {
+    let client = app.apolloProvider.defaultClient;
     const { data }: { data: FetchStudentsQuery } = await client.query({
       query: FetchStudentsQueryGQL,
       fetchPolicy: "no-cache",
     });
-    this.students = data.students;
+    return {
+      students: data.students,
+    };
   },
   components: {
     StudentListItem,
