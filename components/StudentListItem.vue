@@ -64,7 +64,7 @@ import { groupsStore, studentsStore } from "~/utils/store-accessor";
 import CreateGroupDialog from "~/components/CreateGroupDialog.vue";
 import GroupsSelector from "~/components/GroupsSelector.vue";
 
-@Component({
+@Component<StudentListItem>({
   components: { GroupsSelector, CreateGroupDialog }
 })
 export default class StudentListItem extends Vue {

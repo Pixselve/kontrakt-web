@@ -48,7 +48,7 @@ import ImportStudentWithCSVDialog from "~/components/student/ImportStudentWithCS
 import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
 import { FetchStudentsQuery } from "~/types/types";
 
-@Component({
+@Component<TeacherStudentsPageBeta>({
   layout: "teacher",
   async fetch() {
     let client = this.$nuxt.context.app.apolloProvider.defaultClient
@@ -71,7 +71,7 @@ import { FetchStudentsQuery } from "~/types/types";
   }
 })
 export default class TeacherStudentsPageBeta extends Vue {
-  students = []
+  students: any[] = []
   // get students() {
   //   return studentsStore.students;
   // }
