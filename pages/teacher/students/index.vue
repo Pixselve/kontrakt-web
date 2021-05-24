@@ -27,21 +27,16 @@
     <v-alert v-if="students.length <= 0" type="info"
       >Vous n'avez pas encore ajouté d'élève</v-alert
     >
-        <student-list-item
-          :highest-awaiting-to-finish-skill-count="
-            highestAwaitingToFinishSkillCount
-          "
-          v-for="student in students"
-          :key="student.ownerUsername"
-          :student="student"
-        ></student-list-item>
-
+    <student-list-item
+      v-for="student in students"
+      :key="student.ownerUsername"
+      :student="student"
+    ></student-list-item>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { groupsStore, studentsStore } from "~/utils/store-accessor";
 import StudentListItem from "~/components/StudentListItem.vue";
 import CreateStudentDialog from "~/components/CreateStudentDialog.vue";
 import ImportStudentWithCSVDialog from "~/components/student/ImportStudentWithCSVDialog.vue";
@@ -51,41 +46,20 @@ import { FetchStudentsQuery } from "~/types/types";
 @Component<TeacherStudentsPageBeta>({
   layout: "teacher",
   async fetch() {
-    let client = this.$nuxt.context.app.apolloProvider.defaultClient
+    let client = this.$nuxt.context.app.apolloProvider.defaultClient;
     const { data }: { data: FetchStudentsQuery } = await client.query({
       query: FetchStudentsQueryGQL,
-      fetchPolicy: "no-cache"
-    })
-    console.log(data.students);
-    this.students = data.students
-
-    //
-    // await studentsStore.fetchStudents();
-    //
-    // await groupsStore.fetchGroups();
+      fetchPolicy: "no-cache",
+    });
+    this.students = data.students;
   },
   components: {
     StudentListItem,
     CreateStudentDialog,
-    ImportStudentWithCSVDialog
-  }
+    ImportStudentWithCSVDialog,
+  },
 })
 export default class TeacherStudentsPageBeta extends Vue {
-  students: any[] = []
-  // get students() {
-  //   return studentsStore.students;
-  // }
-  //
-  // get highestAwaitingToFinishSkillCount() {
-  //   let result = 0;
-  //   this.students?.forEach(
-  //     student =>
-  //       (result = Math.max(
-  //         result,
-  //         student.skillsToStudentToFinish?.length ?? 0
-  //       ))
-  //   );
-  //   return result;
-  // }
+  students: any[] = [];
 }
 </script>

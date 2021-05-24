@@ -31,24 +31,21 @@
           </v-row>
         </div>
       </v-col>
-<!--      <v-col>-->
-<!--        <div-->
-<!--          v-if="student.skillsToStudentToFinish.length > 0"-->
-<!--          class="text-center"-->
-<!--        >-->
-<!--          {{ student.skillsToStudentToFinish.length }}-->
-<!--          compétences à terminer-->
-<!--        </div>-->
-<!--        <div v-else class="text-center">À jour</div>-->
-<!--        <v-progress-linear-->
-<!--          :color="progressBarColor"-->
-<!--          height="7"-->
-<!--          rounded-->
-<!--          :value="progressBarValue"-->
-<!--        ></v-progress-linear>-->
-<!--      </v-col>-->
+      <v-col>
+        <div v-if="skillsToFinish.length > 0" class="text-center">
+          {{ skillsToFinish.length }}
+          compétences à terminer
+        </div>
+        <div v-else class="text-center">À jour</div>
+        <v-progress-linear
+          :color="progressBarColor"
+          height="7"
+          rounded
+          :value="progressBarValue"
+        ></v-progress-linear>
+      </v-col>
       <v-col class="text-right">
-        <v-btn :to="`/teacher/students/${student.id}`" icon>
+        <v-btn :to="`/teacher/students/${student.ownerUsername}`" icon>
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </v-col>
@@ -59,16 +56,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { FetchStudentsQuery } from "~/types/types";
-import "reflect-metadata";
 import { groupsStore, studentsStore } from "~/utils/store-accessor";
 import CreateGroupDialog from "~/components/CreateGroupDialog.vue";
 import GroupsSelector from "~/components/GroupsSelector.vue";
 
 @Component<StudentListItem>({
-  components: { GroupsSelector, CreateGroupDialog }
+  components: { GroupsSelector, CreateGroupDialog },
 })
 export default class StudentListItem extends Vue {
-  @Prop() readonly highestAwaitingToFinishSkillCount!: number;
   @Prop()
   readonly student!: FetchStudentsQuery["students"][0];
 
@@ -80,8 +75,8 @@ export default class StudentListItem extends Vue {
   async editGroups() {
     try {
       await studentsStore.editStudentGroups({
-        studentId: this.student.id,
-        groupIds: this.selectedGroup
+        studentId: this.student.ownerUsername,
+        groupIds: this.selectedGroup,
       });
       await studentsStore.fetchStudents();
 
@@ -97,14 +92,19 @@ export default class StudentListItem extends Vue {
     return groupsStore.groups;
   }
 
+  get skillsToFinish() { //TODO todo marks
+    return this.student.studentSkills.filter(
+      (studentSkill) => studentSkill.mark === "TODO"
+    );
+  }
+
   get progressBarValue() {
-    return this.highestAwaitingToFinishSkillCount === 0
+    return this.student.studentSkills.length === 0
       ? 100
-      : ((this.highestAwaitingToFinishSkillCount -
-          (this.student.skillsToStudentToFinish?.length ??
-            this.highestAwaitingToFinishSkillCount)) *
+      : ((this.student.studentSkills.length -
+          (this.skillsToFinish.length ?? this.student.studentSkills.length)) *
           100) /
-          this.highestAwaitingToFinishSkillCount;
+          this.student.studentSkills.length;
   }
 
   get progressBarColor() {
