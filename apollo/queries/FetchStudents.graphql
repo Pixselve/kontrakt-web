@@ -3,14 +3,14 @@ query FetchStudents {
     ownerUsername
     firstName
     lastName
-#    groups {
-#      id
-#      name
-#    }
-#
-#    studentSkills {
-#      skillID
-#      mark
-#    }
+    groups {
+      id
+      name
+    }
+
+    studentSkills {
+      skillID
+      mark
+    }
   }
 }
