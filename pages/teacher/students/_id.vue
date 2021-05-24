@@ -58,32 +58,39 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { $apollo } from "~/utils/getGraphQLClient";
 
 import SkillsTable from "~/components/SkillsTable.vue";
 import { contractsStore, studentStore } from "~/utils/store-accessor";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
-import { FetchStudentQuery, FetchStudentQueryVariables } from "~/types/types";
+import { FetchStudentQuery } from "~/types/types";
 
 import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
 
-@Component({
-  async validate({ params }): Promise<boolean> {
-    const { data }: { data?: FetchStudentQuery | null } = await $apollo.mutate({
-      mutation: FetchStudentQueryGQL,
-      variables: {
-        id: parseInt(params.id)
-      } as FetchStudentQueryVariables
-    });
-    return !!data?.student;
+@Component<StudentSpecificPage>({
+  async asyncData({ params, app, redirect }) {
+    try {
+      let client = app.apolloProvider.defaultClient;
+      const { data }: { data: FetchStudentQuery } = await client.query({
+        query: FetchStudentQueryGQL,
+        variables: {
+          id: params.id
+        }
+      });
+
+      return { student: data.student };
+
+    } catch (e) {
+      redirect("/teacher/students");
+    }
+
   },
-  async asyncData({ params }) {
-    studentStore.logout();
-    await studentStore.fetchStudent(parseInt(params.id));
-    await Promise.all([
-      contractsStore.fetchContractsOfGroups(studentStore.student?.groups.map(group => group.id) ?? [])
-    ]);
-  },
+  // async asyncData({ params }) {
+  //   studentStore.logout();
+  //   await studentStore.fetchStudent(parseInt(params.id));
+  //   await Promise.all([
+  //     contractsStore.fetchContractsOfGroups(studentStore.student?.groups.map(group => group.id) ?? [])
+  //   ]);
+  // },
   layout: "teacher",
   head: () => ({
     title: "Mon élève"
@@ -94,7 +101,7 @@ import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
   }
 })
 export default class StudentSpecificPage extends Vue {
-  student = studentStore.student;
+  student: any;
 
   get contracts() {
     return contractsStore.contracts;
