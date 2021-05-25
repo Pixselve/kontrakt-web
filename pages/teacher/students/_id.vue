@@ -5,9 +5,8 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title
-      >{{ student.firstName }} {{ student.lastName }}
-      </v-toolbar-title
-      >
+        >{{ student.firstName }} {{ student.lastName }}
+      </v-toolbar-title>
       <template v-slot:extension>
         <v-tabs centered grow v-model="tab">
           <v-tab>
@@ -39,7 +38,9 @@
               <contract-card-with-popup
                 :editable="true"
                 :contract="contract"
+                :student-username="student.ownerUsername"
               ></contract-card-with-popup>
+
             </v-col>
           </v-row>
         </v-container>
@@ -47,9 +48,8 @@
       <v-tab-item>
         <v-container>
           <v-btn @click="deleteStudent" color="red" block
-          >Supprimer l'élève
-          </v-btn
-          >
+            >Supprimer l'élève
+          </v-btn>
         </v-container>
       </v-tab-item>
     </v-tabs-items>
@@ -60,29 +60,39 @@
 import { Component, Vue } from "vue-property-decorator";
 
 import SkillsTable from "~/components/SkillsTable.vue";
-import { contractsStore, studentStore } from "~/utils/store-accessor";
+import { studentStore } from "~/utils/store-accessor";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
-import { FetchStudentQuery } from "~/types/types";
+import {
+  Contract,
+  FetchStudentQuery,
+  FindManyContractsOfGroupsQuery, Student,
+} from "~/types/types";
 
 import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
+import FindManyContractsOfGroupsQueryGQL from "~/apollo/queries/contact/FindManyContractsOfGroups.graphql";
 
 @Component<StudentSpecificPage>({
   async asyncData({ params, app, redirect }) {
     try {
       let client = app.apolloProvider.defaultClient;
-      const { data }: { data: FetchStudentQuery } = await client.query({
-        query: FetchStudentQueryGQL,
-        variables: {
-          id: params.id
-        }
-      });
-
-      return { student: data.student };
-
+      const { data: studentData }: { data: FetchStudentQuery } =
+        await client.query({
+          query: FetchStudentQueryGQL,
+          variables: {
+            id: params.id,
+          },
+        });
+      const { data: contractsData }: { data: FindManyContractsOfGroupsQuery } =
+        await client.query({
+          query: FindManyContractsOfGroupsQueryGQL,
+          variables: {
+            groups: studentData.student.groups.map((group) => group.id),
+          },
+        });
+      return { student: studentData.student, contracts: contractsData.contracts };
     } catch (e) {
       redirect("/teacher/students");
     }
-
   },
   // async asyncData({ params }) {
   //   studentStore.logout();
@@ -93,19 +103,16 @@ import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
   // },
   layout: "teacher",
   head: () => ({
-    title: "Mon élève"
+    title: "Mon élève",
   }),
   components: {
     SkillsTable,
-    ContractCardWithPopup
-  }
+    ContractCardWithPopup,
+  },
 })
 export default class StudentSpecificPage extends Vue {
-  student: any;
-
-  get contracts() {
-    return contractsStore.contracts;
-  }
+  student: Student;
+  contracts: Contract[] = [];
 
   /**
    * Exit the current student page

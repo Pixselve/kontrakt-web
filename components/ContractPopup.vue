@@ -1,52 +1,72 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500">
-    <template v-slot:activator="{ on }">
-      <slot v-bind:on="on"></slot>
-    </template>
-    <v-card>
-      <!--      <v-progress-linear color="orange" value="50"></v-progress-linear>-->
-      <v-card-title>
-        <v-row align-content="center" no-gutters justify="space-between">
-          <v-col>Contrat du {{new Date(contract.date).toLocaleDateString("fr-FR", {day: "numeric", month: "long"})}}
-          </v-col>
-          <v-col>
-            <!--            <div class="text-right orange&#45;&#45;text overline">50% complété</div>-->
-          </v-col>
-        </v-row>
-      </v-card-title>
-      <v-card-text>
-        <skills-table :editable="editable" :student-skills="studentSkills" :skills="contract.skills"></skills-table>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="orange" outlined tile @click="dialog = false">
-          <v-icon left>mdi-close-circle-outline</v-icon>
-          Fermer
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <v-card>
+    <v-card-title>
+          Contrat du
+          {{
+            new Date(contract.start).toLocaleDateString("fr-FR", {
+              day: "numeric",
+              month: "long",
+            })
+          }}
+          au
+          {{
+            new Date(contract.end).toLocaleDateString("fr-FR", {
+              day: "numeric",
+              month: "long",
+            })
+          }}
+
+    </v-card-title>
+    <v-card-text>
+      <v-progress-linear
+        indeterminate
+        v-if="$fetchState.pending"
+        color="primary"
+      ></v-progress-linear>
+      <skills-table
+        v-else
+        :editable="editable"
+        :student-skills="studentSkills"
+        :skills="contract.skills"
+      ></skills-table>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="orange" outlined tile @click="() => $emit('close')">
+        <v-icon left>mdi-close-circle-outline</v-icon>
+        Fermer
+      </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts">
-  import { Component, Prop, Vue } from 'vue-property-decorator';
-  import SkillsTable from "~/components/SkillsTable.vue";
-  import { Contract } from "~/types/types";
-  import { studentStore } from "~/utils/store-accessor";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import SkillsTable from "~/components/SkillsTable.vue";
+import { Contract, StudentSkillsQuery } from "~/types/types";
+import StudentSkillsGQL from "~/apollo/queries/StudentSkills.graphql";
 
-  @Component({
-    components: {
-      SkillsTable
-    }
-  })
-  export default class ContractPopup extends Vue {
-    @Prop({ type: Object }) readonly contract!: Contract;
-    @Prop({ type: Boolean, default: () => false }) readonly editable!: boolean;
-    dialog = false;
-
-
-    get studentSkills() {
-      return studentStore.student?.skillsToStudent;
-    }
-  }
+@Component<ContractPopup>({
+  components: {
+    SkillsTable,
+  },
+  async fetch(): Promise<void> | void {
+    let client = this.$nuxt.context.app.apolloProvider.defaultClient;
+    const { data }: { data: StudentSkillsQuery } =
+      await client.query({
+        query: StudentSkillsGQL,
+        variables: {
+          studentUsername: this.studentUsername,
+        },
+      });
+    this.studentSkills = data.studentSkills
+  },
+  fetchOnServer: false,
+})
+export default class ContractPopup extends Vue {
+  @Prop({ type: Object }) readonly contract!: Contract;
+  @Prop({ type: Boolean, default: () => false }) readonly editable!: boolean;
+  @Prop() readonly studentUsername!: string;
+  studentSkills = []
+}
 </script>
