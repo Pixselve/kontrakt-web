@@ -1,0 +1,9 @@
+query StudentSkills($studentUsername: String!) {
+  studentSkills(studentUsername: $studentUsername) {
+    mark
+    skill {
+      name
+      id
+    }
+  }
+}
