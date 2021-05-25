@@ -71,6 +71,15 @@ declare module '*/Status.graphql' {
 }
     
 
+declare module '*/StudentSkills.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const StudentSkills: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/FindManyContractsOfGroups.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

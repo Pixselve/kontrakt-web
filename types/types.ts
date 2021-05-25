@@ -65,6 +65,7 @@ export type Query = {
   students: Array<Student>;
   teachers: Array<Teacher>;
   me: User;
+  studentSkills: Array<StudentSkill>;
 };
 
 
@@ -80,6 +81,12 @@ export type QueryStudentArgs = {
 
 export type QueryContractArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryStudentSkillsArgs = {
+  studentUsername: Scalars['String'];
+  contractID?: Maybe<Scalars['Int']>;
 };
 
 export enum Role {
@@ -262,6 +269,23 @@ export type StatusQuery = (
     { __typename?: 'Student' }
     & Pick<Student, 'ownerUsername'>
   ) }
+);
+
+export type StudentSkillsQueryVariables = Exact<{
+  studentUsername: Scalars['String'];
+}>;
+
+
+export type StudentSkillsQuery = (
+  { __typename?: 'Query' }
+  & { studentSkills: Array<(
+    { __typename?: 'StudentSkill' }
+    & Pick<StudentSkill, 'mark'>
+    & { skill: (
+      { __typename?: 'Skill' }
+      & Pick<Skill, 'name' | 'id'>
+    ) }
+  )> }
 );
 
 export type FindManyContractsOfGroupsQueryVariables = Exact<{
