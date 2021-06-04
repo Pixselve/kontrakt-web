@@ -5,11 +5,46 @@
         <v-list flat>
           <v-list-item two-line>
             <v-list-item-avatar>
-              <v-avatar :color="contract.rgb" size="20"></v-avatar>
+              <v-avatar :color="contract.hexColor" size="20"></v-avatar>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                <h2>{{ contract.name }}</h2>
+                <v-row no-gutters align="center">
+                  <h2 class="mr-5">{{ contract.name }}</h2>
+                  <v-menu offset-y >
+                    <template v-slot:activator="{ on }">
+                      <v-btn v-on="on" icon>
+                        <v-icon>mdi-dots-vertical</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list>
+                      <contract-skill-add-dialog>
+                        <template v-slot:default="{ on }">
+                          <v-list-item v-on="on">
+                            <v-list-item-avatar>
+                              <v-icon>mdi-playlist-plus</v-icon>
+                            </v-list-item-avatar>
+                            <v-list-item-title>Ajouter une compétence</v-list-item-title>
+                          </v-list-item>
+                        </template>
+                      </contract-skill-add-dialog>
+
+                      <v-list-item :to="`/teacher/contracts/${contract.id}`">
+                        <v-list-item-avatar>
+                          <v-icon>mdi-playlist-edit</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-title>Compléter les compétences</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item @click="deleteContract">
+                        <v-list-item-avatar>
+                          <v-icon>mdi-delete</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-title>Supprimer le contrat</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </v-row>
+
               </v-list-item-title>
               <v-list-item-subtitle>
                 {{ formattedDate(contract.start) }} -
@@ -47,38 +82,7 @@
           </v-list-item>
         </v-list>
 
-        <v-menu offset-y>
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on" icon>
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <contract-skill-add-dialog>
-              <template v-slot:default="{ on }">
-                <v-list-item v-on="on">
-                  <v-list-item-avatar>
-                    <v-icon>mdi-playlist-plus</v-icon>
-                  </v-list-item-avatar>
-                  <v-list-item-title>Ajouter une compétence</v-list-item-title>
-                </v-list-item>
-              </template>
-            </contract-skill-add-dialog>
 
-            <v-list-item :to="`/teacher/contracts/${contract.id}`">
-              <v-list-item-avatar>
-                <v-icon>mdi-playlist-edit</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-title>Compléter les compétences</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="deleteContract">
-              <v-list-item-avatar>
-                <v-icon>mdi-delete</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-title>Supprimer le contrat</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
       </v-row>
     </v-col>
     <!--    <v-col v-for="i in 3">-->

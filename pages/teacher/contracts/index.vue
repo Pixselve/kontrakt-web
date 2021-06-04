@@ -2,23 +2,22 @@
   <v-container>
     <v-row align="center" justify="space-between">
       <v-col>
-        <h1 class="secondary--text mr-5">
-          Mes contracts
-        </h1>
+        <h1 class="secondary--text mr-5">Mes contracts</h1>
       </v-col>
       <v-col class="text-right">
         <v-tooltip bottom>
-          <template v-slot:activator="{on}">
-            <v-btn v-on="on"  color="secondary" @click="generateSheetFile">
+          <template v-slot:activator="{ on }">
+            <v-btn
+              disabled
+              v-on="on"
+              color="secondary"
+            >
               <v-icon left>mdi-file</v-icon>
               Télécharger le fichier tableur
             </v-btn>
           </template>
           Non implémenté dans cette version
         </v-tooltip>
-
-
-
         <create-contract-dialog>
           <template v-slot="{ on }">
             <v-btn color="secondary" v-on="on">
@@ -41,7 +40,7 @@
           {{
             new Date(calendarValue).toLocaleDateString("fr-FR", {
               month: "long",
-              year: "numeric"
+              year: "numeric",
             })
           }}
         </h3>
@@ -57,7 +56,7 @@
       locale="fr-FR"
       ref="calendar"
       v-model="calendarValue"
-      :events="contractsFormattedForCalendar"
+      :events="contracts"
       @click:event="eventClick"
       :event-color="getEventColor"
     ></v-calendar>
@@ -72,9 +71,7 @@
           size="64"
         ></v-progress-circular>
       </v-col>
-      <v-col cols="12">
-        Chargement du contrat...
-      </v-col>
+      <v-col cols="12"> Chargement du contrat... </v-col>
     </v-row>
     <ContractDetails
       v-else-if="selectedContract"
@@ -90,58 +87,64 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import {
-  contractsStore,
-  contractStore,
-  groupsStore
-} from "~/utils/store-accessor";
+import ContractsDatesOnlyQueryGQL from "~/apollo/queries/ContractsDatesOnly.graphql";
 
 import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
 import CreateContractDialog from "~/components/CreateContractDialog.vue";
 
 import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
-import { FetchContractsQuery } from "~/types/types";
+import { ContractsDatesOnlyQuery, FetchContractQuery, FetchContractsQuery } from "~/types/types";
 import ContractDetails from "~/components/contract/ContractDetails.vue";
+import  FetchContractGQL  from "~/apollo/queries/FetchContract.graphql";
 
 @Component({
   layout: "teacher",
-  async asyncData() {
-    // const { data }: { data: ContractsDatesOnlyQuery } = await $apollo.query({
-    //   query: ContractsDatesOnlyQueryGQL
-    // });
-    // return { contractsOnlyDates: data.contracts };
-    await Promise.all([
-      contractsStore.fetchContracts(),
-      groupsStore.fetchGroups()
-    ]);
+  async asyncData({ app }) {
+    let client = app.apolloProvider.defaultClient;
+    const { data }: { data: ContractsDatesOnlyQuery } = await client.query({
+      query: ContractsDatesOnlyQueryGQL,
+    });
+    const contractsWithFormattedDates = data.contracts.map((contract) => ({
+      start: new Date(contract.start).getTime(),
+      end: new Date(contract.end).getTime(),
+      hexColor: contract.hexColor,
+      name: contract.name,
+      id: contract.id
+    }));
+    return { contracts: contractsWithFormattedDates };
   },
   components: {
     ContractDetails,
     ContractSkillListItemTeacherDashboard,
     CreateContractDialog,
-    ContractSkillAddDialog
-  }
+    ContractSkillAddDialog,
+  },
 })
 export default class TeacherContractsPage extends Vue {
   @Ref("calendar") readonly calendarRef!: any;
-
+  contracts: ContractsDatesOnlyQuery.contracts = [];
   calendarValue = new Date().toISOString();
   loading = false;
+  selectedContract = null;
 
   prev() {
-    //@ts-ignore
     this.calendarRef.prev();
   }
 
   next() {
-    //@ts-ignore
     this.calendarRef.next();
   }
 
   async eventClick({ event }: { event: FetchContractsQuery["contracts"][0] }) {
     try {
       this.loading = true;
-      await contractStore.fetchContract(event.id);
+      const {data}: {data: FetchContractQuery} = await this.$apollo.query({
+        query: FetchContractGQL,
+        variables: {
+          id: event.id
+        }
+      })
+      this.selectedContract = data.contract
     } catch (e) {
       console.log({ e });
     } finally {
@@ -149,25 +152,8 @@ export default class TeacherContractsPage extends Vue {
     }
   }
 
-  get selectedContract() {
-    return contractStore.contract;
-  }
-
-  get contractsFormattedForCalendar() {
-    return contractsStore.contractsFormattedForCalendar;
-  }
-
   getEventColor(event: FetchContractsQuery["contracts"][0]) {
-    return event.rgb;
-  }
-
-  //TODO
-  async generateSheetFile() {
-    // const { data }: { data: GetSheetFileQuery } = await this.$apollo.query({
-    //   query: GetSheetFileQueryGQL
-    // });
-    //
-    // window.open(data.contractsToExcel, "_blank");
+    return event.hexColor;
   }
 }
 </script>
