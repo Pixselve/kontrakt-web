@@ -146,7 +146,7 @@ export type ContractsDatesOnlyQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'start' | 'end'>
+    & Pick<Contract, 'start' | 'id' | 'name' | 'end' | 'hexColor'>
   )> }
 );
 
@@ -169,10 +169,6 @@ export type FetchContractQuery = (
       & { studentSkills: Array<(
         { __typename?: 'StudentSkill' }
         & Pick<StudentSkill, 'mark'>
-        & { student: (
-          { __typename?: 'Student' }
-          & Pick<Student, 'ownerUsername' | 'firstName' | 'lastName'>
-        ) }
       )> }
     )> }
   ) }
