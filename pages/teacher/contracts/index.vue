@@ -2,7 +2,7 @@
   <v-container>
     <v-row align="center" justify="space-between">
       <v-col>
-        <h1 class="secondary--text mr-5">Mes contracts</h1>
+        <h1 class="secondary--text mr-5">Mes contrats</h1>
       </v-col>
       <v-col class="text-right">
         <v-tooltip bottom>
