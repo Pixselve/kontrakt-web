@@ -1,7 +1,6 @@
 <template>
   <v-list-item three-line>
     <v-list-item-action>
-
       <contract-skill-edit-dialog :skill-id="skill.id">
         <template v-slot="{on}">
           <v-btn v-on="on" icon>
@@ -64,16 +63,16 @@ export default class ContractSkillListItemTeacherDashboard extends Vue {
   get successSkillFinishedSkillToStudent() {
     return (
       this.skillFinishedSkillToStudent?.filter(skillToStudent =>
-        ["VERY_GOOD", "DONE"].includes(skillToStudent.mark.value)
+        ["GOOD", "DONE"].includes(skillToStudent.mark)
       ) ?? []
     );
   }
 
   get skillFinishedSkillToStudent() {
     return (
-      this.skill.skillToStudents?.filter(skillToStudent =>
+      this.skill.studentSkills?.filter(skillToStudent =>
         ["VERY_GOOD", "GOOD", "BAD", "VERY_BAD", "DONE"].includes(
-          skillToStudent.mark.value
+          skillToStudent.mark
         )
       ) ?? []
     );
