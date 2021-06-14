@@ -12,19 +12,10 @@ query FetchContract($id: Int!) {
     skills {
       id
       name
+      studentSkills {
+        mark
+      }
     }
-#    skills {
-#      id
-#      name
-#      studentSkills {
-#        mark
-#        student {
-#          ownerUsername
-#          firstName
-#          lastName
-#        }
-#      }
-#    }
   }
 }
 
