@@ -2,7 +2,7 @@
   <v-menu offset-y>
     <template v-slot:activator="{ on }">
       <v-btn v-on="on" icon x-small>
-        <v-icon>mdi-dots-horizontal</v-icon>
+        <v-icon>mdi-playlist-edit</v-icon>
       </v-btn>
     </template>
     <v-progress-linear
