@@ -119,6 +119,9 @@ import  FetchContractGQL  from "~/apollo/queries/FetchContract.graphql";
     CreateContractDialog,
     ContractSkillAddDialog,
   },
+  head: () => ({
+    title: "Contrats"
+  }),
 })
 export default class TeacherContractsPage extends Vue {
   @Ref("calendar") readonly calendarRef!: any;

@@ -55,11 +55,14 @@ import { FetchStudentsQuery } from "~/types/types";
       students: data.students,
     };
   },
+  head: () => ({
+    title: "Mes élèves"
+  }),
   components: {
     StudentListItem,
     CreateStudentDialog,
     ImportStudentWithCSVDialog,
-  },
+  }
 })
 export default class TeacherStudentsPageBeta extends Vue {
   students: any[] = [];
