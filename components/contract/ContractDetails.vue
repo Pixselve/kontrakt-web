@@ -111,11 +111,6 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
 import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
-import {
-  contractsStore,
-  contractStore,
-  groupsStore
-} from "~/utils/store-accessor";
 import { FetchContractQuery } from "~/types/types";
 import GroupsSelector from "~/components/GroupsSelector.vue";
 

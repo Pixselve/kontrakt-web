@@ -34,7 +34,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { contractStore, studentsStore } from "~/utils/store-accessor";
 import StudentSkillTableRow from "~/components/StudentSkillTableRow.vue";
 import { Group } from "~/types/types";
 import { shareCommonElements } from "~/utils/shareCommonElements"
@@ -48,13 +47,12 @@ import { shareCommonElements } from "~/utils/shareCommonElements"
     StudentSkillTableRow
   },
   async asyncData() {
-    await Promise.all([studentsStore.fetchStudents()]);
+
   },
   //@ts-ignore
   async validate({ params }) {
     if (!/[1-9]+/g.test(params.id)) return false;
-    await contractStore.fetchContract(parseInt(params.id));
-    return contractStore.contract !== null;
+    return true; //TODO
   }
 })
 export default class TeacherContractPage extends Vue {
@@ -71,7 +69,7 @@ export default class TeacherContractPage extends Vue {
 
 
   get contract() {
-    return contractStore.contract;
+    return null; //TODO
   };
 
   mapGroupsId(groups: { __typename?: "Group" | undefined; } & Pick<Group, "id" | "name">[]) {
@@ -80,12 +78,13 @@ export default class TeacherContractPage extends Vue {
 
 
   get studentsConcernedByTheContract() {
-    if ((this.contract?.groups ?? []).length > 0) {
-      return studentsStore.students.filter(student => shareCommonElements(this.mapGroupsId(student.groups ?? []), this.mapGroupsId(this.contract?.groups ?? [])));
-
-    } else {
-      return studentsStore.students;
-    }
+    return [] //TODO
+    // if ((this.contract?.groups ?? []).length > 0) {
+    //   return studentsStore.students.filter(student => shareCommonElements(this.mapGroupsId(student.groups ?? []), this.mapGroupsId(this.contract?.groups ?? [])));
+    //
+    // } else {
+    //   return studentsStore.students;
+    // }
   };
 }
 </script>

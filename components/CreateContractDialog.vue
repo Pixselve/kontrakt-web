@@ -116,7 +116,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import EditSkillDialog from "~/components/EditSkillDialog.vue";
 import CreateSkillDialog from "~/components/CreateSkillDialog.vue";
-import { contractsStore } from "~/utils/store-accessor";
 
 @Component({
   components: { EditSkillDialog, CreateSkillDialog }

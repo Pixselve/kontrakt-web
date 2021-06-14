@@ -24,7 +24,6 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { groupsStore } from "~/utils/store-accessor";
 
 @Component({})
 export default class CreateGroupDialog extends Vue {

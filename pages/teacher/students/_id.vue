@@ -58,9 +58,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-
 import SkillsTable from "~/components/SkillsTable.vue";
-import { studentStore } from "~/utils/store-accessor";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
 import {
   Contract,
@@ -111,7 +109,7 @@ import FindManyContractsOfGroupsQueryGQL from "~/apollo/queries/contact/FindMany
   },
 })
 export default class StudentSpecificPage extends Vue {
-  student: Student;
+  student?: Student;
   contracts: Contract[] = [];
 
   /**
@@ -123,7 +121,6 @@ export default class StudentSpecificPage extends Vue {
 
   async deleteStudent() {
     try {
-      await studentStore.deleteStudent();
       await this.$router.push("/teacher/students");
     } catch (e) {
       alert("ERROR");

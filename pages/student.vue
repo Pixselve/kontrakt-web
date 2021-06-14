@@ -126,7 +126,6 @@ import { Component, Ref, Vue } from "vue-property-decorator";
 import ContactPopup from "~/components/ContractPopup.vue";
 import SkillsTable from "~/components/SkillsTable.vue";
 import ContractCard from "~/components/ContractCard.vue";
-import { contractsStore, studentStore } from "~/utils/store-accessor";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
 import AwaitingFinishContractCard from "~/components/AwaitingFinishContractCard.vue";
 import { FetchContractsQuery } from "~/types/types";
@@ -194,7 +193,7 @@ export default class StudentPage extends Vue {
   }
 
   getEventColor(event: FetchContractsQuery["contracts"][0]) {
-    return event.rgb;
+    return event.hexColor;
   }
 
   next() {

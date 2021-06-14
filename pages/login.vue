@@ -31,7 +31,6 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { studentsStore } from "~/utils/store-accessor";
 import { $apollo } from "~/utils/getGraphQLClient";
 import LoginStudentMutationGQL from "~/apollo/mutations/student/LoginStudent.graphql";
 
@@ -40,9 +39,6 @@ import LoginStudentMutationGQL from "~/apollo/mutations/student/LoginStudent.gra
     title: "Connexion élève",
   }),
   layout: "login",
-  async fetch() {
-    await studentsStore.fetchStudents();
-  },
 })
 export default class LoginPage extends Vue {
   @Ref("form") formRef!: HTMLFormElement;

@@ -17,7 +17,6 @@
 <script lang="ts">
   import { Vue, Component, Prop } from 'vue-property-decorator';
   import { Contract }             from "~/types/types";
-  import { contractsStore }       from "~/utils/store-accessor";
 
   @Component({
     filters: {

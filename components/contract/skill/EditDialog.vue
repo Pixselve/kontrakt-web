@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { contractStore } from "~/utils/store-accessor";
 
 @Component({})
 export default class ContractSkillEditDialog extends Vue {

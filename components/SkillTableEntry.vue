@@ -21,7 +21,6 @@ import {Mark} from "~/types/types";
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Mark, Skill, StudentSkill } from "~/types/types";
-import { studentStore } from "~/utils/store-accessor";
 import getMarkData from "~/utils/getMarkData";
 
 @Component({})

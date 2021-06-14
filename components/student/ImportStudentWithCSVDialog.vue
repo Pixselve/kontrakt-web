@@ -46,7 +46,6 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { studentsStore } from "~/utils/store-accessor";
 
 @Component({})
 export default class ImportStudentWithCSVDialog extends Vue {

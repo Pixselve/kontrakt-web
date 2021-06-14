@@ -56,7 +56,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { FetchStudentsQuery } from "~/types/types";
-import { groupsStore, studentsStore } from "~/utils/store-accessor";
 import CreateGroupDialog from "~/components/CreateGroupDialog.vue";
 import GroupsSelector from "~/components/GroupsSelector.vue";
 

@@ -125,10 +125,10 @@ import  FetchContractGQL  from "~/apollo/queries/FetchContract.graphql";
 })
 export default class TeacherContractsPage extends Vue {
   @Ref("calendar") readonly calendarRef!: any;
-  contracts: ContractsDatesOnlyQuery.contracts = [];
+  contracts: ContractsDatesOnlyQuery["contracts"] = [];
   calendarValue = new Date().toISOString();
   loading = false;
-  selectedContract = null;
+  selectedContract?: FetchContractQuery["contract"];
 
   prev() {
     this.calendarRef.prev();
