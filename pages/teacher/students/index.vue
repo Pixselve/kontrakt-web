@@ -5,14 +5,6 @@
         <h1 class="secondary--text mr-5">Mes élèves</h1>
       </v-col>
       <v-col class="text-right">
-        <import-student-with-c-s-v-dialog>
-          <template v-slot:default="{ on }">
-            <v-btn v-on="on" color="secondary">
-              <v-icon left>mdi-file-upload</v-icon>
-              Importer un CSV
-            </v-btn>
-          </template>
-        </import-student-with-c-s-v-dialog>
         <create-student-dialog>
           <template v-slot:default="{ on }">
             <v-btn v-on="on" color="secondary">
@@ -39,7 +31,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import StudentListItem from "~/components/StudentListItem.vue";
 import CreateStudentDialog from "~/components/CreateStudentDialog.vue";
-import ImportStudentWithCSVDialog from "~/components/student/ImportStudentWithCSVDialog.vue";
 import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
 import { FetchStudentsQuery } from "~/types/types";
 
@@ -61,7 +52,6 @@ import { FetchStudentsQuery } from "~/types/types";
   components: {
     StudentListItem,
     CreateStudentDialog,
-    ImportStudentWithCSVDialog,
   }
 })
 export default class TeacherStudentsPageBeta extends Vue {
