@@ -55,18 +55,26 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { FetchStudentsQuery } from "~/types/types";
+import { FetchStudentsQuery, FindManyGroupsQuery } from "~/types/types";
 import CreateGroupDialog from "~/components/CreateGroupDialog.vue";
 import GroupsSelector from "~/components/GroupsSelector.vue";
+import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
 
 @Component<StudentListItem>({
   components: { GroupsSelector, CreateGroupDialog },
+  async fetch(): Promise<void> | void {
+    const { data }: { data: FindManyGroupsQuery } = await this.$apollo.query({
+      query: FindManyGroupsGQL,
+    });
+    this.groups = data.groups
+  },
 })
 export default class StudentListItem extends Vue {
   @Prop()
   readonly student!: FetchStudentsQuery["students"][0];
 
-  selectedGroup: number[] = this.student.groups?.map(({ id }) => id) ?? [];
+  selectedGroup: number[] = this.student.groups.map(group => group.id)
+  groups: FindManyGroupsQuery["groups"] = []
 
   /**
    * Edit the student's groups
@@ -87,11 +95,9 @@ export default class StudentListItem extends Vue {
     }
   }
 
-  get groups() {
-    return groupsStore.groups;
-  }
 
-  get skillsToFinish() { //TODO todo marks
+  get skillsToFinish() {
+    //TODO todo marks
     return this.student.studentSkills.filter(
       (studentSkill) => studentSkill.mark === "TODO"
     );
