@@ -111,19 +111,26 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
 import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
-import { FetchContractQuery } from "~/types/types";
+import { FetchContractQuery, FindManyGroupsQuery } from "~/types/types";
 import GroupsSelector from "~/components/GroupsSelector.vue";
+import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
 
-@Component({
+@Component<ContractDetails>({
   components: {
     ContractSkillAddDialog,
     ContractSkillListItemTeacherDashboard,
     GroupsSelector
-  }
+  },
+  async fetch(): Promise<void> {
+    const { data }: { data: FindManyGroupsQuery } = await this.$apollo.query({
+      query: FindManyGroupsGQL,
+    });
+    this.groups = data.groups
+  },
 })
 export default class ContractDetails extends Vue {
   @Prop() readonly contract!: FetchContractQuery["contract"];
-
+  groups: FindManyGroupsQuery["groups"] = []
   loading = false;
 
   formattedDate(date: string) {
@@ -135,10 +142,6 @@ export default class ContractDetails extends Vue {
 
   get contractGroups() {
     return this.contract?.groups?.map(group => group.id) ?? [];
-  }
-
-  get groups() {
-    return groupsStore.groups;
   }
 
   async groupChange(groups: number[]) {
