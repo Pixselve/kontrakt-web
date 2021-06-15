@@ -62,7 +62,7 @@ import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
 
 @Component<StudentListItem>({
   components: { GroupsSelector, CreateGroupDialog },
-  async fetch(): Promise<void> | void {
+  async fetch(): Promise<void> {
     const { data }: { data: FindManyGroupsQuery } = await this.$apollo.query({
       query: FindManyGroupsGQL,
     });
