@@ -1,5 +1,5 @@
-mutation DeleteStudent($id: Int!) {
-  deleteOneStudent(id: $id) {
-    id
+mutation DeleteStudent($ownerUsername: String!) {
+  deleteOneStudent(ownerUsername: $ownerUsername) {
+    ownerUsername
   }
 }

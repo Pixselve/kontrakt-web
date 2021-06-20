@@ -48,12 +48,83 @@ export enum Mark {
 export type Mutation = {
   __typename?: 'Mutation';
   login: AuthPayload;
+  createOneGroup: Group;
+  updateOneContract: Contract;
+  createOneSkill: Skill;
+  deleteOneSkill: Skill;
+  updateOneSkill: Skill;
+  updateOneStudent: Student;
+  createOneContract: Contract;
+  deleteOneContract: Contract;
+  deleteOneStudent: Student;
+  upsertOneSkillToStudent: StudentSkill;
 };
 
 
 export type MutationLoginArgs = {
   username: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationCreateOneGroupArgs = {
+  name: Scalars['String'];
+  contractID?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationUpdateOneContractArgs = {
+  contractID: Scalars['Int'];
+  groupIDs?: Maybe<Array<Scalars['Int']>>;
+};
+
+
+export type MutationCreateOneSkillArgs = {
+  name: Scalars['String'];
+  contractID: Scalars['Int'];
+};
+
+
+export type MutationDeleteOneSkillArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationUpdateOneSkillArgs = {
+  skillID: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateOneStudentArgs = {
+  ownerUsername: Scalars['String'];
+  groupIDs?: Maybe<Array<Scalars['Int']>>;
+};
+
+
+export type MutationCreateOneContractArgs = {
+  end: Scalars['String'];
+  name: Scalars['String'];
+  hexColor: Scalars['String'];
+  start: Scalars['String'];
+  skillNames: Array<Scalars['String']>;
+};
+
+
+export type MutationDeleteOneContractArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteOneStudentArgs = {
+  ownerUsername: Scalars['String'];
+};
+
+
+export type MutationUpsertOneSkillToStudentArgs = {
+  studentOwnerUsername: Scalars['String'];
+  skillID: Scalars['Int'];
+  mark: Mark;
 };
 
 export type Query = {
@@ -138,6 +209,190 @@ export type User = {
   student: Array<Student>;
   teacher: Array<Teacher>;
 };
+
+export type CreateOneContractMutationVariables = Exact<{
+  start: Scalars['String'];
+  end: Scalars['String'];
+  skills: Array<Scalars['String']> | Scalars['String'];
+  name: Scalars['String'];
+  hexColor: Scalars['String'];
+}>;
+
+
+export type CreateOneContractMutation = (
+  { __typename?: 'Mutation' }
+  & { createOneContract: (
+    { __typename?: 'Contract' }
+    & Pick<Contract, 'start'>
+  ) }
+);
+
+export type DeleteContractMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteContractMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteOneContract: (
+    { __typename?: 'Contract' }
+    & Pick<Contract, 'id'>
+  ) }
+);
+
+export type DeleteStudentMutationVariables = Exact<{
+  ownerUsername: Scalars['String'];
+}>;
+
+
+export type DeleteStudentMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteOneStudent: (
+    { __typename?: 'Student' }
+    & Pick<Student, 'ownerUsername'>
+  ) }
+);
+
+export type EditSkillToStudentMutationVariables = Exact<{
+  mark: Mark;
+  skillID: Scalars['Int'];
+  studentOwnerUsername: Scalars['String'];
+}>;
+
+
+export type EditSkillToStudentMutation = (
+  { __typename?: 'Mutation' }
+  & { upsertOneSkillToStudent: (
+    { __typename?: 'StudentSkill' }
+    & Pick<StudentSkill, 'mark'>
+  ) }
+);
+
+export type LoginMutationVariables = Exact<{
+  username: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+
+export type LoginMutation = (
+  { __typename?: 'Mutation' }
+  & { login: (
+    { __typename?: 'AuthPayload' }
+    & Pick<AuthPayload, 'token'>
+  ) }
+);
+
+export type UpdateContractGroupsMutationVariables = Exact<{
+  contractID: Scalars['Int'];
+  groups: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type UpdateContractGroupsMutation = (
+  { __typename?: 'Mutation' }
+  & { updateOneContract: (
+    { __typename?: 'Contract' }
+    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'hexColor'>
+    & { groups: Array<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
+    )>, skills: Array<(
+      { __typename?: 'Skill' }
+      & Pick<Skill, 'id' | 'name'>
+    )> }
+  ) }
+);
+
+export type CreateGroupMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+
+export type CreateGroupMutation = (
+  { __typename?: 'Mutation' }
+  & { createOneGroup: (
+    { __typename?: 'Group' }
+    & Pick<Group, 'id' | 'name'>
+  ) }
+);
+
+export type CreateOneSkillToContractMutationVariables = Exact<{
+  name: Scalars['String'];
+  contractID: Scalars['Int'];
+}>;
+
+
+export type CreateOneSkillToContractMutation = (
+  { __typename?: 'Mutation' }
+  & { createOneSkill: (
+    { __typename?: 'Skill' }
+    & { contract: (
+      { __typename?: 'Contract' }
+      & Pick<Contract, 'id' | 'start' | 'end' | 'name'>
+      & { groups: Array<(
+        { __typename?: 'Group' }
+        & Pick<Group, 'id' | 'name'>
+      )>, skills: Array<(
+        { __typename?: 'Skill' }
+        & Pick<Skill, 'id' | 'name'>
+      )> }
+    ) }
+  ) }
+);
+
+export type DeleteSkillMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteSkillMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteOneSkill: (
+    { __typename?: 'Skill' }
+    & Pick<Skill, 'id'>
+  ) }
+);
+
+export type EditSkillNameMutationVariables = Exact<{
+  id: Scalars['Int'];
+  name: Scalars['String'];
+}>;
+
+
+export type EditSkillNameMutation = (
+  { __typename?: 'Mutation' }
+  & { updateOneSkill: (
+    { __typename?: 'Skill' }
+    & { contract: (
+      { __typename?: 'Contract' }
+      & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'hexColor'>
+      & { groups: Array<(
+        { __typename?: 'Group' }
+        & Pick<Group, 'id' | 'name'>
+      )>, skills: Array<(
+        { __typename?: 'Skill' }
+        & Pick<Skill, 'id' | 'name'>
+      )> }
+    ) }
+  ) }
+);
+
+export type UpdateStudentGroupsMutationVariables = Exact<{
+  ownerUsername: Scalars['String'];
+  groups: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type UpdateStudentGroupsMutation = (
+  { __typename?: 'Mutation' }
+  & { updateOneStudent: (
+    { __typename?: 'Student' }
+    & { groups: Array<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id'>
+    )> }
+  ) }
+);
 
 export type ContractsDatesOnlyQueryVariables = Exact<{ [key: string]: never; }>;
 

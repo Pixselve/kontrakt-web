@@ -1,5 +1,5 @@
-mutation CreateOneContract($start: DateTime!, $end: DateTime!, $skills: [String!]!, $name: String!, $rgb: String!) {
-  createOneContract(contract: {start: $start, skillNames: $skills, end: $end, name: $name, rgb: $rgb}) {
+mutation CreateOneContract($start: String!, $end: String!, $skills: [String!]!, $name: String!, $hexColor: String!) {
+  createOneContract(end: $end, hexColor: $hexColor, name: $name, skillNames: $skills, start: $start) {
     start
   }
 }
