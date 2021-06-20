@@ -116,6 +116,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import EditSkillDialog from "~/components/EditSkillDialog.vue";
 import CreateSkillDialog from "~/components/CreateSkillDialog.vue";
+import CreateOneContractGQL from "~/apollo/mutations/CreateOneContract.graphql"
 
 @Component({
   components: { EditSkillDialog, CreateSkillDialog }
@@ -181,13 +182,17 @@ export default class CreateContractDialog extends Vue {
   async addContract() {
     try {
       this.loading = true;
-      await contractsStore.addContract({
-        start: this.dates.start.value,
-        end: this.dates.end.value,
-        skills: this.skills,
-        name: this.name,
-        rgb: this.color
-      });
+      await this.$apollo.mutate({
+        mutation: CreateOneContractGQL,
+        variables: {
+          start: this.dates.start.value,
+          end: this.dates.end.value,
+          skills: this.skills,
+          name: this.name,
+          hexColor: this.color
+        }
+      })
+      this.$emit("update")
       this.close();
     } catch (e) {
       alert("ERROR");
