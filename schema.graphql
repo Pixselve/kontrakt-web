@@ -49,7 +49,7 @@ type Query {
   me: User!
   student(ownerUsername: String!): Student!
   studentSkills(contractID: Int, studentUsername: String!): [StudentSkill!]!
-  students: [Student!]!
+  students(contractID: Int): [Student!]!
   teachers: [Teacher!]!
 }
 
