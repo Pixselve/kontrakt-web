@@ -114,6 +114,7 @@ import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillLis
 import { FetchContractQuery, FindManyGroupsQuery } from "~/types/types";
 import GroupsSelector from "~/components/GroupsSelector.vue";
 import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
+import DeleteContractGQL from "~/apollo/mutations/DeleteContract.graphql";
 
 @Component<ContractDetails>({
   components: {
@@ -156,8 +157,13 @@ export default class ContractDetails extends Vue {
   async deleteContract() {
     try {
       this.loading = true;
-      await contractStore.deleteContract();
-      await contractsStore.fetchContracts();
+      await this.$apollo.mutate({
+        mutation: DeleteContractGQL,
+        variables: {
+          id: this.contract.id
+        }
+      })
+      this.$emit("delete")
     } catch (e) {
       alert("Une erreur est survenue lors de la suppression du contrat");
       console.log({ e });
