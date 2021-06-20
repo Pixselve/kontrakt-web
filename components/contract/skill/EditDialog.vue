@@ -26,6 +26,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import EditSkillNameGQL from "~/apollo/mutations/skill/EditSkillName.graphql";
+import DeleteSkillGQL from "~/apollo/mutations/skill/DeleteSkill.graphql";
 
 @Component({})
 export default class ContractSkillEditDialog extends Vue {
@@ -38,7 +40,14 @@ export default class ContractSkillEditDialog extends Vue {
   async submit() {
     try {
       this.loading = true;
-      await contractStore.editSkillById({ id: this.skillId, newName: this.newName });
+      await this.$apollo.mutate({
+        mutation: EditSkillNameGQL,
+        variables: {
+          name: this.newName,
+          id: this.skillId
+        }
+      });
+      this.$emit("update");
       this.opened = false;
     } catch (e) {
       console.log({ e });
@@ -51,7 +60,13 @@ export default class ContractSkillEditDialog extends Vue {
   async deleteSkill() {
     try {
       this.loading = true;
-      await contractStore.deleteSkill(this.skillId);
+      await this.$apollo.mutate({
+        mutation: DeleteSkillGQL,
+        variables: {
+          id: this.skillId
+        }
+      });
+      this.$emit("update");
       this.opened = false;
     } catch (e) {
       console.log({ e });

@@ -63,11 +63,10 @@ import UpdateStudentGroupsGQL from "~/apollo/mutations/student/UpdateStudentGrou
 
 @Component<StudentListItem>({
   components: { GroupsSelector, CreateGroupDialog },
-  async fetch(): Promise<void> {
-    const { data }: { data: FindManyGroupsQuery } = await this.$apollo.query({
-      query: FindManyGroupsGQL,
-    });
-    this.groups = data.groups
+  apollo: {
+    groups: {
+      query: FindManyGroupsGQL
+    }
   },
 })
 export default class StudentListItem extends Vue {
@@ -88,7 +87,7 @@ export default class StudentListItem extends Vue {
         groups: this.selectedGroup
       }
     })
-    this.$emit("groupsUpdate", this.groups)
+    this.$emit("groupsUpdate")
     // try {
     //   await studentsStore.editStudentGroups({
     //     studentId: this.student.ownerUsername,

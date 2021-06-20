@@ -105,6 +105,7 @@
     <v-col cols="12">
       <v-list>
         <contract-skill-list-item-teacher-dashboard
+          v-on:update="() => $apollo.queries.contract.refetch()"
           :skill="skill"
           v-for="skill in contract.skills"
           :key="skill.id"

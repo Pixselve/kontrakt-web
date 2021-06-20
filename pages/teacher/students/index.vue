@@ -38,7 +38,6 @@ import { FetchStudentsQuery, Group, Student } from "~/types/types";
 @Component<TeacherStudentsPageBeta>({
   layout: "teacher",
   async fetch() {
-
     const { data,  }: { data: FetchStudentsQuery } = await this.$apollo.query({
       query: FetchStudentsQueryGQL,
       fetchPolicy: "no-cache",

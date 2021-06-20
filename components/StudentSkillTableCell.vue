@@ -1,6 +1,6 @@
 <template>
-  <td :style="{backgroundColor: '#' + mark.rgb}">
-    <v-select :disabled="loading" :loading="loading" @change="changeValue" :value="mark.value" class="mt-6" flat dense
+  <td>
+    <v-select :disabled="loading" :loading="loading" @change="changeValue" :value="mark" class="mt-6" flat dense
               outlined
               :items="marks"></v-select>
   </td>
@@ -12,18 +12,18 @@ import { Mark, Skill, Student } from "~/types/types";
 
 @Component({})
 export default class StudentSkillTableCell extends Vue {
-  @Prop({ type: Object }) readonly student!: Pick<Student, 'id' | 'firstName' | 'lastName'>;
+  @Prop({ type: Object }) readonly student!: Student;
   @Prop({ type: Object }) readonly skill!: Skill;
-
-
+  marks = [
+    {
+      text: "À faire",
+      value: Mark.Todo
+    }
+  ]
   loading = false;
-
-
-  get mark(): ({ __typename?: "Mark" } & Pick<Mark, "text" | "value" | "rgb">) | undefined {
-    return undefined //TODO
-    // return this.skill.skillToStudents?.find(skillToStudent => skillToStudent.student.id === this.student.id)?.mark ?? this.marks.find((mark: string) => mark === "TODO");
+  get mark() {
+    return this.student.studentSkills.find(studentSkill => studentSkill.skillID === this.skill.id)?.mark ?? Mark.Todo
   }
-
 
   async changeValue(newValue: string) {
     try {
