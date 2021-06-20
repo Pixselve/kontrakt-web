@@ -10,7 +10,7 @@
 
 <script lang="ts">
   import { Vue, Component, Prop }                  from 'vue-property-decorator';
-  import { Maybe, Skill, SkillToStudent, Student } from "../types/types";
+  import { Skill, Student } from "../types/types";
   import StudentSkillTableCell                     from "~/components/StudentSkillTableCell.vue";
 
   @Component({
