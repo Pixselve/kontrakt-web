@@ -115,6 +115,8 @@ import { FetchContractQuery, FindManyGroupsQuery } from "~/types/types";
 import GroupsSelector from "~/components/GroupsSelector.vue";
 import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
 import DeleteContractGQL from "~/apollo/mutations/DeleteContract.graphql";
+import FetchContractGQL from "~/apollo/queries/FetchContract.graphql";
+import UpdateContractGroupsGQL from "~/apollo/mutations/contract/UpdateContractGroups.graphql";
 
 @Component<ContractDetails>({
   components: {
@@ -122,17 +124,32 @@ import DeleteContractGQL from "~/apollo/mutations/DeleteContract.graphql";
     ContractSkillListItemTeacherDashboard,
     GroupsSelector
   },
-  async fetch(): Promise<void> {
-    const { data }: { data: FindManyGroupsQuery } = await this.$apollo.query({
-      query: FindManyGroupsGQL,
-    });
-    this.groups = data.groups
+  apollo: {
+    groups: {
+      query: FindManyGroupsGQL
+    },
+    contract: {
+      query: FetchContractGQL,
+      variables() {
+        return {
+          id: this.id
+        }
+      },
+      prefetch: true
+    }
   },
+  // async fetch(): Promise<void> {
+  //   const { data }: { data: FindManyGroupsQuery } = await this.$apollo.query({
+  //     query: FindManyGroupsGQL,
+  //   });
+  //   this.groups = data.groups
+  // },
 })
 export default class ContractDetails extends Vue {
-  @Prop() readonly contract!: FetchContractQuery["contract"];
+  @Prop() readonly id!: number
   groups: FindManyGroupsQuery["groups"] = []
   loading = false;
+  contract?: FetchContractQuery["contract"]
 
   formattedDate(date: string) {
     return new Date(date).toLocaleDateString("fr-FR", {
@@ -147,7 +164,14 @@ export default class ContractDetails extends Vue {
 
   async groupChange(groups: number[]) {
     try {
-      await contractStore.updateGroups(groups);
+      await this.$apollo.mutate({
+        variables: {
+          contractID: this.id,
+          groups
+        },
+        mutation: UpdateContractGroupsGQL
+      })
+      await this.$apollo.queries.contract.refetch()
     } catch (e) {
       console.log({ e });
     } finally {
@@ -160,7 +184,7 @@ export default class ContractDetails extends Vue {
       await this.$apollo.mutate({
         mutation: DeleteContractGQL,
         variables: {
-          id: this.contract.id
+          id: this.id
         }
       })
       this.$emit("delete")
