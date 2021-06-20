@@ -17,15 +17,6 @@ declare module '*/DeleteContract.graphql' {
 }
     
 
-declare module '*/DeleteStudent.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const DeleteStudent: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
 declare module '*/EditSkillToStudent.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -89,6 +80,15 @@ declare module '*/EditSkillName.graphql' {
 }
     
 
+declare module '*/DeleteStudent.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const DeleteStudent: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/UpdateStudentGroups.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -138,6 +138,15 @@ declare module '*/FetchStudent.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const FetchStudent: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
+declare module '*/FetchStudentForContract.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const FetchStudentForContract: DocumentNode;
 
   export default defaultDocument;
 }
