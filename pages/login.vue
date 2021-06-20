@@ -32,7 +32,7 @@
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
 import { $apollo } from "~/utils/getGraphQLClient";
-import LoginStudentMutationGQL from "~/apollo/mutations/student/LoginStudent.graphql";
+import LoginMutationGQL from "~/apollo/mutations/Login.graphql";
 
 @Component({
   head: () => ({
@@ -71,7 +71,7 @@ export default class LoginPage extends Vue {
         const {
           data,
         } = await $apollo.mutate({
-          mutation: LoginStudentMutationGQL,
+          mutation: LoginMutationGQL,
           variables: {
             username: this.username,
             password: this.password
