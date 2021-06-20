@@ -18,7 +18,7 @@
           </template>
           Non implémenté dans cette version
         </v-tooltip>
-        <create-contract-dialog>
+        <create-contract-dialog v-on:update="() => $apollo.queries.contracts.refetch()">
           <template v-slot="{ on }">
             <v-btn color="secondary" v-on="on">
               <v-icon left>mdi-playlist-plus</v-icon>
@@ -36,14 +36,14 @@
         </v-btn>
       </v-col>
       <v-col
-        ><h3>
-          {{
-            new Date(calendarValue).toLocaleDateString("fr-FR", {
-              month: "long",
-              year: "numeric",
-            })
-          }}
-        </h3>
+      ><h3>
+        {{
+          new Date(calendarValue).toLocaleDateString("fr-FR", {
+            month: "long",
+            year: "numeric",
+          })
+        }}
+      </h3>
       </v-col>
       <v-col>
         <v-btn fab text small color="grey darken-2" @click="next">
@@ -71,12 +71,14 @@
           size="64"
         ></v-progress-circular>
       </v-col>
-      <v-col cols="12"> Chargement du contrat... </v-col>
+      <v-col cols="12"> Chargement du contrat...</v-col>
     </v-row>
     <ContractDetails
+      v-on:delete="() => {selectedContract = null; return $apollo.queries.contracts.refetch()}"
       v-else-if="selectedContract"
-      :contract="selectedContract"
+      :id="selectedContract"
     />
+
     <v-row v-else>
       <v-col cols="12">
         <v-alert type="info">Veuillez selectionner un contrat</v-alert>
@@ -95,23 +97,23 @@ import CreateContractDialog from "~/components/CreateContractDialog.vue";
 import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
 import { ContractsDatesOnlyQuery, FetchContractQuery, FetchContractsQuery } from "~/types/types";
 import ContractDetails from "~/components/contract/ContractDetails.vue";
-import  FetchContractGQL  from "~/apollo/queries/FetchContract.graphql";
+import FetchContractGQL from "~/apollo/queries/FetchContract.graphql";
 
-@Component({
+@Component<TeacherContractsPage>({
   layout: "teacher",
-  async asyncData({ app }) {
-    let client = app.apolloProvider.defaultClient;
-    const { data }: { data: ContractsDatesOnlyQuery } = await client.query({
+  apollo: {
+    contracts: {
       query: ContractsDatesOnlyQueryGQL,
-    });
-    const contractsWithFormattedDates = data.contracts.map((contract) => ({
-      start: new Date(contract.start).getTime(),
-      end: new Date(contract.end).getTime(),
-      hexColor: contract.hexColor,
-      name: contract.name,
-      id: contract.id
-    }));
-    return { contracts: contractsWithFormattedDates };
+      update(data: ContractsDatesOnlyQuery) {
+        return data.contracts.map((contract) => ({
+          start: new Date(contract.start).getTime(),
+          end: new Date(contract.end).getTime(),
+          hexColor: contract.hexColor,
+          name: contract.name,
+          id: contract.id
+        }));
+      }
+    }
   },
   components: {
     ContractDetails,
@@ -128,7 +130,7 @@ export default class TeacherContractsPage extends Vue {
   contracts: ContractsDatesOnlyQuery["contracts"] = [];
   calendarValue = new Date().toISOString();
   loading = false;
-  selectedContract: FetchContractQuery["contract"] | null = null;
+  selectedContract: number | null = null;
 
   prev() {
     this.calendarRef.prev();
@@ -139,20 +141,7 @@ export default class TeacherContractsPage extends Vue {
   }
 
   async eventClick({ event }: { event: FetchContractsQuery["contracts"][0] }) {
-    try {
-      this.loading = true;
-      const {data}: {data: FetchContractQuery} = await this.$apollo.query({
-        query: FetchContractGQL,
-        variables: {
-          id: event.id
-        }
-      })
-      this.selectedContract = data.contract
-    } catch (e) {
-      console.log({ e });
-    } finally {
-      this.loading = false;
-    }
+    this.selectedContract = event.id;
   }
 
   getEventColor(event: FetchContractsQuery["contracts"][0]) {
