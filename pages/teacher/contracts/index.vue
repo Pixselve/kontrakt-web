@@ -128,7 +128,7 @@ export default class TeacherContractsPage extends Vue {
   contracts: ContractsDatesOnlyQuery["contracts"] = [];
   calendarValue = new Date().toISOString();
   loading = false;
-  selectedContract?: FetchContractQuery["contract"] = null;
+  selectedContract: FetchContractQuery["contract"] | null = null;
 
   prev() {
     this.calendarRef.prev();
