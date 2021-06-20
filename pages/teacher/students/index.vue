@@ -20,6 +20,7 @@
       >Vous n'avez pas encore ajouté d'élève</v-alert
     >
     <student-list-item
+      v-on:groupsUpdate="$fetch"
       v-for="student in students"
       :key="student.ownerUsername"
       :student="student"
@@ -32,19 +33,17 @@ import { Component, Vue } from "vue-property-decorator";
 import StudentListItem from "~/components/StudentListItem.vue";
 import CreateStudentDialog from "~/components/CreateStudentDialog.vue";
 import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
-import { FetchStudentsQuery } from "~/types/types";
+import { FetchStudentsQuery, Group, Student } from "~/types/types";
 
 @Component<TeacherStudentsPageBeta>({
   layout: "teacher",
-  async asyncData({ app }) {
-    let client = app.apolloProvider.defaultClient;
-    const { data }: { data: FetchStudentsQuery } = await client.query({
+  async fetch() {
+
+    const { data,  }: { data: FetchStudentsQuery } = await this.$apollo.query({
       query: FetchStudentsQueryGQL,
       fetchPolicy: "no-cache",
     });
-    return {
-      students: data.students,
-    };
+    this.students = data.students
   },
   head: () => ({
     title: "Mes élèves"
@@ -55,6 +54,7 @@ import { FetchStudentsQuery } from "~/types/types";
   }
 })
 export default class TeacherStudentsPageBeta extends Vue {
-  students: any[] = [];
+  students: FetchStudentsQuery["students"] = [];
+
 }
 </script>

@@ -59,6 +59,7 @@ import { FetchStudentsQuery, FindManyGroupsQuery } from "~/types/types";
 import CreateGroupDialog from "~/components/CreateGroupDialog.vue";
 import GroupsSelector from "~/components/GroupsSelector.vue";
 import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
+import UpdateStudentGroupsGQL from "~/apollo/mutations/student/UpdateStudentGroups.graphql"
 
 @Component<StudentListItem>({
   components: { GroupsSelector, CreateGroupDialog },
@@ -80,19 +81,27 @@ export default class StudentListItem extends Vue {
    * Edit the student's groups
    */
   async editGroups() {
-    try {
-      await studentsStore.editStudentGroups({
-        studentId: this.student.ownerUsername,
-        groupIds: this.selectedGroup,
-      });
-      await studentsStore.fetchStudents();
-
-      this.selectedGroup = this.student.groups?.map(({ id }) => id) ?? [];
-    } catch (e) {
-      alert("Une erreur est survenue");
-      console.log({ e });
-    } finally {
-    }
+    await this.$apollo.mutate({
+      mutation: UpdateStudentGroupsGQL,
+      variables: {
+        ownerUsername: this.student.ownerUsername,
+        groups: this.selectedGroup
+      }
+    })
+    this.$emit("groupsUpdate", this.groups)
+    // try {
+    //   await studentsStore.editStudentGroups({
+    //     studentId: this.student.ownerUsername,
+    //     groupIds: this.selectedGroup,
+    //   });
+    //   await studentsStore.fetchStudents();
+    //
+    //   this.selectedGroup = this.student.groups?.map(({ id }) => id) ?? [];
+    // } catch (e) {
+    //   alert("Une erreur est survenue");
+    //   console.log({ e });
+    // } finally {
+    // }
   }
 
 
