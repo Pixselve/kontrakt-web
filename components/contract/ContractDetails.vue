@@ -1,5 +1,12 @@
 <template>
-  <v-row>
+  <v-row v-if="contract === undefined">
+    <v-col cols="12">
+      <v-skeleton-loader
+        type="heading, list-item-avatar, list-item-avatar, list-item-avatar"
+      ></v-skeleton-loader>
+    </v-col>
+  </v-row>
+  <v-row v-else>
     <v-col cols="12">
       <v-row no-gutters>
         <v-list flat>
@@ -11,14 +18,14 @@
               <v-list-item-title>
                 <v-row no-gutters align="center">
                   <h2 class="mr-5">{{ contract.name }}</h2>
-                  <v-menu offset-y >
+                  <v-menu offset-y>
                     <template v-slot:activator="{ on }">
                       <v-btn v-on="on" icon>
                         <v-icon>mdi-dots-vertical</v-icon>
                       </v-btn>
                     </template>
                     <v-list>
-                      <contract-skill-add-dialog>
+                      <contract-skill-add-dialog :contract-i-d="contract.id" v-on:update="() => $apollo.queries.contract.refetch()">
                         <template v-slot:default="{ on }">
                           <v-list-item v-on="on">
                             <v-list-item-avatar>
@@ -67,7 +74,7 @@
                       small
                       v-for="group in contract.groups"
                       :key="group.id"
-                      >{{ group.name }}
+                    >{{ group.name }}
                     </v-chip>
                   </v-chip-group>
                   <span v-else>Le contrat n'est pas accessible</span>
@@ -133,23 +140,16 @@ import UpdateContractGroupsGQL from "~/apollo/mutations/contract/UpdateContractG
       variables() {
         return {
           id: this.id
-        }
-      },
-      prefetch: true
+        };
+      }
     }
   },
-  // async fetch(): Promise<void> {
-  //   const { data }: { data: FindManyGroupsQuery } = await this.$apollo.query({
-  //     query: FindManyGroupsGQL,
-  //   });
-  //   this.groups = data.groups
-  // },
 })
 export default class ContractDetails extends Vue {
-  @Prop() readonly id!: number
-  groups: FindManyGroupsQuery["groups"] = []
+  @Prop() readonly id!: number;
+  groups?: FindManyGroupsQuery["groups"];
   loading = false;
-  contract?: FetchContractQuery["contract"]
+  contract?: FetchContractQuery["contract"];
 
   formattedDate(date: string) {
     return new Date(date).toLocaleDateString("fr-FR", {
@@ -170,8 +170,8 @@ export default class ContractDetails extends Vue {
           groups
         },
         mutation: UpdateContractGroupsGQL
-      })
-      await this.$apollo.queries.contract.refetch()
+      });
+      await this.$apollo.queries.contract.refetch();
     } catch (e) {
       console.log({ e });
     } finally {
@@ -186,8 +186,8 @@ export default class ContractDetails extends Vue {
         variables: {
           id: this.id
         }
-      })
-      this.$emit("delete")
+      });
+      this.$emit("delete");
     } catch (e) {
       alert("Une erreur est survenue lors de la suppression du contrat");
       console.log({ e });
