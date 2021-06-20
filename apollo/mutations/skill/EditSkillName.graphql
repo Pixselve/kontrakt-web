@@ -1,19 +1,5 @@
 mutation EditSkillName($id: Int!, $name: String!) {
   updateOneSkill(name: $name, skillID: $id) {
-    contract {
-      id
-      start
-      end
-      name
-      hexColor
-      groups {
-        id
-        name
-      }
-      skills {
-        id
-        name
-        }
-      }
+    id
     }
   }
