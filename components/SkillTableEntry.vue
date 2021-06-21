@@ -34,19 +34,20 @@ export default class SkillTableEntry extends Vue {
     return getMarkData(this.studentSkill.mark)
   }
 
-  async editMark(markValue: Mark["value"]) {
-    try {
-      this.loading = true;
-      await studentStore.editMarkSkillToStudent({
-        markValue,
-        skillId: this.skill.id,
-      });
-    } catch (e) {
-      alert("ERROR");
-      console.error({ e });
-    } finally {
-      this.loading = false;
-    }
+  async editMark(markValue: Mark) {
+    // TODO
+    // try {
+    //   this.loading = true;
+    //   await studentStore.editMarkSkillToStudent({
+    //     markValue,
+    //     skillId: this.skill.id,
+    //   });
+    // } catch (e) {
+    //   alert("ERROR");
+    //   console.error({ e });
+    // } finally {
+    //   this.loading = false;
+    // }
   }
 }
 </script>
