@@ -21,8 +21,8 @@ import { FetchContractsAwaitingFinishStudentQuery, Skill } from "../types/types"
 
 @Component({})
 export default class AwaitingFinishContractCardSkillItem extends Vue {
-  @Prop({ type: Object }) readonly skill!: FetchContractsAwaitingFinishStudentQuery["findManyContractNotFinishedByStudent"][0]["skills"][0];
-
+  // @Prop({ type: Object }) readonly skill!: FetchContractsAwaitingFinishStudentQuery["findManyContractNotFinishedByStudent"][0]["skills"][0];
+// TODO
 
 
 

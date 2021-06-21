@@ -24,8 +24,8 @@
     }
   })
   export default class AwaitingFinishContractCard extends Vue {
-    @Prop({ type: Object }) readonly contract!: FetchContractsAwaitingFinishStudentQuery["findManyContractNotFinishedByStudent"][0];
-
+    // @Prop({ type: Object }) readonly contract!: FetchContractsAwaitingFinishStudentQuery["findManyContractNotFinishedByStudent"][0];
+  //  TODO
 
 
   }

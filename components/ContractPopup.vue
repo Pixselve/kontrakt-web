@@ -50,10 +50,9 @@ import StudentSkillsGQL from "~/apollo/queries/StudentSkills.graphql";
   components: {
     SkillsTable,
   },
-  async fetch(): Promise<void> | void {
-    let client = this.$nuxt.context.app.apolloProvider.defaultClient;
+  async fetch() {
     const { data }: { data: StudentSkillsQuery } =
-      await client.query({
+      await this.$apollo.query({
         query: StudentSkillsGQL,
         variables: {
           studentUsername: this.studentUsername,
@@ -67,6 +66,6 @@ export default class ContractPopup extends Vue {
   @Prop({ type: Object }) readonly contract!: Contract;
   @Prop({ type: Boolean, default: () => false }) readonly editable!: boolean;
   @Prop() readonly studentUsername!: string;
-  studentSkills = []
+  studentSkills: StudentSkillsQuery["studentSkills"] = []
 }
 </script>

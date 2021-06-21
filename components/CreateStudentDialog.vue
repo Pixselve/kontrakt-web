@@ -47,15 +47,16 @@
     }
 
     async submit() {
-      this.loading = true;
-      try {
-        await studentsStore.addStudent(this.studentData);
-        this.close();
-      } catch (e) {
-        console.error(e);
-      } finally {
-        this.loading = false;
-      }
+      // TODO
+      // this.loading = true;
+      // try {
+      //   await studentsStore.addStudent(this.studentData);
+      //   this.close();
+      // } catch (e) {
+      //   console.error(e);
+      // } finally {
+      //   this.loading = false;
+      // }
     }
   }
 </script>
