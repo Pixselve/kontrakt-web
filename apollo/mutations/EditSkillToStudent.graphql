@@ -8,6 +8,7 @@ mutation EditSkillToStudent(
     skillID: $skillID,
     studentOwnerUsername: $studentOwnerUsername
   ) {
+    skillID
     mark
   }
 }
