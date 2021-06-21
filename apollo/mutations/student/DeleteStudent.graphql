@@ -1,0 +1,5 @@
+mutation DeleteStudent($ownerUsername: String!) {
+  deleteOneStudent(ownerUsername: $ownerUsername) {
+    ownerUsername
+  }
+}

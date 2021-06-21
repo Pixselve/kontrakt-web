@@ -1,10 +1,10 @@
-mutation UpdateContractGroups($contractId: Int!, $groups: [Int!]!) {
-  updateOneContract(id: $contractId, contract: {groupIds: $groups}) {
+mutation UpdateContractGroups($contractID: Int!, $groups: [Int!]!) {
+  updateOneContract(contractID: $contractID, groupIDs: $groups) {
     id
     start
     end
     name
-    rgb
+    hexColor
     groups {
       id
       name
@@ -12,18 +12,6 @@ mutation UpdateContractGroups($contractId: Int!, $groups: [Int!]!) {
     skills {
       id
       name
-      skillToStudents {
-        mark {
-          text
-          value
-          rgb
-        }
-        student {
-          id
-          firstName
-          lastName
-        }
       }
     }
   }
-}

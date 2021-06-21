@@ -1,5 +1,5 @@
 overwrite: true
-schema: "https://api-kontrakt.maelkerichard.com/query"
+schema: "http://localhost:7010/query"
 documents: "apollo/**/*.graphql"
 generates:
   types/graphql.d.ts:

@@ -17,7 +17,6 @@
 <script lang="ts">
   import { Vue, Component, Prop } from 'vue-property-decorator';
   import { Contract }             from "~/types/types";
-  import { contractsStore }       from "~/utils/store-accessor";
 
   @Component({
     filters: {
@@ -31,15 +30,16 @@
     loading = false;
 
     async deleteContract() {
-      try {
-        this.loading = true;
-        await contractsStore.deleteContract(this.contract.id);
-      } catch ( e ) {
-        alert("Une erreur est survenue lors de la suppression du contrat");
-        console.log({ e });
-      } finally {
-        this.loading = false;
-      }
+      //TODO
+      // try {
+      //   this.loading = true;
+      //   await contractsStore.deleteContract(this.contract.id);
+      // } catch ( e ) {
+      //   alert("Une erreur est survenue lors de la suppression du contrat");
+      //   console.log({ e });
+      // } finally {
+      //   this.loading = false;
+      // }
     }
   }
 </script>

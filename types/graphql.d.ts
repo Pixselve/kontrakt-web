@@ -1,13 +1,4 @@
 
-declare module '*/AddStudent.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const AddStudent: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
 declare module '*/CreateOneContract.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -26,15 +17,6 @@ declare module '*/DeleteContract.graphql' {
 }
     
 
-declare module '*/DeleteStudent.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const DeleteStudent: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
 declare module '*/EditSkillToStudent.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -44,10 +26,10 @@ declare module '*/EditSkillToStudent.graphql' {
 }
     
 
-declare module '*/LoginTeacher.graphql' {
+declare module '*/Login.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  export const LoginTeacher: DocumentNode;
+  export const Login: DocumentNode;
 
   export default defaultDocument;
 }
@@ -98,19 +80,10 @@ declare module '*/EditSkillName.graphql' {
 }
     
 
-declare module '*/CreateManyStudentWithCSV.graphql' {
+declare module '*/DeleteStudent.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  export const CreateManyStudentWithCSV: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/LoginStudent.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const LoginStudent: DocumentNode;
+  export const DeleteStudent: DocumentNode;
 
   export default defaultDocument;
 }
@@ -170,6 +143,15 @@ declare module '*/FetchStudent.graphql' {
 }
     
 
+declare module '*/FetchStudentForContract.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const FetchStudentForContract: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/FetchStudents.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -197,6 +179,15 @@ declare module '*/Status.graphql' {
 }
     
 
+declare module '*/StudentSkills.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const StudentSkills: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/FindManyContractsOfGroups.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -210,15 +201,6 @@ declare module '*/FindManyGroups.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   export const FindManyGroups: DocumentNode;
-
-  export default defaultDocument;
-}
-    
-
-declare module '*/FetchMarks.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const FetchMarks: DocumentNode;
 
   export default defaultDocument;
 }

@@ -1,5 +1,7 @@
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -7,73 +9,27 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: any;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: any;
 };
+
+
 
 export type AuthPayload = {
+  __typename?: 'AuthPayload';
   token: Scalars['String'];
-};
-
-export type AuthPayloadStudent = AuthPayload & {
-  __typename?: 'AuthPayloadStudent';
-  token: Scalars['String'];
-  student: Student;
-};
-
-export type AuthPayloadTeacher = AuthPayload & {
-  __typename?: 'AuthPayloadTeacher';
-  token: Scalars['String'];
-  teacher: Teacher;
+  user: User;
 };
 
 export type Contract = {
   __typename?: 'Contract';
+  archived: Scalars['Boolean'];
+  end: Scalars['String'];
   id: Scalars['Int'];
   name: Scalars['String'];
-  start: Scalars['DateTime'];
-  end: Scalars['DateTime'];
-  rgb: Scalars['String'];
-  archived: Scalars['Boolean'];
+  hexColor: Scalars['String'];
+  start: Scalars['String'];
   skills: Array<Skill>;
   groups: Array<Group>;
 };
-
-
-export type ContractSkillsArgs = {
-  markValues?: Maybe<Array<Scalars['String']>>;
-};
-
-export type CreateOneContractInput = {
-  name: Scalars['String'];
-  start: Scalars['DateTime'];
-  end: Scalars['DateTime'];
-  skillNames: Array<Scalars['String']>;
-  rgb: Scalars['String'];
-};
-
-export type CreateOneGroupInput = {
-  name: Scalars['String'];
-};
-
-export type CreateOneSkillInput = {
-  name: Scalars['String'];
-  contractId: Scalars['Int'];
-};
-
-export type CreateOneStudentInput = {
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  groupIds?: Maybe<Array<Scalars['Int']>>;
-};
-
-export type CreateOneTeacherInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
 
 export type Group = {
   __typename?: 'Group';
@@ -83,79 +39,49 @@ export type Group = {
   students: Array<Student>;
 };
 
-export type LoginStudentInput = {
-  username: Scalars['Int'];
-};
-
-export type Mark = {
-  __typename?: 'Mark';
-  rgb: Scalars['String'];
-  text: Scalars['String'];
-  value: Scalars['String'];
-  skillsToStudents: Array<SkillToStudent>;
-  icon: Scalars['String'];
-};
+export enum Mark {
+  Todo = 'TODO',
+  Good = 'GOOD',
+  Bad = 'BAD'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createOneTeacher: Teacher;
-  deleteOneTeacher: Teacher;
-  loginTeacher: AuthPayloadTeacher;
-  createOneStudent: Student;
-  updateOneStudent: Student;
-  updateOneContract: Contract;
+  login: AuthPayload;
   createOneGroup: Group;
+  updateOneContract: Contract;
   createOneSkill: Skill;
   deleteOneSkill: Skill;
   updateOneSkill: Skill;
-  loginStudent: AuthPayloadStudent;
+  updateOneStudent: Student;
   createOneContract: Contract;
   deleteOneContract: Contract;
   deleteOneStudent: Student;
-  upsertOneSkillToStudent: SkillToStudent;
-  createManyStudentCSV: Array<Student>;
+  upsertOneSkillToStudent: StudentSkill;
 };
 
 
-export type MutationCreateOneTeacherArgs = {
-  teacher: CreateOneTeacherInput;
-};
-
-
-export type MutationDeleteOneTeacherArgs = {
-  email: Scalars['String'];
-};
-
-
-export type MutationLoginTeacherArgs = {
-  teacher: CreateOneTeacherInput;
-};
-
-
-export type MutationCreateOneStudentArgs = {
-  student: CreateOneStudentInput;
-};
-
-
-export type MutationUpdateOneStudentArgs = {
-  student: UpdateOneStudentInput;
-  id: Scalars['Int'];
-};
-
-
-export type MutationUpdateOneContractArgs = {
-  contract: UpdateOneContractInput;
-  id: Scalars['Int'];
+export type MutationLoginArgs = {
+  username: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
 export type MutationCreateOneGroupArgs = {
-  group: CreateOneGroupInput;
+  name: Scalars['String'];
+  contractID?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationUpdateOneContractArgs = {
+  contractID: Scalars['Int'];
+  groupIDs?: Maybe<Array<Scalars['Int']>>;
 };
 
 
 export type MutationCreateOneSkillArgs = {
-  skill: CreateOneSkillInput;
+  name: Scalars['String'];
+  contractID: Scalars['Int'];
 };
 
 
@@ -165,18 +91,23 @@ export type MutationDeleteOneSkillArgs = {
 
 
 export type MutationUpdateOneSkillArgs = {
-  skill: UpdateOneSkillInput;
-  id: Scalars['Int'];
+  skillID: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
 };
 
 
-export type MutationLoginStudentArgs = {
-  student: LoginStudentInput;
+export type MutationUpdateOneStudentArgs = {
+  ownerUsername: Scalars['String'];
+  groupIDs?: Maybe<Array<Scalars['Int']>>;
 };
 
 
 export type MutationCreateOneContractArgs = {
-  contract: CreateOneContractInput;
+  end: Scalars['String'];
+  name: Scalars['String'];
+  hexColor: Scalars['String'];
+  start: Scalars['String'];
+  skillNames: Array<Scalars['String']>;
 };
 
 
@@ -186,36 +117,36 @@ export type MutationDeleteOneContractArgs = {
 
 
 export type MutationDeleteOneStudentArgs = {
-  id: Scalars['Int'];
+  ownerUsername: Scalars['String'];
 };
 
 
 export type MutationUpsertOneSkillToStudentArgs = {
-  skillToStudent: UpsertOneSkillToStudentInput;
-};
-
-
-export type MutationCreateManyStudentCsvArgs = {
-  file: Scalars['Upload'];
+  studentOwnerUsername: Scalars['String'];
+  skillID: Scalars['Int'];
+  mark: Mark;
 };
 
 export type Query = {
   __typename?: 'Query';
+  contracts: Array<Contract>;
   groups: Array<Group>;
+  student: Student;
+  contract: Contract;
   students: Array<Student>;
   teachers: Array<Teacher>;
-  marks: Array<Mark>;
-  contracts: Array<Contract>;
-  contract: Contract;
-  student: Student;
   me: User;
-  findManyContractNotFinishedByStudent: Array<Contract>;
-  status: Scalars['Int'];
+  studentSkills: Array<StudentSkill>;
 };
 
 
 export type QueryContractsArgs = {
-  groups?: Maybe<Array<Scalars['Int']>>;
+  groupIds?: Maybe<Array<Scalars['Int']>>;
+};
+
+
+export type QueryStudentArgs = {
+  ownerUsername: Scalars['String'];
 };
 
 
@@ -224,14 +155,21 @@ export type QueryContractArgs = {
 };
 
 
-export type QueryStudentArgs = {
-  id: Scalars['Int'];
+export type QueryStudentsArgs = {
+  contractID?: Maybe<Scalars['Int']>;
 };
 
 
-export type QueryFindManyContractNotFinishedByStudentArgs = {
-  studentId: Scalars['Int'];
+export type QueryStudentSkillsArgs = {
+  studentUsername: Scalars['String'];
+  contractID?: Maybe<Scalars['Int']>;
 };
+
+export enum Role {
+  Teacher = 'TEACHER',
+  Student = 'STUDENT',
+  Admin = 'ADMIN'
+}
 
 export type Skill = {
   __typename?: 'Skill';
@@ -239,93 +177,50 @@ export type Skill = {
   id: Scalars['Int'];
   name: Scalars['String'];
   contract: Contract;
-  skillToStudents: Array<SkillToStudent>;
-  skillToStudent?: Maybe<SkillToStudent>;
+  studentSkills: Array<StudentSkill>;
 };
 
-
-export type SkillSkillToStudentArgs = {
-  studentId: Scalars['Int'];
+export type Student = {
+  __typename?: 'Student';
+  owner: User;
+  ownerUsername: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  studentSkills: Array<StudentSkill>;
+  groups: Array<Group>;
 };
 
-export type SkillToStudent = {
-  __typename?: 'SkillToStudent';
-  markValue: Scalars['String'];
-  skillId: Scalars['Int'];
-  studentId: Scalars['Int'];
+export type StudentSkill = {
+  __typename?: 'StudentSkill';
+  skillID: Scalars['Int'];
+  studentID: Scalars['String'];
   mark: Mark;
   skill: Skill;
   student: Student;
 };
 
-export type Student = {
-  __typename?: 'Student';
-  firstName: Scalars['String'];
-  id: Scalars['Int'];
-  lastName: Scalars['String'];
-  username: Scalars['Int'];
-  skillsToStudent: Array<SkillToStudent>;
-  groups: Array<Group>;
-};
-
-
-export type StudentSkillsToStudentArgs = {
-  markFilter?: Maybe<Array<Scalars['String']>>;
-};
-
 export type Teacher = {
   __typename?: 'Teacher';
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
-export type UpdateOneContractInput = {
-  name?: Maybe<Scalars['String']>;
-  start?: Maybe<Scalars['DateTime']>;
-  end?: Maybe<Scalars['DateTime']>;
-  rgb?: Maybe<Scalars['String']>;
-  groupIds?: Maybe<Array<Scalars['Int']>>;
-};
-
-export type UpdateOneSkillInput = {
-  name?: Maybe<Scalars['String']>;
-};
-
-export type UpdateOneStudentInput = {
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  groupIds?: Maybe<Array<Scalars['Int']>>;
-};
-
-
-export type UpsertOneSkillToStudentInput = {
-  skillId: Scalars['Int'];
-  studentId: Scalars['Int'];
-  markValue: Scalars['String'];
-};
-
-export type User = Teacher | Student;
-
-export type AddStudentMutationVariables = Exact<{
+  owner: User;
+  ownerUsername: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
-}>;
+};
 
-
-export type AddStudentMutation = (
-  { __typename?: 'Mutation' }
-  & { createOneStudent: (
-    { __typename?: 'Student' }
-    & Pick<Student, 'id'>
-  ) }
-);
+export type User = {
+  __typename?: 'User';
+  username: Scalars['String'];
+  role: Role;
+  student: Array<Student>;
+  teacher: Array<Teacher>;
+};
 
 export type CreateOneContractMutationVariables = Exact<{
-  start: Scalars['DateTime'];
-  end: Scalars['DateTime'];
-  skills: Array<Scalars['String']>;
+  start: Scalars['String'];
+  end: Scalars['String'];
+  skills: Array<Scalars['String']> | Scalars['String'];
   name: Scalars['String'];
-  rgb: Scalars['String'];
+  hexColor: Scalars['String'];
 }>;
 
 
@@ -350,54 +245,42 @@ export type DeleteContractMutation = (
   ) }
 );
 
-export type DeleteStudentMutationVariables = Exact<{
-  id: Scalars['Int'];
-}>;
-
-
-export type DeleteStudentMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteOneStudent: (
-    { __typename?: 'Student' }
-    & Pick<Student, 'id'>
-  ) }
-);
-
 export type EditSkillToStudentMutationVariables = Exact<{
-  markValue: Scalars['String'];
-  skillId: Scalars['Int'];
-  studentId: Scalars['Int'];
+  mark: Mark;
+  skillID: Scalars['Int'];
+  studentOwnerUsername: Scalars['String'];
 }>;
 
 
 export type EditSkillToStudentMutation = (
   { __typename?: 'Mutation' }
   & { upsertOneSkillToStudent: (
-    { __typename?: 'SkillToStudent' }
-    & { mark: (
-      { __typename?: 'Mark' }
-      & Pick<Mark, 'text' | 'value'>
-    ) }
+    { __typename?: 'StudentSkill' }
+    & Pick<StudentSkill, 'mark'>
   ) }
 );
 
-export type LoginTeacherMutationVariables = Exact<{
-  email: Scalars['String'];
+export type LoginMutationVariables = Exact<{
+  username: Scalars['String'];
   password: Scalars['String'];
 }>;
 
 
-export type LoginTeacherMutation = (
+export type LoginMutation = (
   { __typename?: 'Mutation' }
-  & { loginTeacher: (
-    { __typename?: 'AuthPayloadTeacher' }
-    & Pick<AuthPayloadTeacher, 'token'>
+  & { login: (
+    { __typename?: 'AuthPayload' }
+    & Pick<AuthPayload, 'token'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'role'>
+    ) }
   ) }
 );
 
 export type UpdateContractGroupsMutationVariables = Exact<{
-  contractId: Scalars['Int'];
-  groups: Array<Scalars['Int']>;
+  contractID: Scalars['Int'];
+  groups: Array<Scalars['Int']> | Scalars['Int'];
 }>;
 
 
@@ -405,23 +288,13 @@ export type UpdateContractGroupsMutation = (
   { __typename?: 'Mutation' }
   & { updateOneContract: (
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'rgb'>
+    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'hexColor'>
     & { groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
     )>, skills: Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
-      & { skillToStudents: Array<(
-        { __typename?: 'SkillToStudent' }
-        & { mark: (
-          { __typename?: 'Mark' }
-          & Pick<Mark, 'text' | 'value' | 'rgb'>
-        ), student: (
-          { __typename?: 'Student' }
-          & Pick<Student, 'id' | 'firstName' | 'lastName'>
-        ) }
-      )> }
     )> }
   ) }
 );
@@ -449,27 +322,7 @@ export type CreateOneSkillToContractMutation = (
   { __typename?: 'Mutation' }
   & { createOneSkill: (
     { __typename?: 'Skill' }
-    & { contract: (
-      { __typename?: 'Contract' }
-      & Pick<Contract, 'id' | 'start' | 'end' | 'name'>
-      & { groups: Array<(
-        { __typename?: 'Group' }
-        & Pick<Group, 'id' | 'name'>
-      )>, skills: Array<(
-        { __typename?: 'Skill' }
-        & Pick<Skill, 'id' | 'name'>
-        & { skillToStudents: Array<(
-          { __typename?: 'SkillToStudent' }
-          & { mark: (
-            { __typename?: 'Mark' }
-            & Pick<Mark, 'text' | 'value' | 'rgb'>
-          ), student: (
-            { __typename?: 'Student' }
-            & Pick<Student, 'id' | 'firstName' | 'lastName'>
-          ) }
-        )> }
-      )> }
-    ) }
+    & Pick<Skill, 'id'>
   ) }
 );
 
@@ -496,79 +349,26 @@ export type EditSkillNameMutation = (
   { __typename?: 'Mutation' }
   & { updateOneSkill: (
     { __typename?: 'Skill' }
-    & { contract: (
-      { __typename?: 'Contract' }
-      & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'rgb'>
-      & { groups: Array<(
-        { __typename?: 'Group' }
-        & Pick<Group, 'id' | 'name'>
-      )>, skills: Array<(
-        { __typename?: 'Skill' }
-        & Pick<Skill, 'id' | 'name'>
-        & { skillToStudents: Array<(
-          { __typename?: 'SkillToStudent' }
-          & { mark: (
-            { __typename?: 'Mark' }
-            & Pick<Mark, 'text' | 'value' | 'rgb'>
-          ), student: (
-            { __typename?: 'Student' }
-            & Pick<Student, 'id' | 'firstName' | 'lastName'>
-          ) }
-        )> }
-      )> }
-    ) }
+    & Pick<Skill, 'id'>
   ) }
 );
 
-export type CreateManyStudentWithCsvMutationVariables = Exact<{
-  file: Scalars['Upload'];
+export type DeleteStudentMutationVariables = Exact<{
+  ownerUsername: Scalars['String'];
 }>;
 
 
-export type CreateManyStudentWithCsvMutation = (
+export type DeleteStudentMutation = (
   { __typename?: 'Mutation' }
-  & { createManyStudentCSV: Array<(
+  & { deleteOneStudent: (
     { __typename?: 'Student' }
-    & Pick<Student, 'id' | 'firstName' | 'lastName' | 'username'>
-    & { groups: Array<(
-      { __typename?: 'Group' }
-      & Pick<Group, 'id' | 'name'>
-    )>, skillsToStudent: Array<(
-      { __typename?: 'SkillToStudent' }
-      & Pick<SkillToStudent, 'skillId'>
-      & { mark: (
-        { __typename?: 'Mark' }
-        & Pick<Mark, 'text' | 'value' | 'rgb'>
-      ) }
-    )>, skillsToStudentToFinish: Array<(
-      { __typename?: 'SkillToStudent' }
-      & { mark: (
-        { __typename?: 'Mark' }
-        & Pick<Mark, 'value' | 'text' | 'rgb'>
-      ), skill: (
-        { __typename?: 'Skill' }
-        & Pick<Skill, 'id'>
-      ) }
-    )> }
-  )> }
-);
-
-export type LoginStudentMutationVariables = Exact<{
-  username: Scalars['Int'];
-}>;
-
-
-export type LoginStudentMutation = (
-  { __typename?: 'Mutation' }
-  & { loginStudent: (
-    { __typename?: 'AuthPayloadStudent' }
-    & Pick<AuthPayloadStudent, 'token'>
+    & Pick<Student, 'ownerUsername'>
   ) }
 );
 
 export type UpdateStudentGroupsMutationVariables = Exact<{
-  studentId: Scalars['Int'];
-  groups: Array<Scalars['Int']>;
+  ownerUsername: Scalars['String'];
+  groups: Array<Scalars['Int']> | Scalars['Int'];
 }>;
 
 
@@ -590,7 +390,7 @@ export type ContractsDatesOnlyQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'start' | 'end'>
+    & Pick<Contract, 'start' | 'id' | 'name' | 'end' | 'hexColor'>
   )> }
 );
 
@@ -603,22 +403,16 @@ export type FetchContractQuery = (
   { __typename?: 'Query' }
   & { contract: (
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'rgb'>
+    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'hexColor'>
     & { groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
     )>, skills: Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
-      & { skillToStudents: Array<(
-        { __typename?: 'SkillToStudent' }
-        & { mark: (
-          { __typename?: 'Mark' }
-          & Pick<Mark, 'text' | 'value' | 'rgb'>
-        ), student: (
-          { __typename?: 'Student' }
-          & Pick<Student, 'id' | 'firstName' | 'lastName'>
-        ) }
+      & { studentSkills: Array<(
+        { __typename?: 'StudentSkill' }
+        & Pick<StudentSkill, 'mark'>
       )> }
     )> }
   ) }
@@ -631,7 +425,7 @@ export type FetchContractsQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'rgb'>
+    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'hexColor'>
     & { groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -642,32 +436,19 @@ export type FetchContractsQuery = (
   )> }
 );
 
-export type FetchContractsAwaitingFinishStudentQueryVariables = Exact<{
-  studentId: Scalars['Int'];
-}>;
+export type FetchContractsAwaitingFinishStudentQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FetchContractsAwaitingFinishStudentQuery = (
   { __typename?: 'Query' }
-  & { findManyContractNotFinishedByStudent: Array<(
-    { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'rgb'>
-    & { skills: Array<(
-      { __typename?: 'Skill' }
-      & Pick<Skill, 'id' | 'name'>
-      & { skillToStudent?: Maybe<(
-        { __typename?: 'SkillToStudent' }
-        & { mark: (
-          { __typename?: 'Mark' }
-          & Pick<Mark, 'text' | 'value' | 'rgb' | 'icon'>
-        ) }
-      )> }
-    )> }
-  )> }
+  & { student: (
+    { __typename?: 'Student' }
+    & Pick<Student, 'ownerUsername'>
+  ) }
 );
 
 export type FetchStudentQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['String'];
 }>;
 
 
@@ -675,30 +456,36 @@ export type FetchStudentQuery = (
   { __typename?: 'Query' }
   & { student: (
     { __typename?: 'Student' }
-    & Pick<Student, 'id' | 'firstName' | 'lastName'>
+    & Pick<Student, 'ownerUsername' | 'firstName' | 'lastName'>
     & { groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
-    )>, skillsToStudent: Array<(
-      { __typename?: 'SkillToStudent' }
-      & { mark: (
-        { __typename?: 'Mark' }
-        & Pick<Mark, 'value' | 'text' | 'rgb'>
-      ), skill: (
-        { __typename?: 'Skill' }
-        & Pick<Skill, 'id'>
-      ) }
-    )>, skillsToStudentToFinish: Array<(
-      { __typename?: 'SkillToStudent' }
-      & { mark: (
-        { __typename?: 'Mark' }
-        & Pick<Mark, 'value' | 'text' | 'rgb'>
-      ), skill: (
+    )>, studentSkills: Array<(
+      { __typename?: 'StudentSkill' }
+      & Pick<StudentSkill, 'mark'>
+      & { skill: (
         { __typename?: 'Skill' }
         & Pick<Skill, 'id'>
       ) }
     )> }
   ) }
+);
+
+export type FetchStudentForContractQueryVariables = Exact<{
+  contractID: Scalars['Int'];
+}>;
+
+
+export type FetchStudentForContractQuery = (
+  { __typename?: 'Query' }
+  & { students: Array<(
+    { __typename?: 'Student' }
+    & Pick<Student, 'firstName' | 'lastName' | 'ownerUsername'>
+    & { studentSkills: Array<(
+      { __typename?: 'StudentSkill' }
+      & Pick<StudentSkill, 'skillID' | 'mark'>
+    )> }
+  )> }
 );
 
 export type FetchStudentsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -708,26 +495,13 @@ export type FetchStudentsQuery = (
   { __typename?: 'Query' }
   & { students: Array<(
     { __typename?: 'Student' }
-    & Pick<Student, 'id' | 'firstName' | 'lastName' | 'username'>
+    & Pick<Student, 'ownerUsername' | 'firstName' | 'lastName'>
     & { groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
-    )>, skillsToStudent: Array<(
-      { __typename?: 'SkillToStudent' }
-      & Pick<SkillToStudent, 'skillId'>
-      & { mark: (
-        { __typename?: 'Mark' }
-        & Pick<Mark, 'text' | 'value' | 'rgb'>
-      ) }
-    )>, skillsToStudentToFinish: Array<(
-      { __typename?: 'SkillToStudent' }
-      & { mark: (
-        { __typename?: 'Mark' }
-        & Pick<Mark, 'value' | 'text' | 'rgb'>
-      ), skill: (
-        { __typename?: 'Skill' }
-        & Pick<Skill, 'id'>
-      ) }
+    )>, studentSkills: Array<(
+      { __typename?: 'StudentSkill' }
+      & Pick<StudentSkill, 'skillID' | 'mark'>
     )> }
   )> }
 );
@@ -737,25 +511,9 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = (
   { __typename?: 'Query' }
-  & { me: (
-    { __typename?: 'Teacher' }
-    & Pick<Teacher, 'email'>
-  ) | (
+  & { student: (
     { __typename?: 'Student' }
-    & Pick<Student, 'id' | 'firstName' | 'lastName'>
-    & { groups: Array<(
-      { __typename?: 'Group' }
-      & Pick<Group, 'id' | 'name'>
-    )>, skillsToStudent: Array<(
-      { __typename?: 'SkillToStudent' }
-      & { mark: (
-        { __typename?: 'Mark' }
-        & Pick<Mark, 'value' | 'text' | 'rgb' | 'icon'>
-      ), skill: (
-        { __typename?: 'Skill' }
-        & Pick<Skill, 'id'>
-      ) }
-    )> }
+    & Pick<Student, 'ownerUsername'>
   ) }
 );
 
@@ -764,11 +522,31 @@ export type StatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type StatusQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'status'>
+  & { student: (
+    { __typename?: 'Student' }
+    & Pick<Student, 'ownerUsername'>
+  ) }
+);
+
+export type StudentSkillsQueryVariables = Exact<{
+  studentUsername: Scalars['String'];
+}>;
+
+
+export type StudentSkillsQuery = (
+  { __typename?: 'Query' }
+  & { studentSkills: Array<(
+    { __typename?: 'StudentSkill' }
+    & Pick<StudentSkill, 'mark'>
+    & { skill: (
+      { __typename?: 'Skill' }
+      & Pick<Skill, 'name' | 'id'>
+    ) }
+  )> }
 );
 
 export type FindManyContractsOfGroupsQueryVariables = Exact<{
-  groups: Array<Scalars['Int']>;
+  groups: Array<Scalars['Int']> | Scalars['Int'];
 }>;
 
 
@@ -776,7 +554,7 @@ export type FindManyContractsOfGroupsQuery = (
   { __typename?: 'Query' }
   & { contracts: Array<(
     { __typename?: 'Contract' }
-    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'rgb'>
+    & Pick<Contract, 'id' | 'start' | 'end' | 'name' | 'hexColor'>
     & { groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
@@ -795,16 +573,5 @@ export type FindManyGroupsQuery = (
   & { groups: Array<(
     { __typename?: 'Group' }
     & Pick<Group, 'id' | 'name'>
-  )> }
-);
-
-export type FetchMarksQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type FetchMarksQuery = (
-  { __typename?: 'Query' }
-  & { marks: Array<(
-    { __typename?: 'Mark' }
-    & Pick<Mark, 'text' | 'value' | 'rgb'>
   )> }
 );

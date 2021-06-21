@@ -6,7 +6,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
 
-      <v-toolbar-title>{{contract.name}} ({{ getFormattedDate(contract.start) }} -
+      <v-toolbar-title>{{ contract.name }} ({{ getFormattedDate(contract.start) }} -
         {{ getFormattedDate(contract.end) }})
       </v-toolbar-title>
 
@@ -17,75 +17,69 @@
           <thead>
           <tr>
             <td class="text-left">Élève</td>
-            <th v-for="skill in contract.skills" :key="skill.id" class="text-left">{{skill.name}}</th>
+            <th v-for="skill in contract.skills" :key="skill.id" class="text-left">{{ skill.name }}</th>
           </tr>
           </thead>
           <tbody>
-          <student-skill-table-row :skills="contract.skills" v-for="student in studentsConcernedByTheContract"
+          <student-skill-table-row :skills="contract.skills"
+                                   v-for="(student, i) in studentsConcernedByTheContract"
                                    :student="student"
-                                   :key="student.id"></student-skill-table-row>
+                                   :contract-i-d="contract.id"
+                                   :key="student.ownerUsername"></student-skill-table-row>
           </tbody>
         </template>
       </v-simple-table>
     </v-container>
   </div>
-
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { contractStore, marksStore, studentsStore } from "~/utils/store-accessor";
+import { Component, Vue } from "vue-property-decorator";
 import StudentSkillTableRow from "~/components/StudentSkillTableRow.vue";
-import { Group } from "~/types/types";
-import { shareCommonElements } from "~/utils/shareCommonElements"
+import { FetchContractQuery, FetchStudentForContractQuery, FetchStudentQuery, Group } from "~/types/types";
+import FetchContractGQL from "~/apollo/queries/FetchContract.graphql";
+import FetchStudentForContractGQL from "~/apollo/queries/FetchStudentForContract.graphql";
+import FetchStudentGQL from "~/apollo/queries/FetchStudent.graphql";
 
-@Component({
+@Component<TeacherContractPage>({
   layout: "teacher",
   head: () => ({
-    title: "Mon contrat"
+    title: "Mon contrat",
   }),
   components: {
-    StudentSkillTableRow
+    StudentSkillTableRow,
   },
-  async asyncData() {
-    await Promise.all([studentsStore.fetchStudents(), marksStore.fetchMarks()]);
+  async asyncData({ app, params }) {
+    const { id } = params;
+    const apolloClient = app.apolloProvider.defaultClient;
+    const { data } = await apolloClient.query({ query: FetchContractGQL, variables: { id } });
+    const { data: studentData } = await apolloClient.query({
+      query: FetchStudentForContractGQL,
+      variables: { contractID: id }
+    });
+    return {
+      contract: data.contract,
+      studentsConcernedByTheContract: studentData.students
+    };
   },
-  //@ts-ignore
-  async validate({ params }) {
-    if (!/[1-9]+/g.test(params.id)) return false;
-    await contractStore.fetchContract(parseInt(params.id));
-    return contractStore.contract !== null;
-  }
 })
 export default class TeacherContractPage extends Vue {
+  contract!: FetchContractQuery["contract"];
+  studentsConcernedByTheContract: FetchStudentForContractQuery["students"] = [];
+
   getFormattedDate(date: string) {
     return new Date(date).toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "numeric",
-      year: "numeric"
+      year: "numeric",
     });
   }
 
-
-
-
-
-  get contract() {
-    return contractStore.contract;
-  };
-
-  mapGroupsId(groups: { __typename?: "Group" | undefined; } & Pick<Group, "id" | "name">[]) {
-    return groups.map(group => (group.id));
+  mapGroupsId(
+    groups: { __typename?: "Group" | undefined } & Pick<Group, "id" | "name">[]
+  ) {
+    return groups.map((group) => group.id);
   }
 
-
-  get studentsConcernedByTheContract() {
-    if ((this.contract?.groups ?? []).length > 0) {
-      return studentsStore.students.filter(student => shareCommonElements(this.mapGroupsId(student.groups ?? []), this.mapGroupsId(this.contract?.groups ?? [])));
-
-    } else {
-      return studentsStore.students;
-    }
-  };
 }
 </script>

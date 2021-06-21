@@ -29,7 +29,17 @@ type Group {
 }
 
 type Mutation {
+  createOneContract(end: String!, hexColor: String!, name: String!, skillNames: [String!]!, start: String!): Contract!
+  createOneGroup(contractID: Int, name: String!): Group!
+  createOneSkill(contractID: Int!, name: String!): Skill!
+  deleteOneContract(id: Int!): Contract!
+  deleteOneSkill(id: Int!): Skill!
+  deleteOneStudent(ownerUsername: String!): Student!
   login(password: String!, username: String!): AuthPayload!
+  updateOneContract(contractID: Int!, groupIDs: [Int!]): Contract!
+  updateOneSkill(name: String, skillID: Int!): Skill!
+  updateOneStudent(groupIDs: [Int!], ownerUsername: String!): Student!
+  upsertOneSkillToStudent(mark: Mark!, skillID: Int!, studentOwnerUsername: String!): StudentSkill!
 }
 
 type Query {
@@ -38,7 +48,8 @@ type Query {
   groups: [Group!]!
   me: User!
   student(ownerUsername: String!): Student!
-  students: [Student!]!
+  studentSkills(contractID: Int, studentUsername: String!): [StudentSkill!]!
+  students(contractID: Int): [Student!]!
   teachers: [Teacher!]!
 }
 

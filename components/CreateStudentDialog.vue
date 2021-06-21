@@ -27,7 +27,6 @@
 
 <script lang="ts">
   import { Component, Ref, Vue } from 'vue-property-decorator';
-  import { studentsStore } from "~/utils/store-accessor";
 
   @Component({})
   export default class CreateStudentDialog extends Vue {
@@ -48,15 +47,16 @@
     }
 
     async submit() {
-      this.loading = true;
-      try {
-        await studentsStore.addStudent(this.studentData);
-        this.close();
-      } catch (e) {
-        console.error(e);
-      } finally {
-        this.loading = false;
-      }
+      // TODO
+      // this.loading = true;
+      // try {
+      //   await studentsStore.addStudent(this.studentData);
+      //   this.close();
+      // } catch (e) {
+      //   console.error(e);
+      // } finally {
+      //   this.loading = false;
+      // }
     }
   }
 </script>

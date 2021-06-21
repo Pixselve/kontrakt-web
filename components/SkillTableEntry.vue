@@ -1,59 +1,53 @@
 import {Mark} from "~/types/types";
 <template>
   <tr>
-    <td>{{skill.name}}</td>
+    <td>{{ studentSkill.skill.name }}</td>
     <td v-if="editable">
-      <v-select :loading="loading" hide-details dense outlined flat placeholder="Status de la compétence"
-                :value="mark.value"
-                @change="editMark"
-                :items="marks"></v-select>
+      <!--      <v-select :loading="loading" hide-details dense outlined flat placeholder="Status de la compétence"-->
+      <!--                :value="mark.value"-->
+      <!--                @change="editMark"-->
+      <!--                :items="marks"></v-select>-->
     </td>
     <td v-else>
-      <v-chip label :color="'#' + mark.rgb" outlined>
-        <v-avatar left>
-          <v-icon>mdi-{{mark.icon}}</v-icon>
-        </v-avatar>
-        {{mark.text}}
-      </v-chip>
+            <v-chip label :color="mark.hexColor" outlined>
+              <v-avatar left>
+                <v-icon>mdi-{{mark.icon}}</v-icon>
+              </v-avatar>
+              {{mark.text}}
+            </v-chip>
     </td>
   </tr>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Mark, Skill, SkillToStudent } from "~/types/types";
-import { marksStore, studentStore } from "~/utils/store-accessor";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { Mark, Skill, StudentSkill } from "~/types/types";
+import getMarkData from "~/utils/getMarkData";
 
 @Component({})
 export default class SkillTableEntry extends Vue {
-  @Prop({ type: Object }) readonly skill!: Skill;
-  @Prop({ type: Array }) readonly studentSkills!: SkillToStudent[];
+  @Prop({ type: Object }) readonly studentSkill!: StudentSkill;
   @Prop({ type: Boolean }) readonly editable!: boolean;
 
   loading = false;
 
-
-  get marks() {
-    return marksStore.marks;
+  get mark() {
+    return getMarkData(this.studentSkill.mark)
   }
 
-
-  get mark(): Mark | null | undefined {
-    return this.studentSkills.find(studentSkill => studentSkill.skill.id === this.skill.id)?.mark;
-  };
-
-
-  async editMark(markValue: Mark["value"]) {
-    try {
-      this.loading = true;
-      await studentStore.editMarkSkillToStudent({ markValue, skillId: this.skill.id });
-    } catch (e) {
-      alert("ERROR");
-      console.error({ e });
-    } finally {
-      this.loading = false;
-    }
+  async editMark(markValue: Mark) {
+    // TODO
+    // try {
+    //   this.loading = true;
+    //   await studentStore.editMarkSkillToStudent({
+    //     markValue,
+    //     skillId: this.skill.id,
+    //   });
+    // } catch (e) {
+    //   alert("ERROR");
+    //   console.error({ e });
+    // } finally {
+    //   this.loading = false;
+    // }
   }
-
-
 }
 </script>

@@ -31,23 +31,14 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { studentsStore } from "~/utils/store-accessor";
 import { $apollo } from "~/utils/getGraphQLClient";
-
-import LoginStudentMutationGQL from "~/apollo/mutations/student/LoginStudent.graphql";
-import {
-  LoginStudentMutation,
-  LoginStudentMutationVariables,
-} from "~/types/types";
+import LoginMutationGQL from "~/apollo/mutations/Login.graphql";
 
 @Component({
   head: () => ({
     title: "Connexion élève",
   }),
   layout: "login",
-  async fetch() {
-    await studentsStore.fetchStudents();
-  },
 })
 export default class LoginPage extends Vue {
   @Ref("form") formRef!: HTMLFormElement;
@@ -80,7 +71,7 @@ export default class LoginPage extends Vue {
         const {
           data,
         } = await $apollo.mutate({
-          mutation: LoginStudentMutationGQL,
+          mutation: LoginMutationGQL,
           variables: {
             username: this.username,
             password: this.password
@@ -89,7 +80,12 @@ export default class LoginPage extends Vue {
         if (data) {
           await this.$apolloHelpers.onLogin(data.login.token);
           this.$cookies.set("role", data.login.user.role);
-          await this.$router.push("/student");
+          if (data.login.user.role === "TEACHER") {
+            await this.$router.push("/teacher/contracts");
+          } else {
+            await this.$router.push("/student");
+          }
+
         }
       }
     } catch (e) {

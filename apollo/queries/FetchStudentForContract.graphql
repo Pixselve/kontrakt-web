@@ -1,0 +1,11 @@
+query FetchStudentForContract($contractID: Int!) {
+  students(contractID: $contractID) {
+    firstName
+    lastName
+    ownerUsername
+    studentSkills {
+      skillID
+      mark
+    }
+  }
+}

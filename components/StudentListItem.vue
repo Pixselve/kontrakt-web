@@ -5,7 +5,7 @@
         <div class="mr-5">
           <v-chip color="primary"
             ><v-avatar left><v-icon>mdi-account-circle</v-icon></v-avatar>
-            {{ student.username }}</v-chip
+            {{ student.ownerUsername }}</v-chip
           >
         </div>
         <div>
@@ -32,11 +32,8 @@
         </div>
       </v-col>
       <v-col>
-        <div
-          v-if="student.skillsToStudentToFinish.length > 0"
-          class="text-center"
-        >
-          {{ student.skillsToStudentToFinish.length }}
+        <div v-if="skillsToFinish.length > 0" class="text-center">
+          {{ skillsToFinish.length }}
           compétences à terminer
         </div>
         <div v-else class="text-center">À jour</div>
@@ -48,7 +45,7 @@
         ></v-progress-linear>
       </v-col>
       <v-col class="text-right">
-        <v-btn :to="`/teacher/students/${student.id}`" icon>
+        <v-btn :to="`/teacher/students/${student.ownerUsername}`" icon>
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </v-col>
@@ -58,53 +55,69 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { FetchStudentsQuery } from "~/types/types";
-import "reflect-metadata";
-import { groupsStore, studentsStore } from "~/utils/store-accessor";
+import { FetchStudentsQuery, FindManyGroupsQuery } from "~/types/types";
 import CreateGroupDialog from "~/components/CreateGroupDialog.vue";
 import GroupsSelector from "~/components/GroupsSelector.vue";
+import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
+import UpdateStudentGroupsGQL from "~/apollo/mutations/student/UpdateStudentGroups.graphql"
 
-@Component({
-  components: { GroupsSelector, CreateGroupDialog }
+@Component<StudentListItem>({
+  components: { GroupsSelector, CreateGroupDialog },
+  apollo: {
+    groups: {
+      query: FindManyGroupsGQL
+    }
+  },
 })
 export default class StudentListItem extends Vue {
-  @Prop() readonly highestAwaitingToFinishSkillCount!: number;
   @Prop()
   readonly student!: FetchStudentsQuery["students"][0];
 
-  selectedGroup: number[] = this.student.groups?.map(({ id }) => id) ?? [];
+  selectedGroup: number[] = this.student.groups.map(group => group.id)
+  groups: FindManyGroupsQuery["groups"] = []
 
   /**
    * Edit the student's groups
    */
   async editGroups() {
-    try {
-      await studentsStore.editStudentGroups({
-        studentId: this.student.id,
-        groupIds: this.selectedGroup
-      });
-      await studentsStore.fetchStudents();
-
-      this.selectedGroup = this.student.groups?.map(({ id }) => id) ?? [];
-    } catch (e) {
-      alert("Une erreur est survenue");
-      console.log({ e });
-    } finally {
-    }
+    await this.$apollo.mutate({
+      mutation: UpdateStudentGroupsGQL,
+      variables: {
+        ownerUsername: this.student.ownerUsername,
+        groups: this.selectedGroup
+      }
+    })
+    this.$emit("groupsUpdate")
+    // try {
+    //   await studentsStore.editStudentGroups({
+    //     studentId: this.student.ownerUsername,
+    //     groupIds: this.selectedGroup,
+    //   });
+    //   await studentsStore.fetchStudents();
+    //
+    //   this.selectedGroup = this.student.groups?.map(({ id }) => id) ?? [];
+    // } catch (e) {
+    //   alert("Une erreur est survenue");
+    //   console.log({ e });
+    // } finally {
+    // }
   }
 
-  get groups() {
-    return groupsStore.groups;
+
+  get skillsToFinish() {
+    //TODO todo marks
+    return this.student.studentSkills.filter(
+      (studentSkill) => studentSkill.mark === "TODO"
+    );
   }
 
   get progressBarValue() {
-    return this.highestAwaitingToFinishSkillCount === 0
+    return this.student.studentSkills.length === 0
       ? 100
-      : ((this.highestAwaitingToFinishSkillCount -
-          (this.student.skillsToStudentToFinish?.length ??
-            this.highestAwaitingToFinishSkillCount)) *
+      : ((this.student.studentSkills.length -
+          (this.skillsToFinish.length ?? this.student.studentSkills.length)) *
           100) /
-          this.highestAwaitingToFinishSkillCount;
+          this.student.studentSkills.length;
   }
 
   get progressBarColor() {

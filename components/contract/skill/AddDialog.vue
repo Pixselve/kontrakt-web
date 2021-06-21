@@ -24,19 +24,27 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { contractStore } from "../../../utils/store-accessor";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import  CreateOneSkillToContractGQL  from "~/apollo/mutations/skill/CreateOneSkillToContract.graphql";
 
 @Component({})
 export default class ContractSkillAddDialog extends Vue {
   opened = false;
   loading = false;
   name = "";
+  @Prop() contractID!: number;
 
   async submit() {
     try {
       this.loading = true;
-      await contractStore.addSkillToContract(this.name);
+      await this.$apollo.mutate({
+        mutation: CreateOneSkillToContractGQL,
+        variables: {
+          contractID: this.contractID,
+          name: this.name
+        }
+      })
+      this.$emit("update")
       this.opened = false;
     } catch (e) {
       console.log({ e });

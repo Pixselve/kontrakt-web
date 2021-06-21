@@ -15,18 +15,7 @@ import { StatusQuery } from "~/types/types";
   layout: "login",
   head: () => ({
     title: "Application fermée"
-  }),
-  async validate({ redirect }): Promise<boolean> {
-    const { data }: { data: StatusQuery } = await $apollo.query({
-      query: StatusQueryGQL
-    });
-    if (data.status === 1) {
-      redirect("/login");
-      return false;
-    } else {
-      return true;
-    }
-  }
+  })
 })
 export default class IndexPage extends Vue {
 

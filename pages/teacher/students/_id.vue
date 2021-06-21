@@ -1,15 +1,14 @@
 <template>
   <div>
     <v-app-bar flat>
-      <v-btn @click="exitPage" icon>
+      <v-btn icon @click="exitPage">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title
-      >{{ student.firstName }} {{ student.lastName }}
-      </v-toolbar-title
-      >
+        >{{ student.firstName }} {{ student.lastName }}
+      </v-toolbar-title>
       <template v-slot:extension>
-        <v-tabs centered grow v-model="tab">
+        <v-tabs v-model="tab" centered grow>
           <v-tab>
             <v-icon left>mdi-note</v-icon>
             Contrats
@@ -28,17 +27,18 @@
           <v-divider></v-divider>
           <v-row>
             <v-col
-              cols="12"
-              sm="12"
-              md="6"
-              lg="4"
-              xl="3"
               v-for="contract in contracts"
               :key="contract.id"
+              cols="12"
+              lg="4"
+              md="6"
+              sm="12"
+              xl="3"
             >
               <contract-card-with-popup
-                :editable="true"
                 :contract="contract"
+                :editable="true"
+                :student-username="student.ownerUsername"
               ></contract-card-with-popup>
             </v-col>
           </v-row>
@@ -46,10 +46,9 @@
       </v-tab-item>
       <v-tab-item>
         <v-container>
-          <v-btn @click="deleteStudent" color="red" block
-          >Supprimer l'élève
-          </v-btn
-          >
+          <v-btn block color="red" @click="deleteStudent"
+            >Supprimer l'élève
+          </v-btn>
         </v-container>
       </v-tab-item>
     </v-tabs-items>
@@ -58,48 +57,57 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { $apollo } from "~/utils/getGraphQLClient";
-
 import SkillsTable from "~/components/SkillsTable.vue";
-import { contractsStore, marksStore, studentStore } from "~/utils/store-accessor";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
-import { FetchStudentQuery, FetchStudentQueryVariables } from "~/types/types";
+import {
+  Contract,
+  FetchStudentQuery,
+  FindManyContractsOfGroupsQuery,
+} from "~/types/types";
 
 import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
+import FindManyContractsOfGroupsQueryGQL from "~/apollo/queries/contact/FindManyContractsOfGroups.graphql";
+import DeleteStudentGQL from "~/apollo/mutations/student/DeleteStudent.graphql";
 
-@Component({
-  async validate({ params }): Promise<boolean> {
-    const { data }: { data?: FetchStudentQuery | null } = await $apollo.mutate({
-      mutation: FetchStudentQueryGQL,
-      variables: {
-        id: parseInt(params.id)
-      } as FetchStudentQueryVariables
-    });
-    return !!data?.student;
-  },
-  async asyncData({ params }) {
-    studentStore.logout();
-    await studentStore.fetchStudent(parseInt(params.id));
-    await Promise.all([
-      contractsStore.fetchContractsOfGroups(studentStore.student?.groups.map(group => group.id) ?? []),
-      marksStore.fetchMarks()
-    ]);
+@Component<StudentSpecificPage>({
+  async asyncData({ params, app, redirect }) {
+    try {
+      let client = app.apolloProvider.defaultClient;
+      const { data: studentData }: { data: FetchStudentQuery } =
+        await client.query({
+          query: FetchStudentQueryGQL,
+          variables: {
+            id: params.id,
+          },
+        });
+      const { data: contractsData }: { data: FindManyContractsOfGroupsQuery } =
+        await client.query({
+          query: FindManyContractsOfGroupsQueryGQL,
+          variables: {
+            groups: studentData.student.groups.map((group) => group.id),
+          },
+        });
+      return {
+        student: studentData.student,
+        contracts: contractsData.contracts,
+      };
+    } catch (e) {
+      redirect("/teacher/students");
+    }
   },
   layout: "teacher",
   head: () => ({
-    title: "Mon élève"
+    title: "Mon élève",
   }),
   components: {
     SkillsTable,
-    ContractCardWithPopup
-  }
+    ContractCardWithPopup,
+  },
 })
 export default class StudentSpecificPage extends Vue {
-  student = studentStore.student;
-
-  get contracts() {
-    return contractsStore.contracts;
-  }
+  student?: FetchStudentQuery["student"];
+  contracts: Contract[] = [];
+  tab = null;
 
   /**
    * Exit the current student page
@@ -110,7 +118,10 @@ export default class StudentSpecificPage extends Vue {
 
   async deleteStudent() {
     try {
-      await studentStore.deleteStudent();
+      await this.$apollo.mutate({
+        mutation: DeleteStudentGQL,
+        variables: { ownerUsername: this.student?.ownerUsername },
+      });
       await this.$router.push("/teacher/students");
     } catch (e) {
       alert("ERROR");
@@ -118,7 +129,5 @@ export default class StudentSpecificPage extends Vue {
     } finally {
     }
   }
-
-  tab = null;
 }
 </script>

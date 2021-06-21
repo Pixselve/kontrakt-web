@@ -2,33 +2,33 @@
   <v-simple-table>
     <template v-slot:default>
       <thead>
-      <tr>
-        <th class="text-left">Compétence</th>
-        <th class="text-left">Status</th>
-      </tr>
+        <tr>
+          <th class="text-left">Compétence</th>
+          <th class="text-left">Status</th>
+        </tr>
       </thead>
       <tbody>
-      <SkillTableEntry :editable="editable" v-for="skill in skills" :key="skill.id" :skill="skill"
-                       :student-skills="studentSkills"/>
+        <SkillTableEntry
+          :editable="editable"
+          v-for="studentSkill in studentSkills"
+          :key="studentSkill.skillID"
+          :student-skill="studentSkill"
+        />
       </tbody>
     </template>
   </v-simple-table>
 </template>
 <script lang="ts">
-  import { Component, Prop, Vue } from 'vue-property-decorator';
-  import { Skill } from "~/types/types";
-  import SkillTableEntry from "~/components/SkillTableEntry.vue";
-  import { studentStore } from "~/utils/store-accessor";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { Skill, StudentSkill } from "~/types/types";
+import SkillTableEntry from "~/components/SkillTableEntry.vue";
 
-  @Component({
-    components: { SkillTableEntry }
-  })
-  export default class SkillsTable extends Vue {
-    @Prop({ type: Array }) readonly skills!: Skill[];
-    @Prop({ type: Boolean, default: () => false }) readonly editable!: boolean;
-
-    get studentSkills() {
-      return studentStore.student?.skillsToStudent;
-    }
-  }
+@Component({
+  components: { SkillTableEntry },
+})
+export default class SkillsTable extends Vue {
+  @Prop({ type: Array }) readonly skills!: Skill[];
+  @Prop({ type: Array }) readonly studentSkills!: StudentSkill[];
+  @Prop({ type: Boolean }) readonly editable!: boolean;
+}
 </script>

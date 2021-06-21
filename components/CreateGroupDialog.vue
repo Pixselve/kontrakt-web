@@ -24,7 +24,6 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { groupsStore } from "~/utils/store-accessor";
 
 @Component({})
 export default class CreateGroupDialog extends Vue {
@@ -38,16 +37,17 @@ export default class CreateGroupDialog extends Vue {
   }
 
   async addGroup() {
-    try {
-      this.loading = true;
-      await groupsStore.createGroup(this.name)
-      this.close()
-    } catch (e) {
-      alert("Une erreur est survenue...");
-      console.log({ e });
-    } finally {
-      this.loading = false;
-    }
+    //TODO
+    // try {
+    //   this.loading = true;
+    //   await groupsStore.createGroup(this.name)
+    //   this.close()
+    // } catch (e) {
+    //   alert("Une erreur est survenue...");
+    //   console.log({ e });
+    // } finally {
+    //   this.loading = false;
+    // }
   }
 
 }

@@ -33,7 +33,7 @@ export default class TeacherLayout extends Vue {
   async logout() {
     await this.$apolloHelpers.onLogout();
     this.$cookies.remove("type");
-    await this.$router.push("/teacher/login");
+    await this.$router.push("/login");
   }
 }
 </script>

@@ -29,14 +29,14 @@
     "@graphql-codegen/typescript": "^1.22.0",
     "@graphql-codegen/typescript-graphql-files-modules": "^1.18.1",
     "@graphql-codegen/typescript-operations": "^1.17.16",
+    "@nuxt/types": "^2.15.3",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/dotenv": "^1.4.1",
-    "@nuxtjs/vuetify": "^1.11.3",
+    "@nuxtjs/vuetify": "^1.12.1",
     "@types/js-cookie": "^2.2.6",
     "@types/node": "^15.3.0",
     "prettier": "^2.3.0",
     "vue-class-component": "^7.2.6",
-    "vuex-module-decorators": "^1.0.1",
-    "@nuxt/types": "^2.15.3"
+    "vuex-module-decorators": "^1.0.1"
   }
 }

@@ -1,18 +1,14 @@
 mutation EditSkillToStudent(
-  $markValue: String!
-  $skillId: Int!
-  $studentId: Int!
+  $mark: Mark!
+  $skillID: Int!
+  $studentOwnerUsername: String!
 ) {
   upsertOneSkillToStudent(
-    skillToStudent: {
-      markValue: $markValue
-      studentId: $studentId
-      skillId: $skillId
-    }
+    mark: $mark,
+    skillID: $skillID,
+    studentOwnerUsername: $studentOwnerUsername
   ) {
-    mark {
-      text
-      value
-    }
+    skillID
+    mark
   }
 }

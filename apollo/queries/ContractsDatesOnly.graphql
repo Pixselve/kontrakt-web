@@ -1,6 +1,9 @@
 query ContractsDatesOnly {
   contracts {
     start
+    id
+    name
     end
+    hexColor
   }
 }

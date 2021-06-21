@@ -5,14 +5,6 @@
         <h1 class="secondary--text mr-5">Mes élèves</h1>
       </v-col>
       <v-col class="text-right">
-        <import-student-with-c-s-v-dialog>
-          <template v-slot:default="{ on }">
-            <v-btn v-on="on" color="secondary">
-              <v-icon left>mdi-file-upload</v-icon>
-              Importer un CSV
-            </v-btn>
-          </template>
-        </import-student-with-c-s-v-dialog>
         <create-student-dialog>
           <template v-slot:default="{ on }">
             <v-btn v-on="on" color="secondary">
@@ -27,55 +19,41 @@
     <v-alert v-if="students.length <= 0" type="info"
       >Vous n'avez pas encore ajouté d'élève</v-alert
     >
-
-
-        <student-list-item
-          :highest-awaiting-to-finish-skill-count="
-            highestAwaitingToFinishSkillCount
-          "
-          v-for="student in students"
-          :key="student.id"
-          :student="student"
-        ></student-list-item>
-
+    <student-list-item
+      v-on:groupsUpdate="$fetch"
+      v-for="student in students"
+      :key="student.ownerUsername"
+      :student="student"
+    ></student-list-item>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { groupsStore, studentsStore } from "~/utils/store-accessor";
 import StudentListItem from "~/components/StudentListItem.vue";
 import CreateStudentDialog from "~/components/CreateStudentDialog.vue";
-import ImportStudentWithCSVDialog from "~/components/student/ImportStudentWithCSVDialog.vue";
+import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
+import { FetchStudentsQuery, Group, Student } from "~/types/types";
 
-@Component({
+@Component<TeacherStudentsPageBeta>({
   layout: "teacher",
-  async asyncData() {
-    await studentsStore.fetchStudents();
-
-    await groupsStore.fetchGroups();
+  async fetch() {
+    const { data,  }: { data: FetchStudentsQuery } = await this.$apollo.query({
+      query: FetchStudentsQueryGQL,
+      fetchPolicy: "no-cache",
+    });
+    this.students = data.students
   },
+  head: () => ({
+    title: "Mes élèves"
+  }),
   components: {
     StudentListItem,
     CreateStudentDialog,
-    ImportStudentWithCSVDialog
   }
 })
 export default class TeacherStudentsPageBeta extends Vue {
-  get students() {
-    return studentsStore.students;
-  }
+  students: FetchStudentsQuery["students"] = [];
 
-  get highestAwaitingToFinishSkillCount() {
-    let result = 0;
-    this.students?.forEach(
-      student =>
-        (result = Math.max(
-          result,
-          student.skillsToStudentToFinish?.length ?? 0
-        ))
-    );
-    return result;
-  }
 }
 </script>

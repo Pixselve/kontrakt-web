@@ -1,15 +1,57 @@
 <template>
-  <v-row>
+  <v-row v-if="contract === undefined">
+    <v-col cols="12">
+      <v-skeleton-loader
+        type="heading, list-item-avatar, list-item-avatar, list-item-avatar"
+      ></v-skeleton-loader>
+    </v-col>
+  </v-row>
+  <v-row v-else>
     <v-col cols="12">
       <v-row no-gutters>
         <v-list flat>
           <v-list-item two-line>
             <v-list-item-avatar>
-              <v-avatar :color="contract.rgb" size="20"></v-avatar>
+              <v-avatar :color="contract.hexColor" size="20"></v-avatar>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                <h2>{{ contract.name }}</h2>
+                <v-row no-gutters align="center">
+                  <h2 class="mr-5">{{ contract.name }}</h2>
+                  <v-menu offset-y>
+                    <template v-slot:activator="{ on }">
+                      <v-btn v-on="on" icon>
+                        <v-icon>mdi-dots-vertical</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list>
+                      <contract-skill-add-dialog :contract-i-d="contract.id" v-on:update="() => $apollo.queries.contract.refetch()">
+                        <template v-slot:default="{ on }">
+                          <v-list-item v-on="on">
+                            <v-list-item-avatar>
+                              <v-icon>mdi-playlist-plus</v-icon>
+                            </v-list-item-avatar>
+                            <v-list-item-title>Ajouter une compétence</v-list-item-title>
+                          </v-list-item>
+                        </template>
+                      </contract-skill-add-dialog>
+
+                      <v-list-item :to="`/teacher/contracts/${contract.id}`">
+                        <v-list-item-avatar>
+                          <v-icon>mdi-playlist-edit</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-title>Compléter les compétences</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item @click="deleteContract">
+                        <v-list-item-avatar>
+                          <v-icon>mdi-delete</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-title>Supprimer le contrat</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </v-row>
+
               </v-list-item-title>
               <v-list-item-subtitle>
                 {{ formattedDate(contract.start) }} -
@@ -32,7 +74,7 @@
                       small
                       v-for="group in contract.groups"
                       :key="group.id"
-                      >{{ group.name }}
+                    >{{ group.name }}
                     </v-chip>
                   </v-chip-group>
                   <span v-else>Le contrat n'est pas accessible</span>
@@ -47,38 +89,7 @@
           </v-list-item>
         </v-list>
 
-        <v-menu offset-y>
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on" icon>
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <contract-skill-add-dialog>
-              <template v-slot:default="{ on }">
-                <v-list-item v-on="on">
-                  <v-list-item-avatar>
-                    <v-icon>mdi-playlist-plus</v-icon>
-                  </v-list-item-avatar>
-                  <v-list-item-title>Ajouter une compétence</v-list-item-title>
-                </v-list-item>
-              </template>
-            </contract-skill-add-dialog>
 
-            <v-list-item :to="`/teacher/contracts/${contract.id}`">
-              <v-list-item-avatar>
-                <v-icon>mdi-playlist-edit</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-title>Compléter les compétences</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="deleteContract">
-              <v-list-item-avatar>
-                <v-icon>mdi-delete</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-title>Supprimer le contrat</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
       </v-row>
     </v-col>
     <!--    <v-col v-for="i in 3">-->
@@ -94,6 +105,7 @@
     <v-col cols="12">
       <v-list>
         <contract-skill-list-item-teacher-dashboard
+          v-on:update="() => $apollo.queries.contract.refetch()"
           :skill="skill"
           v-for="skill in contract.skills"
           :key="skill.id"
@@ -107,25 +119,38 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
 import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
-import {
-  contractsStore,
-  contractStore,
-  groupsStore
-} from "~/utils/store-accessor";
-import { FetchContractQuery } from "~/types/types";
+import { FetchContractQuery, FindManyGroupsQuery } from "~/types/types";
 import GroupsSelector from "~/components/GroupsSelector.vue";
+import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
+import DeleteContractGQL from "~/apollo/mutations/DeleteContract.graphql";
+import FetchContractGQL from "~/apollo/queries/FetchContract.graphql";
+import UpdateContractGroupsGQL from "~/apollo/mutations/contract/UpdateContractGroups.graphql";
 
-@Component({
+@Component<ContractDetails>({
   components: {
     ContractSkillAddDialog,
     ContractSkillListItemTeacherDashboard,
     GroupsSelector
-  }
+  },
+  apollo: {
+    groups: {
+      query: FindManyGroupsGQL
+    },
+    contract: {
+      query: FetchContractGQL,
+      variables() {
+        return {
+          id: this.id
+        };
+      }
+    }
+  },
 })
 export default class ContractDetails extends Vue {
-  @Prop() readonly contract!: FetchContractQuery["contract"];
-
+  @Prop() readonly id!: number;
+  groups?: FindManyGroupsQuery["groups"];
   loading = false;
+  contract?: FetchContractQuery["contract"];
 
   formattedDate(date: string) {
     return new Date(date).toLocaleDateString("fr-FR", {
@@ -138,13 +163,16 @@ export default class ContractDetails extends Vue {
     return this.contract?.groups?.map(group => group.id) ?? [];
   }
 
-  get groups() {
-    return groupsStore.groups;
-  }
-
   async groupChange(groups: number[]) {
     try {
-      await contractStore.updateGroups(groups);
+      await this.$apollo.mutate({
+        variables: {
+          contractID: this.id,
+          groups
+        },
+        mutation: UpdateContractGroupsGQL
+      });
+      await this.$apollo.queries.contract.refetch();
     } catch (e) {
       console.log({ e });
     } finally {
@@ -154,8 +182,13 @@ export default class ContractDetails extends Vue {
   async deleteContract() {
     try {
       this.loading = true;
-      await contractStore.deleteContract();
-      await contractsStore.fetchContracts();
+      await this.$apollo.mutate({
+        mutation: DeleteContractGQL,
+        variables: {
+          id: this.id
+        }
+      });
+      this.$emit("delete");
     } catch (e) {
       alert("Une erreur est survenue lors de la suppression du contrat");
       console.log({ e });
