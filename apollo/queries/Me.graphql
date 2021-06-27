@@ -1,5 +1,8 @@
 query Me {
-  student(ownerUsername: "qwd") {
-    ownerUsername
+  me {
+    student {
+      firstName
+      lastName
+    }
   }
 }
