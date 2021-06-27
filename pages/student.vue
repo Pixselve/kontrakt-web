@@ -246,29 +246,5 @@ export default class StudentPage extends Vue {
   get contractsToFinish() {
     return this.contracts.filter(contract => contract.skills.some(skill => this.skillsIDToFinish.includes(skill.id)));
   }
-
-  // get contractsNeededToBeFinished() {
-  //   return studentStore.contractsNeededToBeFinished;
-  // }
-  //
-  // get skillsCountNeededToBeFinished() {
-  //   return studentStore.skillsCountNeededToBeFinished;
-  // }
-  //
-  // get contracts() {
-  //   return contractsStore.contracts;
-  // }
-  //
-  // get student() {
-  //   return studentStore.student;
-  // }
-  //
-  // get skillToStudent() {
-  //   return studentStore.student?.skillsToStudent;
-  // }
-  //
-  // get contractsFormattedForCalendar() {
-  //   return contractsStore.contractsFormattedForCalendar;
-  // }
 }
 </script>
