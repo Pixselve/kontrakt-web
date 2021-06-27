@@ -33,6 +33,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Skill } from "~/types/types";
 import ContractSkillEditDialog from "~/components/contract/skill/EditDialog.vue";
+import { MarkHelper } from "~/utils/MarkHelper";
 
 @Component({
   components: {
@@ -63,19 +64,13 @@ export default class ContractSkillListItemTeacherDashboard extends Vue {
   get successSkillFinishedSkillToStudent() {
     return (
       this.skillFinishedSkillToStudent?.filter(skillToStudent =>
-        ["GOOD", "DONE"].includes(skillToStudent.mark)
+        MarkHelper.isPerfectlyDone(skillToStudent.mark)
       ) ?? []
     );
   }
 
   get skillFinishedSkillToStudent() {
-    return (
-      this.skill.studentSkills?.filter(skillToStudent =>
-        ["VERY_GOOD", "GOOD", "BAD", "VERY_BAD", "DONE"].includes(
-          skillToStudent.mark
-        )
-      ) ?? []
-    );
+    return (this.skill.studentSkills?.filter(skillToStudent => !MarkHelper.isTodo(skillToStudent.mark)) ?? []);
   }
 }
 </script>

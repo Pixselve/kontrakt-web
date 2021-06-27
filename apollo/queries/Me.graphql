@@ -1,5 +1,20 @@
 query Me {
-  student(ownerUsername: "qwd") {
-    ownerUsername
+  me {
+    student {
+      firstName
+      lastName
+      groups {
+        name
+        id
+      }
+      studentSkills {
+        skillID
+        mark
+        skill {
+          name
+          id
+        }
+      }
+    }
   }
 }

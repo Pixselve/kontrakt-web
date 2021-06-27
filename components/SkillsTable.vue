@@ -20,14 +20,13 @@
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Skill, StudentSkill } from "~/types/types";
+import { StudentSkill } from "~/types/types";
 import SkillTableEntry from "~/components/SkillTableEntry.vue";
 
 @Component({
   components: { SkillTableEntry },
 })
 export default class SkillsTable extends Vue {
-  @Prop({ type: Array }) readonly skills!: Skill[];
   @Prop({ type: Array }) readonly studentSkills!: StudentSkill[];
   @Prop({ type: Boolean }) readonly editable!: boolean;
 }

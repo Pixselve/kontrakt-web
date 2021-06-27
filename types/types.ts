@@ -13,6 +13,7 @@ export type Scalars = {
 
 
 
+
 export type AuthPayload = {
   __typename?: 'AuthPayload';
   token: Scalars['String'];
@@ -256,7 +257,7 @@ export type EditSkillToStudentMutation = (
   { __typename?: 'Mutation' }
   & { upsertOneSkillToStudent: (
     { __typename?: 'StudentSkill' }
-    & Pick<StudentSkill, 'mark'>
+    & Pick<StudentSkill, 'skillID' | 'mark'>
   ) }
 );
 
@@ -511,9 +512,19 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = (
   { __typename?: 'Query' }
-  & { student: (
-    { __typename?: 'Student' }
-    & Pick<Student, 'ownerUsername'>
+  & { me: (
+    { __typename?: 'User' }
+    & { student: Array<(
+      { __typename?: 'Student' }
+      & Pick<Student, 'firstName' | 'lastName'>
+      & { groups: Array<(
+        { __typename?: 'Group' }
+        & Pick<Group, 'name' | 'id'>
+      )>, studentSkills: Array<(
+        { __typename?: 'StudentSkill' }
+        & Pick<StudentSkill, 'skillID' | 'mark'>
+      )> }
+    )> }
   ) }
 );
 
