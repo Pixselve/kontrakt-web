@@ -10,7 +10,7 @@
             label
             v-for="group in me.groups"
             :key="group.id"
-          >{{ group.name }}
+            >{{ group.name }}
           </v-chip>
         </v-chip-group>
       </v-col>
@@ -132,7 +132,13 @@ import SkillsTable from "~/components/SkillsTable.vue";
 import ContractCard from "~/components/ContractCard.vue";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
 import AwaitingFinishContractCard from "~/components/AwaitingFinishContractCard.vue";
-import { FetchContractsQuery, FindManyContractsOfGroupsQuery, Mark, MeQuery, StudentSkill } from "~/types/types";
+import {
+  FetchContractsQuery,
+  FindManyContractsOfGroupsQuery,
+  Mark,
+  MeQuery,
+  StudentSkill,
+} from "~/types/types";
 import MeQueryGQL from "~/apollo/queries/Me.graphql";
 import FindManyContractsOfGroupsQueryGQL from "~/apollo/queries/contact/FindManyContractsOfGroups.graphql";
 
@@ -152,20 +158,23 @@ import FindManyContractsOfGroupsQueryGQL from "~/apollo/queries/contact/FindMany
       query: MeQueryGQL,
     });
 
-    const { data: contractsData }: { data: FindManyContractsOfGroupsQuery } = await this.$apollo.query({
-      query: FindManyContractsOfGroupsQueryGQL,
-      variables: {
-        groups: studentData.me.student[0].groups.map((group) => group.id),
-      },
-    });
+    const { data: contractsData }: { data: FindManyContractsOfGroupsQuery } =
+      await this.$apollo.query({
+        query: FindManyContractsOfGroupsQueryGQL,
+        variables: {
+          groups: studentData.me.student[0].groups.map((group) => group.id),
+        },
+      });
 
     this.me = studentData.me.student[0];
     this.contracts = contractsData.contracts.map(({ start, end, ...rest }) => ({
       ...rest,
       start: start.split(" ")[0],
-      end: end.split(" ")[0]
+      end: end.split(" ")[0],
     }));
-    studentData.me.student[0].studentSkills.forEach(studentSkill => this.skillIDToMark.set(studentSkill.skillID, studentSkill.mark));
+    studentData.me.student[0].studentSkills.forEach((studentSkill) =>
+      this.skillIDToMark.set(studentSkill.skillID, studentSkill.mark)
+    );
   },
   middleware: "studentLogged",
 })
@@ -181,13 +190,19 @@ export default class StudentPage extends Vue {
   selectedElement: null | EventTarget = null;
 
   get selectedContractStudentSkills() {
-    return this.me?.studentSkills.filter(studentSkill => this.selectedContract?.skills.some(skill => skill.id === studentSkill.skillID)) ?? [];
+    return (
+      this.me?.studentSkills.filter((studentSkill) =>
+        this.selectedContract?.skills.some(
+          (skill) => skill.id === studentSkill.skillID
+        )
+      ) ?? []
+    );
   }
 
   showEvent({
-              nativeEvent,
-              event,
-            }: {
+    nativeEvent,
+    event,
+  }: {
     nativeEvent: Event;
     event: FetchContractsQuery["contracts"][0];
   }) {
@@ -235,16 +250,26 @@ export default class StudentPage extends Vue {
     await this.$router.push("/login");
   }
 
-  get studentSkillsToFinish(): ({ __typename?: "StudentSkill" | undefined } & Pick<StudentSkill, "skillID" | "mark">)[] {
-    return this.me?.studentSkills.filter(studentSkill => ["TODO"].includes(studentSkill.mark)) ?? [];
+  get studentSkillsToFinish(): ({
+    __typename?: "StudentSkill" | undefined;
+  } & Pick<StudentSkill, "skillID" | "mark">)[] {
+    return (
+      this.me?.studentSkills.filter((studentSkill) =>
+        ["TODO"].includes(studentSkill.mark)
+      ) ?? []
+    );
   }
 
   get skillsIDToFinish() {
-    return this.studentSkillsToFinish.map(studentSkill => studentSkill.skillID);
+    return this.studentSkillsToFinish.map(
+      (studentSkill) => studentSkill.skillID
+    );
   }
 
   get contractsToFinish() {
-    return this.contracts.filter(contract => contract.skills.some(skill => this.skillsIDToFinish.includes(skill.id)));
+    return this.contracts.filter((contract) =>
+      contract.skills.some((skill) => this.skillsIDToFinish.includes(skill.id))
+    );
   }
 }
 </script>
