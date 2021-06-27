@@ -1,4 +1,3 @@
-import {Mark} from "~/types/types";
 <template>
   <tr>
     <td>{{ studentSkill.skill.name }}</td>

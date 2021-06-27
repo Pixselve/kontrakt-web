@@ -3,6 +3,18 @@ query Me {
     student {
       firstName
       lastName
+      groups {
+        name
+        id
+      }
+      studentSkills {
+        skillID
+        mark
+        skill {
+          name
+          id
+        }
+      }
     }
   }
 }
