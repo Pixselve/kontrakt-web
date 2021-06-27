@@ -118,7 +118,7 @@
         <h1>Vous n'avez plus rien à faire 😁</h1>
         <img
           src="https://data.photofunky.net/output/image/0/5/9/e/059e87/photofunky.gif"
-          alt=""
+          alt="Fille qui danse"
         />
       </v-col>
     </v-row>
