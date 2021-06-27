@@ -21,7 +21,7 @@ import {Mark} from "~/types/types";
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Mark, Skill, StudentSkill } from "~/types/types";
-import getMarkData from "~/utils/getMarkData";
+import { MarkHelper } from "~/utils/MarkHelper";
 
 @Component({})
 export default class SkillTableEntry extends Vue {
@@ -31,7 +31,7 @@ export default class SkillTableEntry extends Vue {
   loading = false;
 
   get mark() {
-    return getMarkData(this.studentSkill.mark)
+    return MarkHelper.markToData.get(this.studentSkill.mark)
   }
 
   async editMark(markValue: Mark) {
