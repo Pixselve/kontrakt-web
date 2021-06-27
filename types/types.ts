@@ -517,6 +517,13 @@ export type MeQuery = (
     & { student: Array<(
       { __typename?: 'Student' }
       & Pick<Student, 'firstName' | 'lastName'>
+      & { groups: Array<(
+        { __typename?: 'Group' }
+        & Pick<Group, 'name' | 'id'>
+      )>, studentSkills: Array<(
+        { __typename?: 'StudentSkill' }
+        & Pick<StudentSkill, 'skillID' | 'mark'>
+      )> }
     )> }
   ) }
 );
