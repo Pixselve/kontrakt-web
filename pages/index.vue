@@ -11,11 +11,14 @@ import { $apollo } from "~/utils/getGraphQLClient";
 import StatusQueryGQL from "~/apollo/queries/Status.graphql";
 import { StatusQuery } from "~/types/types";
 
-@Component({
+@Component<IndexPage>({
   layout: "login",
+  asyncData({redirect}) {
+    redirect("/login")
+  },
   head: () => ({
-    title: "Application fermée"
-  })
+    title: "Kontrakt"
+  }),
 })
 export default class IndexPage extends Vue {
 
