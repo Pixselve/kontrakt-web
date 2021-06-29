@@ -16,14 +16,20 @@
       </v-col>
     </v-row>
     <v-divider class="mb-5"></v-divider>
-    <v-alert v-if="students.length <= 0" type="info"
-      >Vous n'avez pas encore ajouté d'élève</v-alert
-    >
-    <student-list-item
-      v-for="student in students"
-      :key="student.ownerUsername"
-      :student="student"
-    ></student-list-item>
+    <v-skeleton-loader
+      v-if="this.$apollo.queries.students.loading"
+      type="table"
+    ></v-skeleton-loader>
+    <div v-else>
+      <v-alert v-if="students.length <= 0" type="info"
+        >Vous n'avez pas encore ajouté d'élève
+      </v-alert>
+      <student-list-item
+        v-for="student in students"
+        :key="student.ownerUsername"
+        :student="student"
+      ></student-list-item>
+    </div>
   </v-container>
 </template>
 
@@ -32,25 +38,24 @@ import { Component, Vue } from "vue-property-decorator";
 import StudentListItem from "~/components/StudentListItem.vue";
 import CreateStudentDialog from "~/components/CreateStudentDialog.vue";
 import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
-import { FetchStudentsQuery, Group, Student } from "~/types/types";
+import { FetchStudentsQuery } from "~/types/types";
 
 @Component<TeacherStudentsPageBeta>({
   layout: "teacher",
   apollo: {
     students: {
-      query: FetchStudentsQueryGQL
-    }
+      query: FetchStudentsQueryGQL,
+    },
   },
   head: () => ({
-    title: "Mes élèves"
+    title: "Mes élèves",
   }),
   components: {
     StudentListItem,
     CreateStudentDialog,
-  }
+  },
 })
 export default class TeacherStudentsPageBeta extends Vue {
   students: FetchStudentsQuery["students"] = [];
-
 }
 </script>
