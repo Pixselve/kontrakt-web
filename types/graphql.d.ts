@@ -80,6 +80,15 @@ declare module '*/EditSkillName.graphql' {
 }
     
 
+declare module '*/CreateOneStudent.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const CreateOneStudent: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/DeleteStudent.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

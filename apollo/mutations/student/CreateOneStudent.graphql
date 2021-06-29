@@ -1,0 +1,15 @@
+mutation CreateOneStudent($firstName: String!, $lastName: String!, $password: String!) {
+  createOneStudent(user: {password: $password}, student: {firstName: $firstName, lastName: $lastName}) {
+    ownerUsername
+    firstName
+    lastName
+    groups {
+      id
+      name
+    }
+    studentSkills {
+      skillID
+      mark
+    }
+  }
+}

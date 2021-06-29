@@ -370,6 +370,28 @@ export type EditSkillNameMutation = (
   ) }
 );
 
+export type CreateOneStudentMutationVariables = Exact<{
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+
+export type CreateOneStudentMutation = (
+  { __typename?: 'Mutation' }
+  & { createOneStudent: (
+    { __typename?: 'Student' }
+    & Pick<Student, 'ownerUsername' | 'firstName' | 'lastName'>
+    & { groups: Array<(
+      { __typename?: 'Group' }
+      & Pick<Group, 'id' | 'name'>
+    )>, studentSkills: Array<(
+      { __typename?: 'StudentSkill' }
+      & Pick<StudentSkill, 'skillID' | 'mark'>
+    )> }
+  ) }
+);
+
 export type DeleteStudentMutationVariables = Exact<{
   ownerUsername: Scalars['String'];
 }>;
