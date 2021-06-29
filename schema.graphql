@@ -32,6 +32,7 @@ type Mutation {
   createOneContract(end: String!, hexColor: String!, name: String!, skillNames: [String!]!, start: String!): Contract!
   createOneGroup(contractID: Int, name: String!): Group!
   createOneSkill(contractID: Int!, name: String!): Skill!
+  createOneStudent(student: StudentInput!, user: UserInput!): Student!
   deleteOneContract(id: Int!): Contract!
   deleteOneSkill(id: Int!): Skill!
   deleteOneStudent(ownerUsername: String!): Student!
@@ -102,4 +103,13 @@ enum Role {
   ADMIN
   STUDENT
   TEACHER
+}
+
+input StudentInput {
+  firstName: String!
+  lastName: String!
+}
+
+input UserInput {
+  password: String!
 }
