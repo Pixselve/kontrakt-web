@@ -4,5 +4,9 @@ mutation UpdateStudentGroups($ownerUsername: String!, $groups: [Int!]!) {
       id
       name
     }
+    studentSkills {
+      skillID
+      mark
+    }
   }
 }

@@ -418,6 +418,9 @@ export type UpdateStudentGroupsMutation = (
     & { groups: Array<(
       { __typename?: 'Group' }
       & Pick<Group, 'id' | 'name'>
+    )>, studentSkills: Array<(
+      { __typename?: 'StudentSkill' }
+      & Pick<StudentSkill, 'skillID' | 'mark'>
     )> }
   ) }
 );
