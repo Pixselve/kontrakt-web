@@ -100,6 +100,7 @@ export default class StudentListItem extends Vue {
           );
           if (studentIndex >= 0) {
             data.students[studentIndex].groups = updateOneStudent.groups;
+            data.students[studentIndex].studentSkills = updateOneStudent.studentSkills;
             store.writeQuery({ query: FetchStudentsQueryGQL, data });
           }
         }
