@@ -22,7 +22,7 @@
           </thead>
           <tbody>
           <student-skill-table-row :skills="contract.skills"
-                                   v-for="(student, i) in studentsConcernedByTheContract"
+                                   v-for="(student, i) in students"
                                    :student="student"
                                    :contract-i-d="contract.id"
                                    :key="student.ownerUsername"></student-skill-table-row>
@@ -36,10 +36,9 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import StudentSkillTableRow from "~/components/StudentSkillTableRow.vue";
-import { FetchContractQuery, FetchStudentForContractQuery, FetchStudentQuery, Group } from "~/types/types";
+import { FetchContractQuery, FetchStudentForContractQuery, Group } from "~/types/types";
 import FetchContractGQL from "~/apollo/queries/FetchContract.graphql";
 import FetchStudentForContractGQL from "~/apollo/queries/FetchStudentForContract.graphql";
-import FetchStudentGQL from "~/apollo/queries/FetchStudent.graphql";
 
 @Component<TeacherContractPage>({
   layout: "teacher",
@@ -49,23 +48,30 @@ import FetchStudentGQL from "~/apollo/queries/FetchStudent.graphql";
   components: {
     StudentSkillTableRow,
   },
-  async asyncData({ app, params }) {
-    const { id } = params;
-    const apolloClient = app.apolloProvider.defaultClient;
-    const { data } = await apolloClient.query({ query: FetchContractGQL, variables: { id } });
-    const { data: studentData } = await apolloClient.query({
+  apollo: {
+    contract: {
+      query: FetchContractGQL,
+      variables() {
+        return { id: parseInt(this.$route.params.id) };
+      },
+      error(error) {
+        console.log({errorContract: error.networkError});
+      }
+    },
+    students: {
       query: FetchStudentForContractGQL,
-      variables: { contractID: id }
-    });
-    return {
-      contract: data.contract,
-      studentsConcernedByTheContract: studentData.students
-    };
+      variables() {
+        return { contractID: parseInt(this.$route.params.id)  };
+      },
+      error(error) {
+        console.log({errorStudents: error.networkError});
+      }
+    },
   },
 })
 export default class TeacherContractPage extends Vue {
   contract!: FetchContractQuery["contract"];
-  studentsConcernedByTheContract: FetchStudentForContractQuery["students"] = [];
+  students: FetchStudentForContractQuery["students"] = [];
 
   getFormattedDate(date: string) {
     return new Date(date).toLocaleDateString("fr-FR", {
