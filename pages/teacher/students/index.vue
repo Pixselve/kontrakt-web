@@ -20,7 +20,6 @@
       >Vous n'avez pas encore ajouté d'élève</v-alert
     >
     <student-list-item
-      v-on:groupsUpdate="$fetch"
       v-for="student in students"
       :key="student.ownerUsername"
       :student="student"
@@ -37,12 +36,10 @@ import { FetchStudentsQuery, Group, Student } from "~/types/types";
 
 @Component<TeacherStudentsPageBeta>({
   layout: "teacher",
-  async fetch() {
-    const { data,  }: { data: FetchStudentsQuery } = await this.$apollo.query({
-      query: FetchStudentsQueryGQL,
-      fetchPolicy: "no-cache",
-    });
-    this.students = data.students
+  apollo: {
+    students: {
+      query: FetchStudentsQueryGQL
+    }
   },
   head: () => ({
     title: "Mes élèves"
