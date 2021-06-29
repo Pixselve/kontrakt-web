@@ -59,6 +59,7 @@ export type Mutation = {
   deleteOneContract: Contract;
   deleteOneStudent: Student;
   upsertOneSkillToStudent: StudentSkill;
+  createOneStudent: Student;
 };
 
 
@@ -128,6 +129,12 @@ export type MutationUpsertOneSkillToStudentArgs = {
   mark: Mark;
 };
 
+
+export type MutationCreateOneStudentArgs = {
+  student: StudentInput;
+  user: UserInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   contracts: Array<Contract>;
@@ -191,6 +198,11 @@ export type Student = {
   groups: Array<Group>;
 };
 
+export type StudentInput = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
 export type StudentSkill = {
   __typename?: 'StudentSkill';
   skillID: Scalars['Int'];
@@ -214,6 +226,10 @@ export type User = {
   role: Role;
   student: Array<Student>;
   teacher: Array<Teacher>;
+};
+
+export type UserInput = {
+  password: Scalars['String'];
 };
 
 export type CreateOneContractMutationVariables = Exact<{
@@ -379,7 +395,7 @@ export type UpdateStudentGroupsMutation = (
     { __typename?: 'Student' }
     & { groups: Array<(
       { __typename?: 'Group' }
-      & Pick<Group, 'id'>
+      & Pick<Group, 'id' | 'name'>
     )> }
   ) }
 );
@@ -523,6 +539,10 @@ export type MeQuery = (
       )>, studentSkills: Array<(
         { __typename?: 'StudentSkill' }
         & Pick<StudentSkill, 'skillID' | 'mark'>
+        & { skill: (
+          { __typename?: 'Skill' }
+          & Pick<Skill, 'name' | 'id'>
+        ) }
       )> }
     )> }
   ) }
