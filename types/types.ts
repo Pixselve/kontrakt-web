@@ -42,8 +42,12 @@ export type Group = {
 
 export enum Mark {
   Todo = 'TODO',
+  ToFinish = 'TO_FINISH',
+  ToCorrect = 'TO_CORRECT',
   Good = 'GOOD',
-  Bad = 'BAD'
+  VeryGood = 'VERY_GOOD',
+  Bad = 'BAD',
+  VeryBad = 'VERY_BAD'
 }
 
 export type Mutation = {

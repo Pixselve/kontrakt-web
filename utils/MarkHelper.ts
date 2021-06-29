@@ -13,10 +13,40 @@ export abstract class MarkHelper {
       },
     ],
     [
-      Mark.Good,
+      Mark.ToCorrect,
+      {
+        hexColor: "grey",
+        text: "À corriger",
+        icon: "skip-forward",
+        todo: true,
+        perfectlyDone: false,
+      }
+    ],
+    [
+      Mark.ToFinish,
+      {
+        hexColor: "grey",
+        text: "À Terminer",
+        icon: "skip-forward",
+        todo: true,
+        perfectlyDone: false,
+      }
+    ],
+    [
+      Mark.VeryGood,
       {
         hexColor: "green",
-        text: "Bien",
+        text: "Acquis",
+        icon: "emoticon",
+        todo: false,
+        perfectlyDone: true,
+      },
+    ],
+    [
+      Mark.Good,
+      {
+        hexColor: "blue",
+        text: "Acquis avec quelques erreurs",
         icon: "emoticon",
         todo: false,
         perfectlyDone: true,
@@ -25,8 +55,18 @@ export abstract class MarkHelper {
     [
       Mark.Bad,
       {
+        hexColor: "orange",
+        text: "En voie d'acquisition",
+        icon: "emoticon",
+        todo: false,
+        perfectlyDone: true,
+      },
+    ],
+    [
+      Mark.VeryBad,
+      {
         hexColor: "red",
-        text: "Mauvais",
+        text: "Non acquis",
         icon: "emoticon-neutral",
         todo: false,
         perfectlyDone: false,

@@ -97,6 +97,10 @@ enum Mark {
   BAD
   GOOD
   TODO
+  TO_CORRECT
+  TO_FINISH
+  VERY_BAD
+  VERY_GOOD
 }
 
 enum Role {
