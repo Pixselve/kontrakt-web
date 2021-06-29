@@ -1,5 +1,5 @@
 <template>
-  <td>
+  <td :style="`background-color: ${markData.hexColor};`">
     <v-select :disabled="loading" :loading="loading" @change="changeValue" :value="mark" class="mt-6" flat dense
               outlined
               :items="marks"></v-select>
@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { FetchStudentForContractQuery, Mark, Skill, Student } from "~/types/types";
 import EditSkillToStudentGQL from "~/apollo/mutations/EditSkillToStudent.graphql";
 import FetchStudentForContractGQL from "~/apollo/queries/FetchStudentForContract.graphql";
@@ -15,8 +15,8 @@ import { MarkHelper } from "~/utils/MarkHelper";
 
 @Component({})
 export default class StudentSkillTableCell extends Vue {
-  @Prop({ type: Object }) readonly student!: Student;
-  @Prop({ type: Object }) readonly skill!: Skill;
+  @Prop() readonly student!: Student;
+  @Prop() readonly skill!: Skill;
   @Prop() readonly contractID!: number;
   loading = false;
 
@@ -24,8 +24,15 @@ export default class StudentSkillTableCell extends Vue {
     return MarkHelper.marks
   }
 
-  get mark() {
-    return this.student.studentSkills.find(studentSkill => studentSkill.skillID === this.skill.id)?.mark ?? Mark.Todo;
+  @Watch("student", {deep: true, immediate: true})
+  onStudentChange(student: Student) {
+    this.mark = student.studentSkills.find(studentSkill => studentSkill.skillID === this.skill.id)?.mark ?? Mark.Todo;
+  }
+
+  mark: Mark = Mark.Todo
+
+  get markData() {
+    return MarkHelper.markToData.get(this.mark)
   }
 
   async changeValue(newValue: string) {
@@ -42,7 +49,7 @@ export default class StudentSkillTableCell extends Vue {
           // Read the data from our cache for this query.
           const data: FetchStudentForContractQuery | null = store.readQuery({
             query: FetchStudentForContractGQL,
-            variables: { contractID: this.contractID.toString() }
+            variables: { contractID: this.contractID }
           });
           if (data) {
             // Add our tag from the mutation to the end
@@ -56,6 +63,7 @@ export default class StudentSkillTableCell extends Vue {
               }
               // Write our data back to the cache.
               store.writeQuery({ query: FetchStudentForContractGQL, data });
+              this.mark = upsertOneSkillToStudent.mark
             }
           }
 
