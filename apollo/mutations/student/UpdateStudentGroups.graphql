@@ -2,6 +2,7 @@ mutation UpdateStudentGroups($ownerUsername: String!, $groups: [Int!]!) {
   updateOneStudent(groupIDs: $groups, ownerUsername: $ownerUsername) {
     groups {
       id
+      name
     }
   }
 }
