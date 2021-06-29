@@ -3,10 +3,12 @@
     <v-row justify="space-between" class="px-5" dense align="center">
       <v-col class="d-flex">
         <div class="mr-5">
-          <v-chip color="primary"
-            ><v-avatar left><v-icon>mdi-account-circle</v-icon></v-avatar>
-            {{ student.ownerUsername }}</v-chip
-          >
+          <v-chip color="primary">
+            <v-avatar left>
+              <v-icon>mdi-account-circle</v-icon>
+            </v-avatar>
+            {{ student.ownerUsername }}
+          </v-chip>
         </div>
         <div>
           {{ student.lastName.toUpperCase() }} {{ student.firstName }}
@@ -59,22 +61,23 @@ import { FetchStudentsQuery, FindManyGroupsQuery } from "~/types/types";
 import CreateGroupDialog from "~/components/CreateGroupDialog.vue";
 import GroupsSelector from "~/components/GroupsSelector.vue";
 import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
-import UpdateStudentGroupsGQL from "~/apollo/mutations/student/UpdateStudentGroups.graphql"
+import UpdateStudentGroupsGQL from "~/apollo/mutations/student/UpdateStudentGroups.graphql";
+import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
 
 @Component<StudentListItem>({
   components: { GroupsSelector, CreateGroupDialog },
   apollo: {
     groups: {
-      query: FindManyGroupsGQL
-    }
+      query: FindManyGroupsGQL,
+    },
   },
 })
 export default class StudentListItem extends Vue {
   @Prop()
   readonly student!: FetchStudentsQuery["students"][0];
 
-  selectedGroup: number[] = this.student.groups.map(group => group.id)
-  groups: FindManyGroupsQuery["groups"] = []
+  selectedGroup: number[] = this.student.groups.map((group) => group.id);
+  groups: FindManyGroupsQuery["groups"] = [];
 
   /**
    * Edit the student's groups
@@ -84,25 +87,25 @@ export default class StudentListItem extends Vue {
       mutation: UpdateStudentGroupsGQL,
       variables: {
         ownerUsername: this.student.ownerUsername,
-        groups: this.selectedGroup
-      }
-    })
-    this.$emit("groupsUpdate")
-    // try {
-    //   await studentsStore.editStudentGroups({
-    //     studentId: this.student.ownerUsername,
-    //     groupIds: this.selectedGroup,
-    //   });
-    //   await studentsStore.fetchStudents();
-    //
-    //   this.selectedGroup = this.student.groups?.map(({ id }) => id) ?? [];
-    // } catch (e) {
-    //   alert("Une erreur est survenue");
-    //   console.log({ e });
-    // } finally {
-    // }
+        groups: this.selectedGroup,
+      },
+      update: (store, { data: { updateOneStudent } }) => {
+        // Read the data from our cache for this query.
+        const data: FetchStudentsQuery | null = store.readQuery({
+          query: FetchStudentsQueryGQL,
+        });
+        if (data !== null) {
+          const studentIndex = data.students.findIndex(
+            (student) => student.ownerUsername === this.student.ownerUsername
+          );
+          if (studentIndex >= 0) {
+            data.students[studentIndex].groups = updateOneStudent.groups;
+            store.writeQuery({ query: FetchStudentsQueryGQL, data });
+          }
+        }
+      },
+    });
   }
-
 
   get skillsToFinish() {
     //TODO todo marks
