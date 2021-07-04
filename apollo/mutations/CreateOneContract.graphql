@@ -1,5 +1,9 @@
 mutation CreateOneContract($start: String!, $end: String!, $skills: [String!]!, $name: String!, $hexColor: String!) {
   createOneContract(end: $end, hexColor: $hexColor, name: $name, skillNames: $skills, start: $start) {
     start
+    id
+    name
+    end
+    hexColor
   }
 }

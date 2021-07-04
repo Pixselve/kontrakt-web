@@ -117,6 +117,8 @@ import { Component, Vue } from "vue-property-decorator";
 import EditSkillDialog from "~/components/EditSkillDialog.vue";
 import CreateSkillDialog from "~/components/CreateSkillDialog.vue";
 import CreateOneContractGQL from "~/apollo/mutations/CreateOneContract.graphql"
+import { ContractsDatesOnlyQuery, CreateOneContractMutation } from "~/types/types";
+import ContractsDatesOnlyQueryGQL from "~/apollo/queries/ContractsDatesOnly.graphql";
 
 @Component({
   components: { EditSkillDialog, CreateSkillDialog }
@@ -190,6 +192,16 @@ export default class CreateContractDialog extends Vue {
           skills: this.skills,
           name: this.name,
           hexColor: this.color
+        },
+        update: (proxy, {data}) => {
+          const contractsData: ContractsDatesOnlyQuery | null = proxy.readQuery({ query: ContractsDatesOnlyQueryGQL });
+          if (contractsData !== null) {
+            const { createOneContract } = data as CreateOneContractMutation;
+            proxy.writeQuery({
+              query: ContractsDatesOnlyQueryGQL,
+              data: { contracts: [...contractsData.contracts, createOneContract] }
+            });
+          }
         }
       })
       this.$emit("update")

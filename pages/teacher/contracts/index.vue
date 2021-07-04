@@ -18,7 +18,7 @@
           </template>
           Non implémenté dans cette version
         </v-tooltip>
-        <create-contract-dialog v-on:update="() => $apollo.queries.contracts.refetch()">
+        <create-contract-dialog>
           <template v-slot="{ on }">
             <v-btn color="secondary" v-on="on">
               <v-icon left>mdi-playlist-plus</v-icon>
