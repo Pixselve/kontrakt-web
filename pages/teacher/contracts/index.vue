@@ -74,7 +74,7 @@
       <v-col cols="12"> Chargement du contrat...</v-col>
     </v-row>
     <ContractDetails
-      v-on:delete="() => {selectedContract = null; return $apollo.queries.contracts.refetch()}"
+      v-on:delete="selectedContract = null"
       v-else-if="selectedContract"
       :id="selectedContract"
     />

@@ -129,8 +129,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
 import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
 import {
+  ContractsDatesOnlyQuery,
   FetchContractQuery,
-  FetchStudentQuery,
   FindManyGroupsQuery,
   UpdateContractGroupsMutation,
 } from "~/types/types";
@@ -140,6 +140,7 @@ import DeleteContractGQL from "~/apollo/mutations/DeleteContract.graphql";
 import FetchContractGQL from "~/apollo/queries/FetchContract.graphql";
 import UpdateContractGroupsGQL from "~/apollo/mutations/contract/UpdateContractGroups.graphql";
 import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
+import ContractsDatesOnlyQueryGQL from "~/apollo/queries/ContractsDatesOnly.graphql";
 
 @Component<ContractDetails>({
   components: {
@@ -195,7 +196,7 @@ export default class ContractDetails extends Vue {
             data: { contract: updateOneContract },
           });
         },
-        refetchQueries: [{query: FetchStudentsQueryGQL}]
+        refetchQueries: [{ query: FetchStudentsQueryGQL }]
       });
     } catch (e) {
       console.log({ e });
@@ -211,8 +212,17 @@ export default class ContractDetails extends Vue {
         variables: {
           id: this.id,
         },
+        update: (proxy) => {
+          const contractsData: ContractsDatesOnlyQuery | null = proxy.readQuery({ query: ContractsDatesOnlyQueryGQL });
+          if (contractsData !== null) {
+            proxy.writeQuery({
+              query: ContractsDatesOnlyQueryGQL,
+              data: { contracts: contractsData.contracts.filter(contract => contract.id !== this.id) }
+            });
+          }
+        }
       });
-      this.$emit("delete");
+      this.$emit("delete")
     } catch (e) {
       alert("Une erreur est survenue lors de la suppression du contrat");
       console.log({ e });
