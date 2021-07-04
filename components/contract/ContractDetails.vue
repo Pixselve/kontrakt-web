@@ -25,13 +25,19 @@
                       </v-btn>
                     </template>
                     <v-list>
-                      <contract-skill-add-dialog :contract-i-d="contract.id" v-on:update="() => $apollo.queries.contract.refetch()">
+                      <contract-skill-add-dialog
+                        :contract-i-d="contract.id"
+                        v-on:update="() => $apollo.queries.contract.refetch()"
+                      >
                         <template v-slot:default="{ on }">
                           <v-list-item v-on="on">
                             <v-list-item-avatar>
                               <v-icon>mdi-playlist-plus</v-icon>
                             </v-list-item-avatar>
-                            <v-list-item-title>Ajouter une compétence</v-list-item-title>
+                            <v-list-item-title
+                            >Ajouter une compétence
+                            </v-list-item-title
+                            >
                           </v-list-item>
                         </template>
                       </contract-skill-add-dialog>
@@ -40,18 +46,23 @@
                         <v-list-item-avatar>
                           <v-icon>mdi-playlist-edit</v-icon>
                         </v-list-item-avatar>
-                        <v-list-item-title>Compléter les compétences</v-list-item-title>
+                        <v-list-item-title
+                        >Compléter les compétences
+                        </v-list-item-title
+                        >
                       </v-list-item>
                       <v-list-item @click="deleteContract">
                         <v-list-item-avatar>
                           <v-icon>mdi-delete</v-icon>
                         </v-list-item-avatar>
-                        <v-list-item-title>Supprimer le contrat</v-list-item-title>
+                        <v-list-item-title
+                        >Supprimer le contrat
+                        </v-list-item-title
+                        >
                       </v-list-item>
                     </v-list>
                   </v-menu>
                 </v-row>
-
               </v-list-item-title>
               <v-list-item-subtitle>
                 {{ formattedDate(contract.start) }} -
@@ -88,8 +99,6 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-
-
       </v-row>
     </v-col>
     <!--    <v-col v-for="i in 3">-->
@@ -119,7 +128,12 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
 import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
-import { FetchContractQuery, FindManyGroupsQuery } from "~/types/types";
+import {
+  FetchContractQuery,
+  FetchStudentQuery,
+  FindManyGroupsQuery,
+  UpdateContractGroupsMutation,
+} from "~/types/types";
 import GroupsSelector from "~/components/GroupsSelector.vue";
 import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
 import DeleteContractGQL from "~/apollo/mutations/DeleteContract.graphql";
@@ -131,20 +145,20 @@ import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
   components: {
     ContractSkillAddDialog,
     ContractSkillListItemTeacherDashboard,
-    GroupsSelector
+    GroupsSelector,
   },
   apollo: {
     groups: {
-      query: FindManyGroupsGQL
+      query: FindManyGroupsGQL,
     },
     contract: {
       query: FetchContractGQL,
       variables() {
         return {
-          id: this.id
+          id: this.id,
         };
-      }
-    }
+      },
+    },
   },
 })
 export default class ContractDetails extends Vue {
@@ -156,12 +170,12 @@ export default class ContractDetails extends Vue {
   formattedDate(date: string) {
     return new Date(date).toLocaleDateString("fr-FR", {
       month: "long",
-      day: "numeric"
+      day: "numeric",
     });
   }
 
   get contractGroups() {
-    return this.contract?.groups?.map(group => group.id) ?? [];
+    return this.contract?.groups?.map((group) => group.id) ?? [];
   }
 
   async groupChange(groups: number[]) {
@@ -169,12 +183,19 @@ export default class ContractDetails extends Vue {
       await this.$apollo.mutate({
         variables: {
           contractID: this.id,
-          groups
+          groups,
         },
         mutation: UpdateContractGroupsGQL,
         update: (proxy, { data }) => {
-          proxy.writeQuery({ query: FetchContractGQL, variables: {id: this.id}, data: { contract: data.updateOneContract } });
-        }
+          const { updateOneContract } = data as UpdateContractGroupsMutation;
+          // Update the current contract
+          proxy.writeQuery({
+            query: FetchContractGQL,
+            variables: { id: this.id },
+            data: { contract: updateOneContract },
+          });
+        },
+        refetchQueries: [{query: FetchStudentsQueryGQL}]
       });
     } catch (e) {
       console.log({ e });
@@ -188,8 +209,8 @@ export default class ContractDetails extends Vue {
       await this.$apollo.mutate({
         mutation: DeleteContractGQL,
         variables: {
-          id: this.id
-        }
+          id: this.id,
+        },
       });
       this.$emit("delete");
     } catch (e) {

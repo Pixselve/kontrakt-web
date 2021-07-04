@@ -316,6 +316,10 @@ export type UpdateContractGroupsMutation = (
     )>, skills: Array<(
       { __typename?: 'Skill' }
       & Pick<Skill, 'id' | 'name'>
+      & { studentSkills: Array<(
+        { __typename?: 'StudentSkill' }
+        & Pick<StudentSkill, 'studentID' | 'skillID' | 'mark'>
+      )> }
     )> }
   ) }
 );
