@@ -32,6 +32,10 @@ export type Contract = {
   groups: Array<Group>;
 };
 
+export type FilterGroup = {
+  idsIn?: Maybe<Array<Scalars['Int']>>;
+};
+
 export type Group = {
   __typename?: 'Group';
   id: Scalars['Int'];
@@ -153,7 +157,7 @@ export type Query = {
 
 
 export type QueryContractsArgs = {
-  groupIds?: Maybe<Array<Scalars['Int']>>;
+  groups?: Maybe<FilterGroup>;
 };
 
 
@@ -249,7 +253,7 @@ export type CreateOneContractMutation = (
   { __typename?: 'Mutation' }
   & { createOneContract: (
     { __typename?: 'Contract' }
-    & Pick<Contract, 'start'>
+    & Pick<Contract, 'start' | 'id' | 'name' | 'end' | 'hexColor'>
   ) }
 );
 

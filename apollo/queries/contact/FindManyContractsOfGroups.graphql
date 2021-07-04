@@ -1,5 +1,5 @@
 query FindManyContractsOfGroups($groups: [Int!]!) {
-  contracts(groupIds: $groups) {
+  contracts(groups: {idsIn: $groups}) {
     id
     start
     end

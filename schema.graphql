@@ -45,7 +45,7 @@ type Mutation {
 
 type Query {
   contract(id: Int!): Contract!
-  contracts(groupIds: [Int!]): [Contract!]!
+  contracts(groups: FilterGroup): [Contract!]!
   groups: [Group!]!
   me: User!
   student(ownerUsername: String!): Student!
@@ -107,6 +107,10 @@ enum Role {
   ADMIN
   STUDENT
   TEACHER
+}
+
+input FilterGroup {
+  idsIn: [Int!]
 }
 
 input StudentInput {
