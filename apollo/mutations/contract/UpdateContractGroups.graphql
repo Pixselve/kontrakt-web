@@ -12,6 +12,9 @@ mutation UpdateContractGroups($contractID: Int!, $groups: [Int!]!) {
     skills {
       id
       name
+      studentSkills {
+        mark
+      }
       }
     }
   }

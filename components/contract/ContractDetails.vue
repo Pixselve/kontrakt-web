@@ -125,6 +125,7 @@ import FindManyGroupsGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
 import DeleteContractGQL from "~/apollo/mutations/DeleteContract.graphql";
 import FetchContractGQL from "~/apollo/queries/FetchContract.graphql";
 import UpdateContractGroupsGQL from "~/apollo/mutations/contract/UpdateContractGroups.graphql";
+import FetchStudentsQueryGQL from "~/apollo/queries/FetchStudents.graphql";
 
 @Component<ContractDetails>({
   components: {
@@ -170,9 +171,11 @@ export default class ContractDetails extends Vue {
           contractID: this.id,
           groups
         },
-        mutation: UpdateContractGroupsGQL
+        mutation: UpdateContractGroupsGQL,
+        update: (proxy, { data }) => {
+          proxy.writeQuery({ query: FetchContractGQL, variables: {id: this.id}, data: { contract: data.updateOneContract } });
+        }
       });
-      await this.$apollo.queries.contract.refetch();
     } catch (e) {
       console.log({ e });
     } finally {
