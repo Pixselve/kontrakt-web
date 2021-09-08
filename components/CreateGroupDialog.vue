@@ -24,30 +24,45 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { FindManyGroupsQuery } from "~/types/types";
+import FindManyGroupsQueryGQL from "~/apollo/queries/groups/FindManyGroups.graphql";
+import CreateGroupMutationGQL from "~/apollo/mutations/groups/CreateGroup.graphql";
 
 @Component({})
 export default class CreateGroupDialog extends Vue {
   loading = false;
   dialog = false;
 
-  name = ""
+  name = "";
 
   close() {
     this.dialog = false;
   }
 
   async addGroup() {
-    //TODO
-    // try {
-    //   this.loading = true;
-    //   await groupsStore.createGroup(this.name)
-    //   this.close()
-    // } catch (e) {
-    //   alert("Une erreur est survenue...");
-    //   console.log({ e });
-    // } finally {
-    //   this.loading = false;
-    // }
+    try {
+      this.loading = true;
+      await this.$apollo.mutate({
+        mutation: CreateGroupMutationGQL,
+        variables: {
+          name: this.name
+        },
+        update: (store, { data: { createOneGroup } }) => {
+          // Read the data from our cache for this query.
+          const data: FindManyGroupsQuery | null = store.readQuery({
+            query: FindManyGroupsQueryGQL,
+          });
+          if (data !== null) {
+            data.groups.push(createOneGroup);
+          }
+        },
+      });
+      this.dialog = false;
+    } catch (e) {
+      alert(e);
+    } finally {
+      this.loading = false;
+    }
   }
 
 }
