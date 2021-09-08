@@ -117,7 +117,7 @@
       <v-col cols="12">
         <h1>Vous n'avez plus rien à faire 😁</h1>
         <img
-          src="https://data.photofunky.net/output/image/0/5/9/e/059e87/photofunky.gif"
+          src="https://c.tenor.com/A-ozELwp694AAAAC/thumbs-thumbs-up-kid.gif"
           alt="Fille qui danse"
         />
       </v-col>
