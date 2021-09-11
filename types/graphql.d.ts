@@ -17,6 +17,15 @@ declare module '*/DeleteContract.graphql' {
 }
     
 
+declare module '*/DownloadSpreadsheet.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const DownloadSpreadsheet: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/EditSkillToStudent.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

@@ -5,19 +5,15 @@
         <h1 class="secondary--text mr-5">Mes contrats</h1>
       </v-col>
       <v-col class="text-right">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              disabled
-              v-on="on"
-              color="secondary"
-            >
-              <v-icon left>mdi-file</v-icon>
-              Télécharger le fichier tableur
-            </v-btn>
-          </template>
-          Non implémenté dans cette version
-        </v-tooltip>
+        <v-btn
+          @click="downloadSpreadsheet"
+          v-on="on"
+          color="secondary"
+          :loading="loadingDownloadSpreadsheet"
+        >
+          <v-icon left>mdi-file</v-icon>
+          Télécharger le fichier tableur
+        </v-btn>
         <create-contract-dialog>
           <template v-slot="{ on }">
             <v-btn color="secondary" v-on="on">
@@ -90,14 +86,14 @@
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
 import ContractsDatesOnlyQueryGQL from "~/apollo/queries/ContractsDatesOnly.graphql";
+import DownloadSpreadsheetMutationGQL from "~/apollo/mutations/DownloadSpreadsheet.graphql";
 
 import ContractSkillListItemTeacherDashboard from "~/components/ContractSkillListItemTeacherDashboard.vue";
 import CreateContractDialog from "~/components/CreateContractDialog.vue";
 
 import ContractSkillAddDialog from "~/components/contract/skill/AddDialog.vue";
-import { ContractsDatesOnlyQuery, FetchContractQuery, FetchContractsQuery } from "~/types/types";
+import { ContractsDatesOnlyQuery, FetchContractsQuery } from "~/types/types";
 import ContractDetails from "~/components/contract/ContractDetails.vue";
-import FetchContractGQL from "~/apollo/queries/FetchContract.graphql";
 
 @Component<TeacherContractsPage>({
   layout: "teacher",
@@ -132,6 +128,8 @@ export default class TeacherContractsPage extends Vue {
   loading = false;
   selectedContract: number | null = null;
 
+  loadingDownloadSpreadsheet = false;
+
   prev() {
     this.calendarRef.prev();
   }
@@ -146,6 +144,24 @@ export default class TeacherContractsPage extends Vue {
 
   getEventColor(event: FetchContractsQuery["contracts"][0]) {
     return event.hexColor;
+  }
+
+  async downloadSpreadsheet() {
+    try {
+      this.loadingDownloadSpreadsheet = true;
+      const { data } = await this.$apollo.mutate({
+        mutation: DownloadSpreadsheetMutationGQL
+      });
+      const downloadLink = document.createElement("a");
+      downloadLink.href = data.generateSpreadsheet;
+      downloadLink.download = "contrats.xlsx";
+      downloadLink.click();
+      downloadLink.remove()
+    } catch (e) {
+      alert({ e });
+    } finally {
+      this.loadingDownloadSpreadsheet = false;
+    }
   }
 }
 </script>

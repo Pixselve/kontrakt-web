@@ -68,6 +68,8 @@ export type Mutation = {
   deleteOneStudent: Student;
   upsertOneSkillToStudent: StudentSkill;
   createOneStudent: Student;
+  createOneTeacher: Teacher;
+  generateSpreadsheet: Scalars['String'];
 };
 
 
@@ -141,6 +143,14 @@ export type MutationUpsertOneSkillToStudentArgs = {
 export type MutationCreateOneStudentArgs = {
   student: StudentInput;
   user: UserInput;
+};
+
+
+export type MutationCreateOneTeacherArgs = {
+  username: Scalars['String'];
+  password: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
 };
 
 export type Query = {
@@ -268,6 +278,14 @@ export type DeleteContractMutation = (
     { __typename?: 'Contract' }
     & Pick<Contract, 'id'>
   ) }
+);
+
+export type DownloadSpreadsheetMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DownloadSpreadsheetMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'generateSpreadsheet'>
 );
 
 export type EditSkillToStudentMutationVariables = Exact<{

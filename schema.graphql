@@ -33,9 +33,11 @@ type Mutation {
   createOneGroup(contractID: Int, name: String!): Group!
   createOneSkill(contractID: Int!, name: String!): Skill!
   createOneStudent(student: StudentInput!, user: UserInput!): Student!
+  createOneTeacher(firstName: String!, lastName: String!, password: String!, username: String!): Teacher!
   deleteOneContract(id: Int!): Contract!
   deleteOneSkill(id: Int!): Skill!
   deleteOneStudent(ownerUsername: String!): Student!
+  generateSpreadsheet: String!
   login(password: String!, username: String!): AuthPayload!
   updateOneContract(contractID: Int!, groupIDs: [Int!]): Contract!
   updateOneSkill(name: String, skillID: Int!): Skill!
