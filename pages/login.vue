@@ -9,12 +9,14 @@
       class="mt-7"
       prepend-inner-icon="mdi-account"
       label="Identifiant"
+      id="username"
       outlined
       required
       :error-messages="errors.username"
     ></v-text-field>
     <v-text-field
       required
+      id="password"
       label="Mot de passe"
       :rules="rules.password"
       outlined

@@ -30,7 +30,8 @@
       "cookie-universal-nuxt",
       "@nuxtjs/apollo",
       "vuetify",
-      "vue-cli-plugin-apollo"
+      "vue-cli-plugin-apollo",
+      "cypress"
     ]
   },
   "exclude": [

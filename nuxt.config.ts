@@ -50,7 +50,7 @@ const config: Configuration = {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: process.env.NODE_ENV !== 'production' ? 'https://api-kontrakt.maelkerichard.com/query' : "https://api-kontrakt.maelkerichard.com/query"
+        httpEndpoint: 'https://api-kontrakt.maelkerichard.com/query'
       }
     },
     tokenName: "token"
