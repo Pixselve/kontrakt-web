@@ -7,7 +7,6 @@
       <v-col class="text-right">
         <v-btn
           @click="downloadSpreadsheet"
-          v-on="on"
           color="secondary"
           :loading="loadingDownloadSpreadsheet"
         >
