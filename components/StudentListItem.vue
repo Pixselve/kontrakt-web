@@ -1,6 +1,6 @@
 <template>
   <v-card flat>
-    <v-row justify="space-between" class="px-5" dense align="center">
+    <v-row align="center" class="px-5" dense justify="space-between">
       <v-col class="d-flex">
         <div class="mr-5">
           <v-chip color="primary">
@@ -13,22 +13,22 @@
         <div>
           {{ student.lastName.toUpperCase() }} {{ student.firstName }}
           <!--   Groups chip list   -->
-          <v-row no-gutters align="center">
+          <v-row align="center" no-gutters>
             <v-chip-group>
               <v-chip
-                color="primary"
-                small
-                label
                 v-for="group in student.groups"
                 :key="group.id"
-                >{{ group.name }}
+                color="primary"
+                label
+                small
+              >{{ group.name }}
               </v-chip>
             </v-chip-group>
 
             <GroupsSelector
-              @input="editGroups"
-              :groups="groups"
               v-model="selectedGroup"
+              :groups="groups"
+              @input="editGroups"
             />
           </v-row>
         </div>
@@ -41,9 +41,9 @@
         <div v-else class="text-center">À jour</div>
         <v-progress-linear
           :color="progressBarColor"
+          :value="progressBarValue"
           height="7"
           rounded
-          :value="progressBarValue"
         ></v-progress-linear>
       </v-col>
       <v-col class="text-right">
@@ -79,6 +79,32 @@ export default class StudentListItem extends Vue {
   selectedGroup: number[] = this.student.groups.map((group) => group.id);
   groups: FindManyGroupsQuery["groups"] = [];
 
+  get skillsToFinish() {
+    //TODO todo marks
+    return this.student.studentSkills.filter(
+      (studentSkill) => studentSkill.mark === "TODO"
+    );
+  }
+
+  get progressBarValue() {
+    return this.student.studentSkills.length === 0
+      ? 100
+      : ((this.student.studentSkills.length -
+          (this.skillsToFinish.length ?? this.student.studentSkills.length)) *
+        100) /
+      this.student.studentSkills.length;
+  }
+
+  get progressBarColor() {
+    if (this.progressBarValue >= 75) {
+      return "green";
+    } else if (this.progressBarValue >= 25) {
+      return "orange";
+    } else {
+      return "red";
+    }
+  }
+
   /**
    * Edit the student's groups
    */
@@ -106,32 +132,6 @@ export default class StudentListItem extends Vue {
         }
       },
     });
-  }
-
-  get skillsToFinish() {
-    //TODO todo marks
-    return this.student.studentSkills.filter(
-      (studentSkill) => studentSkill.mark === "TODO"
-    );
-  }
-
-  get progressBarValue() {
-    return this.student.studentSkills.length === 0
-      ? 100
-      : ((this.student.studentSkills.length -
-          (this.skillsToFinish.length ?? this.student.studentSkills.length)) *
-          100) /
-          this.student.studentSkills.length;
-  }
-
-  get progressBarColor() {
-    if (this.progressBarValue >= 75) {
-      return "green";
-    } else if (this.progressBarValue >= 25) {
-      return "orange";
-    } else {
-      return "red";
-    }
   }
 }
 </script>

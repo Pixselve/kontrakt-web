@@ -21,11 +21,11 @@
           </tr>
           </thead>
           <tbody>
-          <student-skill-table-row :skills="contract.skills"
-                                   v-for="(student, i) in students"
-                                   :student="student"
+          <student-skill-table-row v-for="(student, i) in students"
+                                   :key="student.ownerUsername"
                                    :contract-i-d="contract.id"
-                                   :key="student.ownerUsername"></student-skill-table-row>
+                                   :skills="contract.skills"
+                                   :student="student"></student-skill-table-row>
           </tbody>
         </template>
       </v-simple-table>
@@ -55,16 +55,16 @@ import FetchStudentForContractGQL from "~/apollo/queries/FetchStudentForContract
         return { id: parseInt(this.$route.params.id) };
       },
       error(error) {
-        console.log({errorContract: error.networkError});
+        console.log({ errorContract: error.networkError });
       }
     },
     students: {
       query: FetchStudentForContractGQL,
       variables() {
-        return { contractID: parseInt(this.$route.params.id)  };
+        return { contractID: parseInt(this.$route.params.id) };
       },
       error(error) {
-        console.log({errorStudents: error.networkError});
+        console.log({ errorStudents: error.networkError });
       }
     },
   },

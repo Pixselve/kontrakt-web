@@ -7,7 +7,7 @@
       <v-col class="text-right">
         <create-student-dialog>
           <template v-slot:default="{ on }">
-            <v-btn v-on="on" color="secondary">
+            <v-btn color="secondary" v-on="on">
               <v-icon left>mdi-account-plus</v-icon>
               Ajouter un élève
             </v-btn>
@@ -22,7 +22,7 @@
     ></v-skeleton-loader>
     <div v-else>
       <v-alert v-if="students.length <= 0" type="info"
-        >Vous n'avez pas encore ajouté d'élève
+      >Vous n'avez pas encore ajouté d'élève
       </v-alert>
       <student-list-item
         v-for="student in students"

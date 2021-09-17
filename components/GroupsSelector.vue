@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y>
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" icon x-small>
+      <v-btn icon x-small v-on="on">
         <v-icon>mdi-playlist-edit</v-icon>
       </v-btn>
     </template>
@@ -10,17 +10,17 @@
       indeterminate
     ></v-progress-linear>
     <v-list dense>
-      <v-list-item-group multiple v-model="content" @change="handleInput">
+      <v-list-item-group v-model="content" multiple @change="handleInput">
         <template v-for="group in groups">
-          <v-list-item :value="group.id" dense :key="group.id">
+          <v-list-item :key="group.id" :value="group.id" dense>
             <template v-slot:default="{ active, toggle }">
               <v-list-item-action>
                 <v-checkbox
                   :input-value="active"
-                  dense
-                  color="deep-purple accent-4"
-                  @click.stop="toggle"
                   :true-value="group.id"
+                  color="deep-purple accent-4"
+                  dense
+                  @click.stop="toggle"
                 ></v-checkbox>
               </v-list-item-action>
               <v-list-item-content>
@@ -49,14 +49,12 @@ export default class GroupsSelector extends Vue {
   @Prop() readonly value!: number[];
 
   content = this.value;
+  loading = false;
 
   @Emit("input")
   handleInput() {
     return this.content;
   }
-
-
-  loading = false;
 
 }
 </script>

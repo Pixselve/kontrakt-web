@@ -5,7 +5,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title
-        >{{ student.firstName }} {{ student.lastName }}
+      >{{ student.firstName }} {{ student.lastName }}
       </v-toolbar-title>
       <template v-slot:extension>
         <v-tabs v-model="tab" centered grow>
@@ -47,7 +47,7 @@
       <v-tab-item>
         <v-container>
           <v-btn block color="red" @click="deleteStudent"
-            >Supprimer l'élève
+          >Supprimer l'élève
           </v-btn>
         </v-container>
       </v-tab-item>
@@ -59,11 +59,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import SkillsTable from "~/components/SkillsTable.vue";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
-import {
-  Contract,
-  FetchStudentQuery,
-  FindManyContractsOfGroupsQuery,
-} from "~/types/types";
+import { Contract, FetchStudentQuery, FindManyContractsOfGroupsQuery, } from "~/types/types";
 
 import FetchStudentQueryGQL from "~/apollo/queries/FetchStudent.graphql";
 import FindManyContractsOfGroupsQueryGQL from "~/apollo/queries/contact/FindManyContractsOfGroups.graphql";

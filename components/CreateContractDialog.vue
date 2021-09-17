@@ -1,5 +1,5 @@
 <template>
-  <v-dialog fullscreen hide-overlay v-model="dialog">
+  <v-dialog v-model="dialog" fullscreen hide-overlay>
     <template v-slot:activator="{ on }">
       <slot v-bind="{ on }">
         <v-btn color="primary" dark v-on="on">
@@ -10,7 +10,7 @@
 
     <v-card :disabled="loading" :loading="loading" tile>
       <v-toolbar flat>
-        <v-btn @click="close" icon>
+        <v-btn icon @click="close">
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-toolbar-title>Ajouter un contrat</v-toolbar-title>
@@ -22,7 +22,7 @@
       <v-card-text>
         <v-row align="center">
           <v-col>
-            <v-text-field v-model="name" outlined required label="Nom du contrat"></v-text-field>
+            <v-text-field v-model="name" label="Nom du contrat" outlined required></v-text-field>
             <v-menu
               v-model="dates.start.isMenuOpen"
               :close-on-content-click="false"
@@ -32,18 +32,18 @@
                 <v-text-field
                   :value="dates.start.computedDateFormatted"
                   label="Date de début"
-                  readonly
-                  prepend-icon="mdi-calendar"
-                  @click:clear="dates.start.value = null"
-                  v-on="on"
                   outlined
+                  prepend-icon="mdi-calendar"
+                  readonly
                   required
+                  v-on="on"
+                  @click:clear="dates.start.value = null"
                 ></v-text-field>
               </template>
               <v-date-picker
+                v-model="dates.start.value"
                 first-day-of-week="1"
                 locale="fr-FR"
-                v-model="dates.start.value"
                 @change="dates.start.isMenuOpen = false"
               ></v-date-picker>
             </v-menu>
@@ -57,29 +57,26 @@
                 <v-text-field
                   :value="dates.end.computedDateFormatted"
                   label="Date de fin"
-                  readonly
-                  prepend-icon="mdi-calendar"
-                  @click:clear="dates.end.value = null"
-                  v-on="on"
                   outlined
+                  prepend-icon="mdi-calendar"
+                  readonly
                   required
+                  v-on="on"
+                  @click:clear="dates.end.value = null"
                 ></v-text-field>
               </template>
               <v-date-picker
+                v-model="dates.end.value"
                 first-day-of-week="1"
                 locale="fr-FR"
-                v-model="dates.end.value"
                 @change="dates.end.isMenuOpen = false"
               ></v-date-picker>
             </v-menu>
           </v-col>
           <v-col>
-            <v-color-picker v-model="color" hide-mode-switch mode="hexa" hide-canvas></v-color-picker>
+            <v-color-picker v-model="color" hide-canvas hide-mode-switch mode="hexa"></v-color-picker>
           </v-col>
         </v-row>
-
-
-
 
 
         <v-simple-table>
@@ -94,13 +91,13 @@
             <tr v-for="(skill, i) in skills" :key="`skillKEY${i}`">
               <td>{{ skill }}</td>
               <td>
-                <v-btn @click="deleteSkill(i)" icon x-small>
+                <v-btn icon x-small @click="deleteSkill(i)">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
                 <EditSkillDialog
-                  @edit="editSkill"
                   :index="i"
                   :skill-prop="skill"
+                  @edit="editSkill"
                 />
               </td>
             </tr>
@@ -116,7 +113,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import EditSkillDialog from "~/components/EditSkillDialog.vue";
 import CreateSkillDialog from "~/components/CreateSkillDialog.vue";
-import CreateOneContractGQL from "~/apollo/mutations/CreateOneContract.graphql"
+import CreateOneContractGQL from "~/apollo/mutations/CreateOneContract.graphql";
 import { ContractsDatesOnlyQuery, CreateOneContractMutation } from "~/types/types";
 import ContractsDatesOnlyQueryGQL from "~/apollo/queries/ContractsDatesOnly.graphql";
 
@@ -158,7 +155,7 @@ export default class CreateContractDialog extends Vue {
   };
 
   name = "";
-  color = ""
+  color = "";
 
   deleteSkill(index: number) {
     this.skills = this.skills.filter((_, i) => i != index);
@@ -193,7 +190,7 @@ export default class CreateContractDialog extends Vue {
           name: this.name,
           hexColor: this.color
         },
-        update: (proxy, {data}) => {
+        update: (proxy, { data }) => {
           const contractsData: ContractsDatesOnlyQuery | null = proxy.readQuery({ query: ContractsDatesOnlyQueryGQL });
           if (contractsData !== null) {
             const { createOneContract } = data as CreateOneContractMutation;
@@ -203,8 +200,8 @@ export default class CreateContractDialog extends Vue {
             });
           }
         }
-      })
-      this.$emit("update")
+      });
+      this.$emit("update");
       this.close();
     } catch (e) {
       alert("ERROR");

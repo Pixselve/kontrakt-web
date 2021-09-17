@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="500">
+  <v-dialog v-model="dialog" max-width="500" persistent>
     <template v-slot:activator="{on}">
       <slot v-bind="{on}">
         <v-btn color="primary" v-on="on">Ajouter un élève</v-btn>
@@ -13,14 +13,14 @@
         </v-card-title>
         <div v-if="!complete">
           <v-card-text>
-            <v-text-field v-model="studentData.firstName" outlined required label="Prénom"></v-text-field>
-            <v-text-field v-model="studentData.lastName" outlined required label="Nom de famille"></v-text-field>
-            <v-text-field v-model="studentData.password" outlined required label="Mot de passe"></v-text-field>
+            <v-text-field v-model="studentData.firstName" label="Prénom" outlined required></v-text-field>
+            <v-text-field v-model="studentData.lastName" label="Nom de famille" outlined required></v-text-field>
+            <v-text-field v-model="studentData.password" label="Mot de passe" outlined required></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn @click="close" color="primary" text>Annuler</v-btn>
-            <v-btn type="submit" color="primary">Ajouter</v-btn>
+            <v-btn color="primary" text @click="close">Annuler</v-btn>
+            <v-btn color="primary" type="submit">Ajouter</v-btn>
           </v-card-actions>
         </div>
         <div v-else-if="addedStudent !== null">
@@ -33,7 +33,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn @click="close" color="primary" text>Fermer</v-btn>
+            <v-btn color="primary" text @click="close">Fermer</v-btn>
           </v-card-actions>
 
         </div>

@@ -1,5 +1,5 @@
 <template>
-  <v-card height="100%" flat hover shaped class="white--text" :color="contract.hexColor">
+  <v-card :color="contract.hexColor" class="white--text" flat height="100%" hover shaped>
     <v-card-title class="px-6">
       <v-row no-gutters>
         <v-col cols="12"><h5>{{ contract.name }}</h5></v-col>
@@ -7,7 +7,8 @@
       </v-row>
     </v-card-title>
     <v-card-text>
-      <SkillListItem v-if="isMarkTodo(skillIDToMark.get(skill.id)) " v-for="skill in contract.skills" :key="skill.id" :skill="skill" :mark="skillIDToMark.get(skill.id)"/>
+      <SkillListItem v-for="skill in contract.skills" v-if="isMarkTodo(skillIDToMark.get(skill.id)) " :key="skill.id"
+                     :mark="skillIDToMark.get(skill.id)" :skill="skill"/>
     </v-card-text>
   </v-card>
 </template>
@@ -18,6 +19,7 @@ import { Contract, Mark } from "~/types/types";
 import AwaitingFinishContractCardSkillItem from "~/components/AwaitingFinishContractCardSkillItem.vue";
 import SkillListItem from "~/components/SkillListItem.vue";
 import { MarkHelper } from "~/utils/MarkHelper";
+
 @Component({
   components: {
     SkillListItem,
@@ -29,7 +31,7 @@ export default class AwaitingFinishContractCard extends Vue {
   @Prop() readonly skillIDToMark!: Map<number, Mark>;
 
   isMarkTodo(mark: Mark) {
-    return MarkHelper.isTodo(mark)
+    return MarkHelper.isTodo(mark);
   }
 
 }

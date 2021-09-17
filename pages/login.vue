@@ -1,32 +1,32 @@
 <template>
-  <v-form lazy-validation ref="form" @submit.prevent="login">
+  <v-form ref="form" lazy-validation @submit.prevent="login">
     <h1 class="mb-10">Connexion</h1>
     <v-text-field
-      autofocus
-      :rules="rules.username"
-      v-model="username"
-      type="text"
-      class="mt-7"
-      prepend-inner-icon="mdi-account"
-      label="Identifiant"
       id="username"
-      outlined
-      required
+      v-model="username"
       :error-messages="errors.username"
+      :rules="rules.username"
+      autofocus
+      class="mt-7"
+      label="Identifiant"
+      outlined
+      prepend-inner-icon="mdi-account"
+      required
+      type="text"
     ></v-text-field>
     <v-text-field
-      required
       id="password"
-      label="Mot de passe"
-      :rules="rules.password"
-      outlined
-      type="password"
       v-model="password"
       :error-messages="errors.password"
+      :rules="rules.password"
+      label="Mot de passe"
+      outlined
       prepend-inner-icon="mdi-lock"
+      required
+      type="password"
     ></v-text-field>
     <v-row no-gutters>
-      <v-btn block :loading="loading" type="submit" color="primary">Connexion</v-btn>
+      <v-btn :loading="loading" block color="primary" type="submit">Connexion</v-btn>
     </v-row>
   </v-form>
 </template>
@@ -47,7 +47,7 @@ export default class LoginPage extends Vue {
 
   loading = false;
   username: string = "";
-  password = ""
+  password = "";
   rules = {
     username: [
       (v: string) => !!v || "Veuillez entrer un identifiant valide",

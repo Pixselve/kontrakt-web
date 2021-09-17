@@ -7,14 +7,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { $apollo } from "~/utils/getGraphQLClient";
-import StatusQueryGQL from "~/apollo/queries/Status.graphql";
-import { StatusQuery } from "~/types/types";
 
 @Component<IndexPage>({
   layout: "login",
-  asyncData({redirect}) {
-    redirect("/login")
+  asyncData({ redirect }) {
+    redirect("/login");
   },
   head: () => ({
     title: "Kontrakt"

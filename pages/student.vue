@@ -5,12 +5,12 @@
         <h1>Bonjour {{ me.firstName }} ! 👋</h1>
         <v-chip-group>
           <v-chip
-            color="primary"
-            small
-            label
             v-for="group in me.groups"
             :key="group.id"
-            >{{ group.name }}
+            color="primary"
+            label
+            small
+          >{{ group.name }}
           </v-chip>
         </v-chip-group>
       </v-col>
@@ -25,7 +25,7 @@
           >
           </v-icon>
         </v-btn>
-        <v-btn @click="disconnect" icon>
+        <v-btn icon @click="disconnect">
           <v-icon>mdi-logout</v-icon>
         </v-btn>
       </v-col>
@@ -35,11 +35,11 @@
       <v-col>
         <h1>Les contrats</h1>
         <v-sheet height="64">
-          <v-toolbar flat color="white">
-            <v-btn fab text small color="grey darken-2" @click="prev">
+          <v-toolbar color="white" flat>
+            <v-btn color="grey darken-2" fab small text @click="prev">
               <v-icon small>mdi-chevron-left</v-icon>
             </v-btn>
-            <v-btn fab text small color="grey darken-2" @click="next">
+            <v-btn color="grey darken-2" fab small text @click="next">
               <v-icon small>mdi-chevron-right</v-icon>
             </v-btn>
             <h3>
@@ -55,24 +55,24 @@
         </v-sheet>
         <v-sheet height="600">
           <v-calendar
-            :weekdays="[1, 2, 3, 4, 5]"
-            locale="fr-FR"
             ref="calendar"
             v-model="calendarValue"
-            color="primary"
-            :events="contracts"
-            @click:event="showEvent"
             :event-color="getEventColor"
+            :events="contracts"
+            :weekdays="[1, 2, 3, 4, 5]"
+            color="primary"
+            locale="fr-FR"
+            @click:event="showEvent"
           ></v-calendar>
           <v-menu
             v-if="selectedContract"
             v-model="selectedOpen"
-            :close-on-content-click="false"
             :activator="selectedElement"
-            offset-x
+            :close-on-content-click="false"
             max-width="500px"
+            offset-x
           >
-            <v-card color="grey lighten-4" min-width="350px" flat>
+            <v-card color="grey lighten-4" flat min-width="350px">
               <v-toolbar :color="selectedContract.color" dark>
                 <v-btn icon @click="selectedOpen = false">
                   <v-icon>mdi-close</v-icon>
@@ -101,11 +101,11 @@
         v-for="contract in contractsToFinish"
         :key="contract.id"
         cols="12"
-        xs="12"
-        sm="12"
-        md="6"
         lg="4"
+        md="6"
+        sm="12"
         xl="4"
+        xs="12"
       >
         <awaiting-finish-contract-card
           :contract="contract"
@@ -117,8 +117,8 @@
       <v-col cols="12">
         <h1>Vous n'avez plus rien à faire 😁</h1>
         <img
-          src="https://c.tenor.com/A-ozELwp694AAAAC/thumbs-thumbs-up-kid.gif"
           alt="Fille qui danse"
+          src="https://c.tenor.com/A-ozELwp694AAAAC/thumbs-thumbs-up-kid.gif"
         />
       </v-col>
     </v-row>
@@ -132,13 +132,7 @@ import SkillsTable from "~/components/SkillsTable.vue";
 import ContractCard from "~/components/ContractCard.vue";
 import ContractCardWithPopup from "~/components/ContractCardWithPopup.vue";
 import AwaitingFinishContractCard from "~/components/AwaitingFinishContractCard.vue";
-import {
-  FetchContractsQuery,
-  FindManyContractsOfGroupsQuery,
-  Mark,
-  MeQuery,
-  StudentSkill,
-} from "~/types/types";
+import { FetchContractsQuery, FindManyContractsOfGroupsQuery, Mark, MeQuery, StudentSkill, } from "~/types/types";
 import MeQueryGQL from "~/apollo/queries/Me.graphql";
 import FindManyContractsOfGroupsQueryGQL from "~/apollo/queries/contact/FindManyContractsOfGroups.graphql";
 
@@ -199,10 +193,36 @@ export default class StudentPage extends Vue {
     );
   }
 
+  get isDarkTheme() {
+    return this.$vuetify.theme.dark;
+  }
+
+  get studentSkillsToFinish(): ({
+    __typename?: "StudentSkill" | undefined;
+  } & Pick<StudentSkill, "skillID" | "mark">)[] {
+    return (
+      this.me?.studentSkills.filter((studentSkill) =>
+        ["TODO"].includes(studentSkill.mark)
+      ) ?? []
+    );
+  }
+
+  get skillsIDToFinish() {
+    return this.studentSkillsToFinish.map(
+      (studentSkill) => studentSkill.skillID
+    );
+  }
+
+  get contractsToFinish() {
+    return this.contracts.filter((contract) =>
+      contract.skills.some((skill) => this.skillsIDToFinish.includes(skill.id))
+    );
+  }
+
   showEvent({
-    nativeEvent,
-    event,
-  }: {
+              nativeEvent,
+              event,
+            }: {
     nativeEvent: Event;
     event: FetchContractsQuery["contracts"][0];
   }) {
@@ -236,10 +256,6 @@ export default class StudentPage extends Vue {
     this.calendarRef.next();
   }
 
-  get isDarkTheme() {
-    return this.$vuetify.theme.dark;
-  }
-
   toggleTheme() {
     this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
   }
@@ -248,28 +264,6 @@ export default class StudentPage extends Vue {
     await this.$apolloHelpers.onLogout();
     this.$cookies.remove("type");
     await this.$router.push("/login");
-  }
-
-  get studentSkillsToFinish(): ({
-    __typename?: "StudentSkill" | undefined;
-  } & Pick<StudentSkill, "skillID" | "mark">)[] {
-    return (
-      this.me?.studentSkills.filter((studentSkill) =>
-        ["TODO"].includes(studentSkill.mark)
-      ) ?? []
-    );
-  }
-
-  get skillsIDToFinish() {
-    return this.studentSkillsToFinish.map(
-      (studentSkill) => studentSkill.skillID
-    );
-  }
-
-  get contractsToFinish() {
-    return this.contracts.filter((contract) =>
-      contract.skills.some((skill) => this.skillsIDToFinish.includes(skill.id))
-    );
   }
 }
 </script>

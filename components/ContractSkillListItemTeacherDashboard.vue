@@ -1,9 +1,9 @@
 <template>
   <v-list-item three-line>
     <v-list-item-action>
-      <contract-skill-edit-dialog v-on:update="() => $emit('update')" :skill-id="skill.id">
+      <contract-skill-edit-dialog :skill-id="skill.id" v-on:update="() => $emit('update')">
         <template v-slot="{on}">
-          <v-btn v-on="on" icon>
+          <v-btn icon v-on="on">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
         </template>

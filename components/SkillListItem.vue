@@ -1,5 +1,5 @@
 <template>
-  <v-list-item dense dark>
+  <v-list-item dark dense>
     <v-list-item-icon v-on="on">
       <v-icon color="white">mdi-{{ markData.icon }}</v-icon>
 
@@ -22,7 +22,7 @@ export default class SkillListItem extends Vue {
   @Prop() readonly mark!: Mark;
 
   get markData() {
-    return MarkHelper.markToData.get(this.mark)
+    return MarkHelper.markToData.get(this.mark);
   }
 }
 </script>

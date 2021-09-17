@@ -2,18 +2,18 @@
   <v-simple-table>
     <template v-slot:default>
       <thead>
-        <tr>
-          <th class="text-left">Compétence</th>
-          <th class="text-left">Status</th>
-        </tr>
+      <tr>
+        <th class="text-left">Compétence</th>
+        <th class="text-left">Status</th>
+      </tr>
       </thead>
       <tbody>
-        <SkillTableEntry
-          :editable="editable"
-          v-for="studentSkill in studentSkills"
-          :key="studentSkill.skillID"
-          :student-skill="studentSkill"
-        />
+      <SkillTableEntry
+        v-for="studentSkill in studentSkills"
+        :key="studentSkill.skillID"
+        :editable="editable"
+        :student-skill="studentSkill"
+      />
       </tbody>
     </template>
   </v-simple-table>

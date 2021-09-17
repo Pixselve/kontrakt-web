@@ -1,5 +1,5 @@
 <template>
-  <v-dialog persistent v-model="dialog" max-width="500px">
+  <v-dialog v-model="dialog" max-width="500px" persistent>
     <template v-slot:activator="{ on }">
       <v-list-item v-on.stop="on">
         <v-list-item-title>Nouveau</v-list-item-title>
@@ -10,12 +10,12 @@
       <v-card-title>Ajouter un groupe</v-card-title>
       <v-form @submit.prevent="addGroup">
         <v-card-text>
-          <v-text-field v-model="name" outlined required label="Nom"></v-text-field>
+          <v-text-field v-model="name" label="Nom" outlined required></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="close" text color="red">Annuler</v-btn>
-          <v-btn type="submit" text color="secondary">Ajouter</v-btn>
+          <v-btn color="red" text @click="close">Annuler</v-btn>
+          <v-btn color="secondary" text type="submit">Ajouter</v-btn>
         </v-card-actions>
       </v-form>
 

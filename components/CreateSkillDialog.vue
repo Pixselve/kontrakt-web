@@ -1,24 +1,24 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog v-model="dialog" max-width="600px" persistent>
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" color="primary" block>Ajouter une compétence</v-btn>
+      <v-btn block color="primary" v-on="on">Ajouter une compétence</v-btn>
     </template>
     <v-card>
       <v-form ref="form" @submit.prevent="submit">
         <v-card-title>Ajouter une compétence</v-card-title>
         <v-card-text>
           <v-text-field
+            v-model="skill"
             :rules="rules"
             autofocus
-            outlined
-            v-model="skill"
             label="Compétence"
+            outlined
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="close" text color="primary">Annuler</v-btn>
-          <v-btn type="submit" color="primary">Ajouter</v-btn>
+          <v-btn color="primary" text @click="close">Annuler</v-btn>
+          <v-btn color="primary" type="submit">Ajouter</v-btn>
         </v-card-actions>
       </v-form>
     </v-card>

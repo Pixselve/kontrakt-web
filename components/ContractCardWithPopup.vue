@@ -4,10 +4,10 @@
       <template v-slot:activator="{ on }">
         <slot v-bind:on="on"></slot>
       </template>
-      <contract-popup @close="dialog = false" :student-username="studentUsername" :contract="contract"></contract-popup>
+      <contract-popup :contract="contract" :student-username="studentUsername" @close="dialog = false"></contract-popup>
     </v-dialog>
-    <contract-card @click="cardClick" :date-string="contract.start">
-      <v-row no-gutters align-content="center" justify="center">
+    <contract-card :date-string="contract.start" @click="cardClick">
+      <v-row align-content="center" justify="center" no-gutters>
         <v-col cols="12">
           <v-icon small>mdi-marker</v-icon>
           Consulter le contrat
@@ -18,11 +18,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Ref, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { Contract } from "~/types/types";
 import ContractCard from "~/components/ContractCard.vue";
 import SkillsTable from "~/components/SkillsTable.vue";
 import ContractPopup from "~/components/ContractPopup.vue";
+
 @Component<ContractCardWithPopup>({
   components: {
     ContractPopup,
@@ -38,7 +39,7 @@ export default class ContractCardWithPopup extends Vue {
   dialog = false;
 
   cardClick() {
-    this.dialog = true
+    this.dialog = true;
   }
 }
 </script>

@@ -15,9 +15,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="opened = false" color="secondary" text>Annuler</v-btn>
-          <v-btn @click="deleteSkill" dark color="red">Supprimer</v-btn>
-          <v-btn type="submit" color="secondary">Changer le nom</v-btn>
+          <v-btn color="secondary" text @click="opened = false">Annuler</v-btn>
+          <v-btn color="red" dark @click="deleteSkill">Supprimer</v-btn>
+          <v-btn color="secondary" type="submit">Changer le nom</v-btn>
         </v-card-actions>
       </v-form>
     </v-card>

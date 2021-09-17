@@ -8,18 +8,18 @@
       <!--                :items="marks"></v-select>-->
     </td>
     <td v-else>
-            <v-chip label :color="mark.hexColor" outlined>
-              <v-avatar left>
-                <v-icon>mdi-{{mark.icon}}</v-icon>
-              </v-avatar>
-              {{mark.text}}
-            </v-chip>
+      <v-chip :color="mark.hexColor" label outlined>
+        <v-avatar left>
+          <v-icon>mdi-{{ mark.icon }}</v-icon>
+        </v-avatar>
+        {{ mark.text }}
+      </v-chip>
     </td>
   </tr>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Mark, Skill, StudentSkill } from "~/types/types";
+import { Mark, StudentSkill } from "~/types/types";
 import { MarkHelper } from "~/utils/MarkHelper";
 
 @Component({})
@@ -30,7 +30,7 @@ export default class SkillTableEntry extends Vue {
   loading = false;
 
   get mark() {
-    return MarkHelper.markToData.get(this.studentSkill.mark)
+    return MarkHelper.markToData.get(this.studentSkill.mark);
   }
 
   async editMark(markValue: Mark) {

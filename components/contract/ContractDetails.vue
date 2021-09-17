@@ -16,11 +16,11 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                <v-row no-gutters align="center">
+                <v-row align="center" no-gutters>
                   <h2 class="mr-5">{{ contract.name }}</h2>
                   <v-menu offset-y>
                     <template v-slot:activator="{ on }">
-                      <v-btn v-on="on" icon>
+                      <v-btn icon v-on="on">
                         <v-icon>mdi-dots-vertical</v-icon>
                       </v-btn>
                     </template>
@@ -77,22 +77,22 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                <v-row no-gutters align="center">
+                <v-row align="center" no-gutters>
                   <v-chip-group v-if="contract.groups.length > 0">
                     <v-chip
-                      label
-                      color="primary"
-                      small
                       v-for="group in contract.groups"
                       :key="group.id"
+                      color="primary"
+                      label
+                      small
                     >{{ group.name }}
                     </v-chip>
                   </v-chip-group>
                   <span v-else>Le contrat n'est pas accessible</span>
                   <groups-selector
-                    @input="groupChange"
-                    :value="contractGroups"
                     :groups="groups"
+                    :value="contractGroups"
+                    @input="groupChange"
                   ></groups-selector>
                 </v-row>
               </v-list-item-title>
@@ -114,10 +114,10 @@
     <v-col cols="12">
       <v-list>
         <contract-skill-list-item-teacher-dashboard
-          v-on:update="() => $apollo.queries.contract.refetch()"
-          :skill="skill"
           v-for="skill in contract.skills"
           :key="skill.id"
+          :skill="skill"
+          v-on:update="() => $apollo.queries.contract.refetch()"
         ></contract-skill-list-item-teacher-dashboard>
       </v-list>
     </v-col>
@@ -168,15 +168,15 @@ export default class ContractDetails extends Vue {
   loading = false;
   contract?: FetchContractQuery["contract"];
 
+  get contractGroups() {
+    return this.contract?.groups?.map((group) => group.id) ?? [];
+  }
+
   formattedDate(date: string) {
     return new Date(date).toLocaleDateString("fr-FR", {
       month: "long",
       day: "numeric",
     });
-  }
-
-  get contractGroups() {
-    return this.contract?.groups?.map((group) => group.id) ?? [];
   }
 
   async groupChange(groups: number[]) {
@@ -222,7 +222,7 @@ export default class ContractDetails extends Vue {
           }
         }
       });
-      this.$emit("delete")
+      this.$emit("delete");
     } catch (e) {
       alert("Une erreur est survenue lors de la suppression du contrat");
       console.log({ e });

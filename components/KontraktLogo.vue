@@ -1,9 +1,9 @@
 <template>
   <svg
+    viewBox="0 0 767.63 139.35"
     width="50%"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    viewBox="0 0 767.63 139.35"
   >
     <defs>
       <style>
@@ -15,11 +15,11 @@
         id="radial-gradient"
         cx="82.68"
         cy="-13.64"
-        r="774.53"
         gradientUnits="userSpaceOnUse"
+        r="774.53"
       >
-        <stop offset="0" stop-color="#e06cf2" />
-        <stop offset="1" stop-color="#174891" />
+        <stop offset="0" stop-color="#e06cf2"/>
+        <stop offset="1" stop-color="#174891"/>
       </radialGradient>
     </defs>
     <g id="Layer_2" data-name="Layer 2">
@@ -36,5 +36,6 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({})
-export default class KontraktLogo extends Vue {}
+export default class KontraktLogo extends Vue {
+}
 </script>

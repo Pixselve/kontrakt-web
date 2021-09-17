@@ -6,9 +6,9 @@
       </v-col>
       <v-col class="text-right">
         <v-btn
-          @click="downloadSpreadsheet"
-          color="secondary"
           :loading="loadingDownloadSpreadsheet"
+          color="secondary"
+          @click="downloadSpreadsheet"
         >
           <v-icon left>mdi-file</v-icon>
           Télécharger le fichier tableur
@@ -24,9 +24,9 @@
       </v-col>
     </v-row>
     <v-divider></v-divider>
-    <v-row no-gutters class="text-center" justify="center" align="center">
+    <v-row align="center" class="text-center" justify="center" no-gutters>
       <v-col>
-        <v-btn fab text small color="grey darken-2" @click="prev">
+        <v-btn color="grey darken-2" fab small text @click="prev">
           <v-icon small>mdi-chevron-left</v-icon>
         </v-btn>
       </v-col>
@@ -41,24 +41,24 @@
       </h3>
       </v-col>
       <v-col>
-        <v-btn fab text small color="grey darken-2" @click="next">
+        <v-btn color="grey darken-2" fab small text @click="next">
           <v-icon small>mdi-chevron-right</v-icon>
         </v-btn>
       </v-col>
     </v-row>
     <v-calendar
-      :weekdays="[1, 2, 3, 4, 5]"
-      locale="fr-FR"
       ref="calendar"
       v-model="calendarValue"
-      :events="contracts"
-      @click:event="eventClick"
       :event-color="getEventColor"
+      :events="contracts"
+      :weekdays="[1, 2, 3, 4, 5]"
+      locale="fr-FR"
+      @click:event="eventClick"
     ></v-calendar>
 
     <v-divider class="mt-5"></v-divider>
 
-    <v-row class="text-center" v-if="loading">
+    <v-row v-if="loading" class="text-center">
       <v-col cols="12">
         <v-progress-circular
           color="secondary"
@@ -69,9 +69,9 @@
       <v-col cols="12"> Chargement du contrat...</v-col>
     </v-row>
     <ContractDetails
-      v-on:delete="selectedContract = null"
       v-else-if="selectedContract"
       :id="selectedContract"
+      v-on:delete="selectedContract = null"
     />
 
     <v-row v-else>
@@ -155,7 +155,7 @@ export default class TeacherContractsPage extends Vue {
       downloadLink.href = data.generateSpreadsheet;
       downloadLink.download = "contrats.xlsx";
       downloadLink.click();
-      downloadLink.remove()
+      downloadLink.remove();
     } catch (e) {
       alert({ e });
     } finally {

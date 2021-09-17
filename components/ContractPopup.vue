@@ -1,33 +1,33 @@
 <template>
   <v-card>
     <v-card-title>
-          Contrat du
-          {{
-            new Date(contract.start).toLocaleDateString("fr-FR", {
-              day: "numeric",
-              month: "long",
-            })
-          }}
-          au
-          {{
-            new Date(contract.end).toLocaleDateString("fr-FR", {
-              day: "numeric",
-              month: "long",
-            })
-          }}
+      Contrat du
+      {{
+        new Date(contract.start).toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+        })
+      }}
+      au
+      {{
+        new Date(contract.end).toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+        })
+      }}
 
     </v-card-title>
     <v-card-text>
       <v-progress-linear
-        indeterminate
         v-if="$fetchState.pending"
         color="primary"
+        indeterminate
       ></v-progress-linear>
       <skills-table
         v-else
         :editable="editable"
-        :student-skills="studentSkills"
         :skills="contract.skills"
+        :student-skills="studentSkills"
       ></skills-table>
     </v-card-text>
     <v-card-actions>
@@ -58,7 +58,7 @@ import StudentSkillsGQL from "~/apollo/queries/StudentSkills.graphql";
           studentUsername: this.studentUsername,
         },
       });
-    this.studentSkills = data.studentSkills
+    this.studentSkills = data.studentSkills;
   },
   fetchOnServer: false,
 })
@@ -66,6 +66,6 @@ export default class ContractPopup extends Vue {
   @Prop({ type: Object }) readonly contract!: Contract;
   @Prop({ type: Boolean, default: () => false }) readonly editable!: boolean;
   @Prop() readonly studentUsername!: string;
-  studentSkills: StudentSkillsQuery["studentSkills"] = []
+  studentSkills: StudentSkillsQuery["studentSkills"] = [];
 }
 </script>

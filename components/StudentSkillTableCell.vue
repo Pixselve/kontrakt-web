@@ -1,8 +1,8 @@
 <template>
   <td :style="`background-color: ${markData.hexColor};`">
-    <v-select :disabled="loading" :loading="loading" @change="changeValue" :value="mark" class="mt-6" flat dense
+    <v-select :disabled="loading" :items="marks" :loading="loading" :value="mark" class="mt-6" dense flat
               outlined
-              :items="marks"></v-select>
+              @change="changeValue"></v-select>
   </td>
 </template>
 
@@ -19,20 +19,19 @@ export default class StudentSkillTableCell extends Vue {
   @Prop() readonly skill!: Skill;
   @Prop() readonly contractID!: number;
   loading = false;
+  mark: Mark = Mark.Todo;
 
   get marks() {
-    return MarkHelper.marks
+    return MarkHelper.marks;
   }
-
-  @Watch("student", {deep: true, immediate: true})
-  onStudentChange(student: Student) {
-    this.mark = student.studentSkills.find(studentSkill => studentSkill.skillID === this.skill.id)?.mark ?? Mark.Todo;
-  }
-
-  mark: Mark = Mark.Todo
 
   get markData() {
-    return MarkHelper.markToData.get(this.mark)
+    return MarkHelper.markToData.get(this.mark);
+  }
+
+  @Watch("student", { deep: true, immediate: true })
+  onStudentChange(student: Student) {
+    this.mark = student.studentSkills.find(studentSkill => studentSkill.skillID === this.skill.id)?.mark ?? Mark.Todo;
   }
 
   async changeValue(newValue: string) {
@@ -63,7 +62,7 @@ export default class StudentSkillTableCell extends Vue {
               }
               // Write our data back to the cache.
               store.writeQuery({ query: FetchStudentForContractGQL, data });
-              this.mark = upsertOneSkillToStudent.mark
+              this.mark = upsertOneSkillToStudent.mark;
             }
           }
 
