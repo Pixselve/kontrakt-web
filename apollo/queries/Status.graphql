@@ -1,5 +1,0 @@
-query Status {
-  student(ownerUsername: "qwd") {
-    ownerUsername
-  }
-}
