@@ -7,15 +7,15 @@ describe('Authentication', function () {
   });
   it('should warn the user when their password is incorrect', function () {
     cy.visit("/login")
-    cy.get("#username").type("pixselve")
+    cy.get("#username").type(Cypress.env("DEMO_TEACHER_USERNAME"))
     cy.get("#password").type("wrong password")
     cy.get("form").submit()
     cy.contains("Mot de passe incorrect")
   });
   it('should redirect a teacher to the teacher dashboard after sign in', function () {
     cy.visit("/login")
-    cy.get("#username").type("pixselve")
-    cy.get("#password").type("password")
+    cy.get("#username").type(Cypress.env("DEMO_TEACHER_USERNAME"))
+    cy.get("#password").type(Cypress.env("DEMO_TEACHER_PASSWORD"))
     cy.get("form").submit()
     cy.url().should("equal", "http://localhost:3000/teacher/contracts")
   });
