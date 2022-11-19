@@ -27,7 +27,7 @@ export default class ContractCard extends Vue {
   @Prop() readonly dateString!: string;
 
   get date() {
-    return new Date(this.dateString);
+    return new Date(this.dateString.split(" ")[0]);
   }
 
 

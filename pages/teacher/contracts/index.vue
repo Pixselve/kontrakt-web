@@ -101,8 +101,8 @@ import ContractDetails from "~/components/contract/ContractDetails.vue";
       query: ContractsDatesOnlyQueryGQL,
       update(data: ContractsDatesOnlyQuery) {
         return data.contracts.map((contract) => ({
-          start: new Date(contract.start).getTime(),
-          end: new Date(contract.end).getTime(),
+          start: contract.start.split(" ")[0],
+          end: contract.end.split(" ")[0],
           hexColor: contract.hexColor,
           name: contract.name,
           id: contract.id

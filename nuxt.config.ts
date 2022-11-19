@@ -34,7 +34,7 @@ const config: Configuration = {
     manifest: {
       name: "Kontrakt - Contrats de travail ",
       land: "fr-FR",
-      description: "Gerez vos contrats de travail en toute simplicité",
+      description: "Gérez vos contrats de travail en toute simplicité",
       short_name: "Kontrakt",
       start_url: "/"
     }
@@ -50,7 +50,7 @@ const config: Configuration = {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: 'https://api-kontrakt.maelkerichard.com/query'
+        httpEndpoint: 'http://localhost:3001/query'
       }
     },
     tokenName: "token"

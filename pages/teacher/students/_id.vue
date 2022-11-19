@@ -25,23 +25,26 @@
         <v-container>
           <h1>Les contrats</h1>
           <v-divider></v-divider>
-          <v-row>
-            <v-col
-              v-for="contract in contracts"
-              :key="contract.id"
-              cols="12"
-              lg="4"
-              md="6"
-              sm="12"
-              xl="3"
-            >
-              <contract-card-with-popup
-                :contract="contract"
-                :editable="true"
-                :student-username="student.ownerUsername"
-              ></contract-card-with-popup>
-            </v-col>
-          </v-row>
+          <v-container>
+            <v-row>
+              <v-col
+                v-for="contract in contracts"
+                :key="contract.id"
+                cols="12"
+                lg="4"
+                md="6"
+                sm="12"
+                xl="3"
+              >
+                <contract-card-with-popup
+                  :contract="contract"
+                  :editable="true"
+                  :student-username="student.ownerUsername"
+                ></contract-card-with-popup>
+              </v-col>
+            </v-row>
+          </v-container>
+
         </v-container>
       </v-tab-item>
       <v-tab-item>

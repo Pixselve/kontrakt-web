@@ -74,7 +74,7 @@ export default class TeacherContractPage extends Vue {
   students: FetchStudentForContractQuery["students"] = [];
 
   getFormattedDate(date: string) {
-    return new Date(date).toLocaleDateString("fr-FR", {
+    return new Date(date.split(" ")[0]).toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "numeric",
       year: "numeric",

@@ -3,14 +3,14 @@
     <v-card-title>
       Contrat du
       {{
-        new Date(contract.start).toLocaleDateString("fr-FR", {
+        new Date(contract.start.split(" ")[0]).toLocaleDateString("fr-FR", {
           day: "numeric",
           month: "long",
         })
       }}
       au
       {{
-        new Date(contract.end).toLocaleDateString("fr-FR", {
+        new Date(contract.end.split(" ")[0]).toLocaleDateString("fr-FR", {
           day: "numeric",
           month: "long",
         })

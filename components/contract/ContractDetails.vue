@@ -173,7 +173,7 @@ export default class ContractDetails extends Vue {
   }
 
   formattedDate(date: string) {
-    return new Date(date).toLocaleDateString("fr-FR", {
+    return new Date(date.split(" ")[0]).toLocaleDateString("fr-FR", {
       month: "long",
       day: "numeric",
     });
