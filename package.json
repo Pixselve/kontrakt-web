@@ -19,7 +19,7 @@
     "bufferutil": "^4.0.3",
     "cookie-universal-nuxt": "^2.1.4",
     "core-js": "^3.9.1",
-    "nuxt": "^2.15.6",
+    "nuxt": "^3.4.3",
     "reflect-metadata": "^0.1.13",
     "utf-8-validate": "^5.0.5",
     "vue-property-decorator": "^9.1.2"
